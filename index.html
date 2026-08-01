@@ -1921,15 +1921,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 #ai-send-btn:active { transform: scale(0.92); }
 #ai-send-btn:disabled { background: #C8D8EC; cursor: not-allowed; }
 
-/* API key ekranı */
-#ai-apikey-panel {
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  flex: 1;
-  justify-content: center;
-}
+/* API key pop-up artık kendi inline stiliyle (#ai-apikey-overlay) tanımlı */
 
 
 /* Saha ölçüm inputları placeholder */
@@ -2045,7 +2037,10 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 })();
 </script>
 <body>
-<div id="status-bar-white-strip" style="position:fixed;top:0;left:0;right:0;height:max(env(safe-area-inset-top,0px), 28px);background:#ffffff;z-index:99999;pointer-events:none;"></div>
+<!-- status-bar-white-strip kaldırıldı (2026-07-30): native tarafta MainActivity.kt artık
+     WebView'e sistem çubukları kadar padding veriyor, bu CSS-katmanı yama ile çakışıp
+     çift boşluk yaratıyordu ve AI Hesap Asistanı başlığının arkasında gizli kalmasına
+     neden oluyordu. -->
 
   <!-- Sözleşme Modal — Popup -->
   <div id="sozlesme-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,22,40,0.72);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
@@ -2112,29 +2107,34 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     </div>
   </div>
 
-  <!-- API Key Panel (gizli başlar) -->
-  <div id="ai-apikey-panel" style="display:none;">
-    <div style="text-align:center;margin-bottom:8px;">
-      <div style="width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,#EAF4FB,#F0F8EE);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
-        <svg viewBox="0 0 24 24" width="32" height="32" fill="none"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" stroke="#122E43" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <!-- API Key Panel — küçük, kapatılabilir pop-up olarak ai-screen'in dışında -->
+  <div id="ai-apikey-overlay" style="display:none;position:fixed;inset:0;z-index:950;background:rgba(10,30,50,0.62);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+    <div style="position:relative;width:100%;max-width:340px;background:var(--surface,#fff);border-radius:18px;padding:24px 20px 20px;box-sizing:border-box;box-shadow:0 12px 40px rgba(10,30,50,0.35);display:flex;flex-direction:column;gap:14px;">
+      <button type="button" onclick="closeAiApiKeyOverlay()" aria-label="Kapat" style="position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:9px;border:none;background:var(--bg,#EAF1F4);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="var(--text,#122E43)" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <div style="text-align:center;margin-bottom:2px;">
+        <div style="width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#EAF4FB,#F0F8EE);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" stroke="#122E43" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p style="margin:0 0 6px;font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:var(--text,#122E43);">API Anahtarı Gerekli</p>
+        <p style="margin:0;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;color:var(--text-muted,#5B7488);line-height:1.5;">Anthropic API anahtarınızı girin.<br>Anahtar yalnızca cihazınızda saklanır.</p>
       </div>
-      <p style="margin:0 0 6px;font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:var(--text,#122E43);">API Anahtarı Gerekli</p>
-      <p style="margin:0;font-family:'IBM Plex Sans',sans-serif;font-size:13px;color:var(--text-muted,#5B7488);line-height:1.5;">Anthropic API anahtarınızı girin.<br>Anahtar yalnızca cihazınızda saklanır.</p>
-    </div>
-    <div style="background:var(--surface,#fff);border-radius:14px;border:1px solid var(--border,#C8D8EC);overflow:hidden;">
-      <input type="password" id="ai-apikey-input" placeholder="sk-ant-..." autocomplete="off" spellcheck="false"
-        style="width:100%;box-sizing:border-box;padding:14px 16px;border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-size:13px;background:transparent;color:var(--text,#122E43);">
-    </div>
-    <button type="button" id="ai-apikey-save-btn" onclick="saveApiKey()"
-      style="width:100%;padding:14px;border-radius:12px;border:none;background:#122E43;color:#fff;font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.06em;cursor:pointer;">
-      KAYDET VE BAŞLAT
-    </button>
-    <div style="background:#EAF4FB;border-radius:10px;padding:10px 12px;border-left:3px solid #2E6BB0;">
-      <p style="margin:0;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#1A3E6E;line-height:1.5;">
-        🔑 <strong>API anahtarı nereden alınır?</strong><br>
-        console.anthropic.com adresine gidin → API Keys → Create Key<br>
-        Yeni hesaplara $5 ücretsiz kredi verilir.
-      </p>
+      <div style="background:var(--bg,#EAF1F4);border-radius:12px;border:1px solid var(--border,#C8D8EC);overflow:hidden;">
+        <input type="password" id="ai-apikey-input" placeholder="sk-ant-..." autocomplete="off" spellcheck="false"
+          style="width:100%;box-sizing:border-box;padding:12px 14px;border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-size:13px;background:transparent;color:var(--text,#122E43);">
+      </div>
+      <button type="button" id="ai-apikey-save-btn" onclick="saveApiKey()"
+        style="width:100%;padding:13px;border-radius:12px;border:none;background:#122E43;color:#fff;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.06em;cursor:pointer;">
+        KAYDET VE BAŞLAT
+      </button>
+      <div style="background:#EAF4FB;border-radius:10px;padding:10px 12px;border-left:3px solid #2E6BB0;">
+        <p style="margin:0;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#1A3E6E;line-height:1.5;">
+          🔑 <strong>API anahtarı nereden alınır?</strong><br>
+          console.anthropic.com adresine gidin → API Keys → Create Key<br>
+          Yeni hesaplara $5 ücretsiz kredi verilir.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -4206,13 +4206,9 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     </div>
 
     <!-- Not Detay Overlay -->
-    <div id="nd-detay-overlay" style="display:none;position:fixed;inset:0;z-index:550;background:var(--bg);overflow-y:auto;">
+    <div id="nd-detay-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:calc(62px + env(safe-area-inset-bottom, 0px));z-index:150;background:var(--bg);overflow-y:auto;">
       <div style="max-width:480px;margin:0 auto;padding:calc(16px + max(env(safe-area-inset-top,0px), 28px)) 20px 40px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-          <button type="button" id="nd-detay-kapat" style="display:flex;align-items:center;gap:5px;background:var(--surface);border:none;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;color:var(--text);">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-            Geri
-          </button>
           <div id="nd-detay-kat-badge" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;color:#fff;"></div>
           <div id="nd-detay-durum" style="font-size:10px;"></div>
         </div>
@@ -5130,7 +5126,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);">
             <label for="ts-e" style="flex:1;margin:0;font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text);line-height:1.3;">Temel Derinliği (m)</label>
-            <input type="text" inputmode="decimal" autocomplete="off" id="ts-e" placeholder="örn. 2" onfocus="this.value=''" style="width:88px;flex-shrink:0;border:none;outline:none;background:transparent;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:var(--text);">
+            <input type="text" inputmode="decimal" autocomplete="off" id="ts-e" placeholder="örn. 2.5" onfocus="this.value=''" style="width:88px;flex-shrink:0;border:none;outline:none;background:transparent;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:var(--text);">
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);">
             <label for="ts-f" style="flex:1;margin:0;font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text);line-height:1.3;">Ayak Genişliği (m)</label>
@@ -6451,6 +6447,10 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
   function goHome(){
     currentBackTarget = null;
     window._mtbCurrentModId = null;
+    var ndDetayOv = document.getElementById('nd-detay-overlay');
+    if(ndDetayOv) ndDetayOv.style.display = 'none';
+    var aiScr = document.getElementById('ai-screen');
+    if(aiScr) aiScr.classList.remove('show');
     var mtbBar = document.getElementById('module-tab-bar');
     if(mtbBar) mtbBar.style.display = 'none';
     moduleScreens.forEach(function(s){
@@ -6470,6 +6470,16 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     if(window._haritaMesafeTemizle) window._haritaMesafeTemizle();
   }
   backBtn.addEventListener('click', function(){
+    var ndDetayOv = document.getElementById('nd-detay-overlay');
+    if(ndDetayOv && ndDetayOv.style.display !== 'none'){
+      ndDetayOv.style.display = 'none';
+      return;
+    }
+    var aiScr = document.getElementById('ai-screen');
+    if(aiScr && aiScr.classList.contains('show')){
+      closeAiScreen();
+      return;
+    }
     if(currentBackTarget && moduleRegistry[currentBackTarget]){
       openModule(moduleRegistry[currentBackTarget]);
     } else {
@@ -9041,9 +9051,6 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         ctx.fillStyle = '#122E43'; ctx.font = '700 52px sans-serif';
         ctx.textAlign = 'center'; ctx.fillText('sehimci', W/2, headerH/2+18); ctx.textAlign = 'left';
       }
-      ctx.textAlign = 'right'; ctx.fillStyle = '#5B7488'; ctx.font = '26px sans-serif';
-      ctx.fillText(ts, W-pad, headerH/2+10); ctx.textAlign = 'left';
-
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, headerH, W, titleH);
       ctx.fillStyle = ACCENT;
@@ -9682,9 +9689,6 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
           ctx.fillStyle='#122E43'; ctx.font='700 52px sans-serif'; ctx.textAlign='center';
           ctx.fillText('sehimci', W/2, headerH/2+18); ctx.textAlign='left';
         }
-        ctx.textAlign='right'; ctx.fillStyle='#5B7488'; ctx.font='26px sans-serif';
-        ctx.fillText(ts, W-pad, headerH/2+10); ctx.textAlign='left';
-
         ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,headerH,W,titleH);
         ctx.fillStyle=ACCENT; ctx.fillRect(0,headerH,8,titleH);
         ctx.fillStyle=BG_COLOR; ctx.font='700 38px sans-serif';
@@ -11284,10 +11288,6 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         // Ust bilgi bandi (rumuz yok, sadece logo + tarih)
         ctx.fillStyle = '#EBF3F8'; ctx.fillRect(0,0,W,78);
         if(logoImg){ var lh=40, lw=Math.round(logoImg.width*lh/logoImg.height); ctx.drawImage(logoImg, pad, 19, lw, lh); }
-        ctx.textAlign='right';
-        ctx.fillStyle = SUBTEXT; ctx.font = '15px sans-serif';
-        ctx.fillText(ts, W-pad, 44);
-        ctx.textAlign='left';
 
         var y = 78;
         // Baslik bandi
@@ -11852,9 +11852,6 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
           ctx.fillStyle='#122E43'; ctx.font='700 52px sans-serif'; ctx.textAlign='center';
           ctx.fillText('sehimci', W/2, headerH/2+18); ctx.textAlign='left';
         }
-        ctx.textAlign='right'; ctx.fillStyle='#5B7488'; ctx.font='26px sans-serif';
-        ctx.fillText(ts, W-pad, headerH/2+10); ctx.textAlign='left';
-
         ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,headerH,W,titleH);
         ctx.fillStyle=ACCENT; ctx.fillRect(0,headerH,8,titleH);
         ctx.fillStyle=BG_COLOR; ctx.font='700 38px sans-serif';
@@ -13349,6 +13346,14 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       return;
     }
     renderSahaDiffs(r.vals, computeSahaDiffs(r.vals));
+    setTimeout(function(){
+      var ayakKotKutu = document.getElementById('ayar-kot-kutu');
+      if(ayakKotKutu){
+        ayakKotKutu.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      } else {
+        sahaSonucList.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 50);
   });
 
   function loadSahaRecords(){
@@ -13921,13 +13926,13 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var baslikMetni = tekKayit
         ? '📐  Direk Ayak Ayar — ' + (kayitlar[0].hatGuzergah ? escapeHtml(kayitlar[0].hatGuzergah) : ('Direk No: ' + escapeHtml(kayitlar[0].direkNo || '—')))
         : '📐  Direk Ayak Ayar — Saha Ölçümleri Listesi';
-      var altMetni = tekKayit ? (kayitlar[0].date || '') : (kayitlar.length + ' kayıt');
+      var altMetni = tekKayit ? '' : (kayitlar.length + ' kayıt');
       ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, headerH, W, titleH);
       ctx.fillStyle = ACCENT; ctx.fillRect(0, headerH, 8, titleH);
       ctx.fillStyle = BG_COLOR; ctx.font = '700 42px sans-serif';
       ctx.fillText(baslikMetni, pad+20, headerH+56);
       ctx.fillStyle = '#5B7488'; ctx.font = '26px sans-serif';
-      ctx.fillText(altMetni, pad+20, headerH+88);
+      if(altMetni) ctx.fillText(altMetni, pad+20, headerH+88);
 
       // ── KAYITLAR ──
       var cy = headerH + titleH + 20;
@@ -13940,13 +13945,15 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         var govdeLabel = r.govde >= 0 ? ('+' + r.govde) : String(r.govde);
         var ayakStr = 'A:' + (r.a||'—') + '  B:' + (r.b||'—') + '  C:' + (r.c||'—') + '  D:' + (r.d||'—');
         var rBaslik = r.hatGuzergah ? escapeHtml(r.hatGuzergah) : ('Direk No: ' + escapeHtml(r.direkNo || '—'));
-        var rAltSatir = (r.hatGuzergah ? ('Direk No: ' + escapeHtml(r.direkNo || '—') + '   ·   ') : '') + r.tipi + ' ' + govdeLabel + '   ·   ' + (r.date || '');
+        var rAltSatir = (r.hatGuzergah ? ('Direk No: ' + escapeHtml(r.direkNo || '—') + '   ·   ') : '') + r.tipi + ' ' + govdeLabel;
         ctx.fillStyle = BG_COLOR; ctx.font = '700 30px sans-serif';
         ctx.fillText((i+1) + '.  ' + rBaslik, pad+24, cy+36);
         ctx.fillStyle = '#5B7488'; ctx.font = '22px sans-serif';
         ctx.fillText(rAltSatir, pad+24, cy+64);
         ctx.fillStyle = ACCENT; ctx.font = '21px monospace';
         ctx.fillText(ayakStr, pad+24, cy+90);
+        ctx.fillStyle = '#9AABB8'; ctx.font = '20px sans-serif';
+        ctx.fillText(r.date || '', pad+24, cy+114);
 
         // Sağ tarafta 2 sütun: mesafe farkları + ayak stub kotları
         var colX1 = pad + 420; // MESAFELER
@@ -20997,7 +21004,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       document.getElementById('nd-kat-yeni-ad').value='';
       ndKatYonetRender(); ndKatBarRender();
     });
-    document.getElementById('nd-detay-kapat').addEventListener('click', ndDetayKapat);
     // Görsel önizleme overlay kapat
     var gorselOverlay = document.getElementById('nd-gorsel-preview-overlay');
     document.getElementById('nd-gorsel-preview-kapat').addEventListener('click', function(){
@@ -21602,9 +21608,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
           ctx.fillStyle='#122E43'; ctx.font='700 52px sans-serif'; ctx.textAlign='center';
           ctx.fillText('sehimci', W/2, headerH/2+18); ctx.textAlign='left';
         }
-        ctx.textAlign='right'; ctx.fillStyle='#5B7488'; ctx.font='26px sans-serif';
-        ctx.fillText(ts, W-pad, headerH/2+10); ctx.textAlign='left';
-
         ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,headerH,W,titleH);
         ctx.fillStyle=ACCENT; ctx.fillRect(0,headerH,8,titleH);
         ctx.fillStyle=BG_COLOR; ctx.font='700 38px sans-serif';
@@ -22694,9 +22697,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
           ctx.fillStyle='#122E43'; ctx.font='700 52px sans-serif'; ctx.textAlign='center';
           ctx.fillText('sehimci', W/2, headerH/2+18); ctx.textAlign='left';
         }
-        ctx.textAlign='right'; ctx.fillStyle='#5B7488'; ctx.font='26px sans-serif';
-        ctx.fillText(ts, W-pad, headerH/2+10); ctx.textAlign='left';
-
         ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,headerH,W,titleH);
         ctx.fillStyle=ACCENT; ctx.fillRect(0,headerH,8,titleH);
         ctx.fillStyle=BG_COLOR; ctx.font='700 38px sans-serif';
@@ -22924,7 +22924,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         ctx.fillStyle=BG_COLOR; ctx.font='700 42px sans-serif';
         ctx.fillText('Not Defteri',pad+20,headerH+54);
         ctx.fillStyle='#5B7488'; ctx.font='28px sans-serif';
-        ctx.fillText(katAd+' \u2014 '+ts,pad+20,headerH+90);
+        ctx.fillText(katAd,pad+20,headerH+90);
 
         cy=headerH+baslikH+araH;
 
@@ -23783,19 +23783,30 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     box.appendChild(inner); overlay.appendChild(box);
     document.body.appendChild(overlay);
     inp.addEventListener('input', function(){
-      var q = inp.value.trim().toLowerCase();
+      var q = normalizeTr(inp.value.trim());
       if(!q){ res.hidden=true; res.innerHTML=''; return; }
-      var hits = Object.keys(moduleRegistry).map(function(k){ return moduleRegistry[k]; })
-        .filter(function(m){ return m.title && m.title.toLowerCase().indexOf(q)!==-1; }).slice(0,6);
+      // Modül başlıklarının yanı sıra Not Defteri notları, Direk Ağırlıkları/
+      // Topraklama/Gabari kayıtlı ölçümleri ve kml/kmz nokta notları da (içerik
+      // dahil) aranıyor — searchIndex+getDynamicSearchEntries() zaten bunun için
+      // vardı, sadece bu (asıl kullanılan) arama kutusuna hiç bağlanmamıştı.
+      var combinedIndex = searchIndex.concat(getDynamicSearchEntries());
+      var hits = combinedIndex.filter(function(item){
+        return normalizeTr(item.title).indexOf(q)!==-1 || normalizeTr(item.desc).indexOf(q)!==-1 || normalizeTr(item.path).indexOf(q)!==-1;
+      }).slice(0,20);
       if(!hits.length){ res.innerHTML='<div class="home-search-empty">Sonuç bulunamadı</div>'; res.hidden=false; return; }
-      res.innerHTML = hits.map(function(m){
-        return '<button class="home-search-result" type="button" data-sid="'+m.id+'"><span class="home-search-result-title">'+m.title+'</span></button>';
+      res.innerHTML = hits.map(function(item, idx){
+        return '<button class="home-search-result" type="button" data-idx="'+idx+'"><span class="home-search-result-title">'+escapeHtml(item.title)+'</span><span class="home-search-result-path">'+escapeHtml(item.path)+'</span></button>';
       }).join('');
       res.hidden = false;
-      res.querySelectorAll('[data-sid]').forEach(function(b){
+      res.querySelectorAll('[data-idx]').forEach(function(b){
         b.addEventListener('click', function(){
-          var m = moduleRegistry[b.getAttribute('data-sid')];
-          if(m){ closeSearchOverlay(); openModule(m); }
+          var item = hits[parseInt(b.getAttribute('data-idx'),10)];
+          if(!item) return;
+          if(item.dynamic){
+            window._sehimciSearchPending = { module: item.module, noteId: item.noteId, pointKey: item.pointKey, pointName: item.pointName, fileName: item.fileName };
+          }
+          closeSearchOverlay();
+          openModule(item.target, item.backTarget ? { backTarget:item.backTarget } : undefined);
         });
       });
     });
@@ -24110,15 +24121,25 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
   window.saveApiKey = saveApiKey;
 
   function showAiSettings(){
-    document.getElementById('ai-apikey-panel').style.display = 'flex';
+    document.getElementById('ai-apikey-overlay').style.display = 'flex';
     document.getElementById('ai-messages').style.display = 'none';
     document.getElementById('ai-quick-area').style.display = 'none';
     document.getElementById('ai-input-area').style.display = 'none';
   }
   window.showAiSettings = showAiSettings;
 
+  function closeAiApiKeyOverlay(){
+    document.getElementById('ai-apikey-overlay').style.display = 'none';
+    // Anahtar hâlâ girilmemişse gösterilecek sohbet ekranı yok — pop-up
+    // kapatılınca doğrudan bir önceki ekrana dönülür. Anahtar zaten
+    // kayıtlıysa (kullanıcı ayarlar ⚙ ile tekrar açtıysa) sohbet ekranı
+    // arkada zaten görünür durumda, sadece pop-up kapanır.
+    if(!getApiKey()) closeAiScreen();
+  }
+  window.closeAiApiKeyOverlay = closeAiApiKeyOverlay;
+
   function showAiChat(){
-    document.getElementById('ai-apikey-panel').style.display = 'none';
+    document.getElementById('ai-apikey-overlay').style.display = 'none';
     document.getElementById('ai-messages').style.display = 'flex';
     document.getElementById('ai-quick-area').style.display = 'flex';
     document.getElementById('ai-input-area').style.display = 'flex';
@@ -25931,6 +25952,31 @@ var TS_MEDYAN_HATA = [0.242, 0.228, 0.202, 0.185, 0.177, 0.169, 0.157, 0.120, 0.
       temelDerinligi = elleDegerler[1];
       ayakGenisligi = elleDegerler[2];
       yanakGenisligi = elleDegerler[3];
+
+      if(direkAyakAcikligi < 1 || direkAyakAcikligi > 40){
+        tsErrorBox.textContent = 'Direk Ayak Açıklığı 1 ile 40 metre arasında olmalıdır.';
+        tsErrorBox.hidden = false;
+        tsSonucWrap.hidden = true;
+        return;
+      }
+      if(temelDerinligi < 1 || temelDerinligi > 5){
+        tsErrorBox.textContent = 'Temel Derinliği 1 ile 5 metre arasında olmalıdır.';
+        tsErrorBox.hidden = false;
+        tsSonucWrap.hidden = true;
+        return;
+      }
+      if(ayakGenisligi < 0.3 || ayakGenisligi > 0.99){
+        tsErrorBox.textContent = 'Ayak Genişliği 0,3 ile 0,99 metre arasında olmalıdır.';
+        tsErrorBox.hidden = false;
+        tsSonucWrap.hidden = true;
+        return;
+      }
+      if(yanakGenisligi < 0.04 || yanakGenisligi > 0.22){
+        tsErrorBox.textContent = 'Dikme Köşebenti Yanak Genişliği 0,04 ile 0,22 metre arasında olmalıdır.';
+        tsErrorBox.hidden = false;
+        tsSonucWrap.hidden = true;
+        return;
+      }
     }
 
     var degerler = [];
@@ -25944,6 +25990,24 @@ var TS_MEDYAN_HATA = [0.242, 0.228, 0.202, 0.185, 0.177, 0.169, 0.157, 0.120, 0.
         return;
       }
       degerler.push(n);
+    }
+    if(degerler[0] < 5 || degerler[0] > 9999){
+      tsErrorBox.textContent = 'Toprak Üst Katman Direnci 5 ile 9999 Ω arasında olmalıdır.';
+      tsErrorBox.hidden = false;
+      tsSonucWrap.hidden = true;
+      return;
+    }
+    if(degerler[1] < 5 || degerler[1] > 9999){
+      tsErrorBox.textContent = 'Toprak Alt Katman Direnci 5 ile 9999 Ω arasında olmalıdır.';
+      tsErrorBox.hidden = false;
+      tsSonucWrap.hidden = true;
+      return;
+    }
+    if(degerler[2] < 0.05 || degerler[2] > 49){
+      tsErrorBox.textContent = 'Toprak Üst Katman Kalınlığı 0,05 ile 49 metre arasında olmalıdır.';
+      tsErrorBox.hidden = false;
+      tsSonucWrap.hidden = true;
+      return;
     }
 
     if(tsMod === 'oto'){
@@ -26334,7 +26398,7 @@ function toKartOlustur(kayit){
         ctx.fillText(kayit.isim || '—', pad+16, y+82);
         ctx.fillStyle = MUTED; ctx.font = '20px sans-serif';
         var zeminEtiket = kayit.zemin ? (ZEMIN_ETIKETI[kayit.zemin]||'') : '';
-        ctx.fillText('Direk: ' + (kayit.tipi||'') + ' ' + (kayit.govde||'') + '   D1: ' + (kayit.d1 ? kayit.d1.toFixed(2) : '—') + ' m' + (zeminEtiket ? '   ' + zeminEtiket : '') + '   ' + ts, pad+16, y+118);
+        ctx.fillText('Direk: ' + (kayit.tipi||'') + ' ' + (kayit.govde||'') + '   D1: ' + (kayit.d1 ? kayit.d1.toFixed(2) : '—') + ' m' + (zeminEtiket ? '   ' + zeminEtiket : ''), pad+16, y+118);
         y += 130;
 
         // ── 4 SONUÇ KUTUSU ──
