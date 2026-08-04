@@ -114,7 +114,6 @@ button,input{font-family:inherit;}
   right:0;
   margin:0 auto;
   max-width:480px;
-  width:100%;
   z-index:100;
   background:var(--bg);
   padding:6px 0 8px;
@@ -209,7 +208,7 @@ button,input{font-family:inherit;}
   text-align:center;
 }
 
-.module-bar{display:none; align-items:center; gap:12px; position:fixed; left:0; right:0; margin:0 auto; max-width:480px; width:100%; top:120px; z-index:90; background:var(--bg); padding:10px 16px 10px; border-bottom:1.5px solid var(--border); margin-bottom:0;}
+.module-bar{display:none; align-items:center; gap:12px; position:fixed; left:0; right:0; margin:0 auto; max-width:480px; top:120px; z-index:90; background:var(--bg); padding:10px 16px 10px; border-bottom:1.5px solid var(--border); margin-bottom:0;}
 .back-btn{
   width:36px; height:36px;
   display:flex; align-items:center; justify-content:center;
@@ -712,7 +711,7 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 .picker-overlay{
   position:fixed; inset:0; z-index:250;
   display:flex; align-items:flex-end; justify-content:center;
-  padding-bottom: calc(62px + var(--nav-extra, 0px) + var(--kb-offset, 0px)); /* bottom nav yüksekliği + dinamik nav-çubuğu boşluğu + klavye */
+  padding-bottom: calc(70px + var(--nav-extra, 0px) + var(--kb-offset, 0px)); /* bottom nav yüksekliği+yüzer boşluk + dinamik nav-çubuğu boşluğu + klavye */
   transition: padding-bottom 150ms ease-out;
 }
 #harita-not-overlay,
@@ -740,7 +739,7 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 .picker-sheet{
   position:relative;
   width:100%; max-width:480px;
-  max-height: calc(72vh - 62px - var(--nav-extra, 0px));
+  max-height: calc(72vh - 70px - var(--nav-extra, 0px));
   background:var(--surface);
   border-radius:20px 20px 0 0;
   border:1px solid var(--border);
@@ -1411,26 +1410,28 @@ body.dark footer p { color: var(--text-muted) !important; }
 /* ════ BOTTOM NAV BAR ════ */
 #bottom-nav {
   position: fixed;
-  bottom: var(--nav-extra, 0px); /* dinamik: telefonun sistem nav çubuğu açıkken yukarı kayar, kapalıyken en alta iner */
+  bottom: calc(var(--nav-extra, 0px) + 8px); /* dinamik nav-çubuğu boşluğu + sabit 8px yüzer boşluk */
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
+  width: calc(100% - 20px);
+  max-width: 460px;
   height: 62px;
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(200,216,236,0.6);
+  border: 1.5px solid rgba(200,216,236,0.7);
+  border-radius: 24px;
+  box-shadow: 0 10px 28px -8px rgba(10,42,74,0.22), 0 2px 8px rgba(10,42,74,0.08);
   display: flex;
   align-items: center;
   justify-content: space-around;
   z-index: 200;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
   box-sizing: border-box;
 }
 body.dark #bottom-nav {
   background: rgba(14,22,33,0.94);
-  border-top-color: rgba(42,61,85,0.8);
+  border-color: rgba(77,184,200,0.28);
+  box-shadow: 0 10px 28px -8px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.25);
 }
 body.dark #module-tab-bar {
   background: rgba(14,22,33,0.94) !important;
@@ -1572,8 +1573,8 @@ body.dark .bnav-badge { border-color: #0E1621; }
 body.dark .toast { background: #1A2535; }
 
 /* ════ BOTTOM NAV için sayfa alt boşluğu ════ */
-.home { padding-bottom: calc(80px + var(--nav-extra, 0px)) !important; }
-.module { padding-bottom: calc(128px + var(--nav-extra, 0px)) !important; }
+.home { padding-bottom: calc(88px + var(--nav-extra, 0px)) !important; }
+.module { padding-bottom: calc(136px + var(--nav-extra, 0px)) !important; }
 
 
 
@@ -1704,7 +1705,7 @@ body.dark [style*="background:#1A4A6E"] {
 
 #fav-tray {
   position: absolute;
-  bottom: calc(62px + var(--nav-extra, 0px)); /* alt bar yüksekliği (62px) + dinamik nav-çubuğu boşluğu */
+  bottom: calc(70px + var(--nav-extra, 0px)); /* alt bar yüksekliği+yüzer boşluk (70px) + dinamik nav-çubuğu boşluğu */
   left: 50%;
   transform: translateX(-50%) translateY(100%);
   width: 100%;
@@ -2209,7 +2210,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 </div>
 
 <!-- Modül Sekme Çubuğu: geri / modül adı / favori — sadece bir modül açıkken görünür -->
-<nav id="module-tab-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:46px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(200,216,236,0.6);align-items:center;justify-content:space-between;z-index:199;box-sizing:border-box;padding:0 14px;bottom:calc(62px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));">
+<nav id="module-tab-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:46px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(200,216,236,0.6);align-items:center;justify-content:space-between;z-index:199;box-sizing:border-box;padding:0 14px;bottom:calc(70px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));">
   <button type="button" id="mtb-back-btn" aria-label="Geri" onclick="document.getElementById('back-btn').click()" style="width:34px;height:34px;border-radius:50%;background:rgba(46,107,176,0.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;">
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#2E6BB0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
@@ -2219,7 +2220,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 
 <!-- Nav çubuğu açıkken bottom-nav'ın altındaki boşluğu düz uygulama rengiyle kaplar; nav
      çubuğu kapalıyken (--nav-extra:0px) yüksekliği 0'a iner, hiç görünmez. -->
-<div id="bottom-nav-alt-doldur" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:var(--nav-extra, 0px);background:var(--bg);z-index:200;pointer-events:none;"></div>
+<div id="bottom-nav-alt-doldur" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:calc(var(--nav-extra, 0px) + 8px);background:var(--bg);z-index:200;pointer-events:none;"></div>
 
 <!-- Bottom Navigation Bar -->
 <nav id="bottom-nav">
@@ -2307,7 +2308,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 <!-- Ayarlar / Profil Bottom Sheet -->
 <div id="settings-panel" class="picker-overlay" hidden style="z-index:500;align-items:flex-start;justify-content:flex-end;padding-bottom:0;">
   <div class="picker-backdrop" id="settings-backdrop" style="background:rgba(0,0,0,0.28);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);"></div>
-  <div id="settings-sheet" class="picker-sheet" style="width:52%;max-width:240px;min-width:190px;height:calc(100% - 62px - var(--nav-extra, 0px));max-height:calc(100% - 62px - var(--nav-extra, 0px));border-radius:16px 0 0 16px;border-right:none;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow-y:auto;padding-top:calc(20px + max(env(safe-area-inset-top,0px), 28px));padding-bottom:20px;position:relative;">
+  <div id="settings-sheet" class="picker-sheet" style="width:52%;max-width:240px;min-width:190px;height:calc(100% - 70px - var(--nav-extra, 0px));max-height:calc(100% - 70px - var(--nav-extra, 0px));border-radius:16px 0 0 16px;border-right:none;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow-y:auto;padding-top:calc(20px + max(env(safe-area-inset-top,0px), 28px));padding-bottom:20px;position:relative;">
     <!-- Sürükleme tutamacı — sol kenarda dikey çizgi -->
     <div id="settings-drag-handle" style="position:absolute;left:0;top:0;bottom:0;width:28px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;z-index:1;">
       <div style="width:4px;height:48px;border-radius:2px;background:var(--border,#C8D8EC);opacity:0.7;"></div>
@@ -2540,7 +2541,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 
 <div class="app">
 
-  <header id="home-bar" style="background:var(--bg);padding:0;margin:0;">
+  <header id="home-bar" style="background:var(--bg);padding:0;">
     <div style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:28px 20px 4px;overflow:hidden;box-sizing:border-box;">
       <svg version="1.0" xmlns="http://www.w3.org/2000/svg" style="width:96px;height:auto;flex-shrink:0;" viewBox="0 0 1414.877550 512.433301"  preserveAspectRatio="xMidYMid meet">  <g transform="translate(-103.000000,612.942871) scale(0.100000,-0.100000)" fill="#122E43" stroke="none"> <path d="M13593 6119 c-6 -6 -37 -98 -69 -205 -32 -107 -61 -194 -65 -194 -13 0 -607 -266 -623 -279 -23 -19 -20 -52 5 -58 32 -9 22 -57 -13 -61 -31 -4 -46 -30 -20 -38 58 -19 59 -21 20 -37 -21 -9 -38 -19 -38 -22 0 -3 14 -11 30 -16 37 -13 38 -26 5 -35 -27 -7 -34 -32 -10 -39 51 -16 51 -16 15 -33 -41 -20 -41 -34 0 -45 45 -11 39 -40 -31 -143 -124 -182 -271 -340 -452 -486 -150 -120 -288 -207 -502 -313 -277 -137 -520 -219 -845 -285 -243 -49 -373 -62 -700 -69 l-305 -6 -3 -27 c-3 -22 2 -29 23 -34 15 -4 156 -4 313 -1 367 7 569 33 883 112 705 178 1308 566 1633 1049 32 47 64 86 71 86 7 0 19 -8 26 -17 38 -45 214 -138 312 -164 26 -7 47 -19 47 -26 0 -13 -18 -94 -189 -848 -62 -271 -86 -394 -79 -402 6 -7 21 -13 33 -13 18 0 25 8 34 43 11 37 39 66 263 269 l251 226 111 -101 c61 -56 175 -160 253 -230 116 -105 143 -134 150 -165 9 -39 34 -51 62 -33 16 10 25 -33 -150 736 -44 193 -89 388 -100 434 -11 47 -16 87 -12 91 5 3 35 14 68 24 89 27 199 84 267 139 l60 49 15 -24 c37 -57 214 -216 291 -262 136 -81 299 -133 468 -150 63 -6 96 12 78 41 -8 13 -34 21 -100 31 -276 39 -472 143 -652 346 -57 64 -67 107 -27 114 11 2 24 8 29 13 13 11 -12 39 -35 39 -29 0 -22 17 12 29 36 13 34 35 -4 39 -35 4 -35 30 1 34 34 4 36 30 3 38 -30 7 -40 30 -13 30 11 0 25 7 32 15 11 13 8 17 -19 28 -37 14 -42 46 -11 77 15 15 18 25 11 38 -5 10 -72 45 -148 79 -274 122 -488 217 -491 219 -2 1 -29 88 -61 194 -61 199 -77 230 -108 199z m83 -361 l6 -28 -70 0 -70 0 30 103 c16 56 32 109 35 117 5 13 52 -119 69 -192z m28 -125 c3 -16 8 -63 12 -105 l6 -78 -112 0 c-111 0 -112 0 -107 23 3 12 9 56 13 97 3 41 9 78 11 83 2 4 42 7 88 7 83 0 83 0 89 -27z m-258 -65 c-13 -132 13 -118 -225 -118 l-206 0 210 94 c116 52 214 95 219 95 5 1 6 -31 2 -71z m510 -4 c93 -42 187 -84 209 -94 l40 -19 -206 0 -206 -1 -7 73 c-4 39 -10 82 -13 95 -3 12 -1 22 4 22 6 0 86 -34 179 -76z m-536 -206 c0 -42 -40 -272 -73 -423 l-32 -150 -30 3 c-43 5 -171 58 -230 95 -128 81 -171 154 -104 173 41 12 41 25 1 44 -33 16 -34 30 -2 30 10 0 23 7 30 15 10 13 6 18 -26 31 l-39 17 32 11 c48 17 50 24 7 42 l-39 17 33 14 c37 15 38 35 1 43 -17 4 -25 14 -27 33 l-3 27 250 0 251 0 0 -22z m321 -28 c4 -25 9 -70 13 -100 l7 -56 -72 -21 -71 -21 -74 20 c-85 23 -81 14 -62 146 l11 83 121 -3 121 -3 6 -45z m559 20 c0 -26 -5 -31 -30 -36 -16 -4 -30 -10 -30 -13 0 -14 24 -31 43 -31 26 0 16 -23 -13 -30 -35 -8 -35 -26 0 -38 38 -14 38 -28 0 -35 -16 -4 -30 -11 -30 -17 0 -6 14 -16 30 -21 17 -6 30 -14 30 -18 0 -4 -13 -12 -30 -18 -39 -14 -38 -32 1 -40 28 -5 30 -9 27 -42 -3 -29 -12 -43 -60 -81 -31 -25 -89 -62 -130 -82 -79 -38 -184 -75 -193 -66 -9 8 -74 324 -90 433 -8 55 -17 115 -20 133 l-6 32 251 0 250 0 0 -30z m-687 -280 c17 0 57 7 89 16 35 10 62 13 67 8 5 -5 16 -47 25 -94 l16 -85 -27 -20 c-15 -11 -60 -48 -100 -82 l-71 -63 -96 82 c-53 45 -96 87 -96 94 0 14 28 153 35 171 3 8 21 6 65 -8 34 -10 76 -19 93 -19z m-122 -306 c12 -15 9 -16 -41 -9 -30 4 -58 10 -61 14 -3 3 -2 21 3 39 l9 33 38 -30 c21 -17 44 -38 52 -47z m345 41 c3 -20 5 -38 2 -40 -2 -2 -31 -7 -64 -11 l-59 -6 50 45 c28 26 53 46 57 47 4 0 10 -16 14 -35z m-348 -90 c34 -4 62 -10 62 -13 -1 -11 -212 -183 -217 -178 -3 2 5 50 18 106 22 99 23 101 48 96 14 -3 54 -8 89 -11z m371 -22 c22 -83 39 -168 35 -172 -2 -2 -12 2 -21 11 -10 8 -61 50 -113 94 l-94 79 79 11 c44 6 85 12 92 13 7 0 17 -16 22 -36z m-183 -85 c34 -29 103 -88 153 -131 51 -43 91 -83 89 -88 -2 -4 -70 -71 -153 -147 l-150 -140 -35 29 c-19 15 -91 81 -159 146 l-124 119 140 116 c77 64 145 124 153 132 7 9 15 16 19 16 3 0 34 -24 67 -52z m-177 -495 l64 -59 -143 -129 c-239 -217 -274 -247 -277 -238 -3 8 118 555 133 606 6 18 6 18 223 -180z m519 -119 c40 -175 71 -318 70 -319 -3 -3 -146 125 -359 318 l-64 59 135 129 c74 70 137 129 140 129 3 0 38 -142 78 -316z"/> <path d="M5230 2595 l0 -1555 120 0 120 0 0 613 c0 663 4 737 51 882 38 120 89 205 175 291 115 117 232 160 410 152 83 -4 109 -9 159 -33 122 -58 205 -176 257 -360 22 -79 23 -88 26 -812 l3 -733 125 0 125 0 -4 758 -3 757 -27 110 c-89 369 -339 569 -687 552 -58 -3 -132 -13 -165 -22 -145 -39 -305 -150 -395 -274 l-45 -62 -3 646 -2 645 -120 0 -120 0 0 -1555z"/> <path d="M7250 4048 c-49 -17 -107 -79 -121 -130 -6 -24 -9 -65 -5 -92 18 -153 198 -225 325 -129 100 76 92 252 -15 326 -46 32 -128 43 -184 25z"/> <path d="M1675 3210 c-91 -15 -162 -37 -255 -82 -105 -51 -222 -161 -263 -250 -72 -154 -74 -322 -5 -468 12 -25 53 -77 92 -115 107 -106 185 -140 671 -290 251 -78 375 -150 428 -250 18 -33 22 -57 22 -140 0 -89 -3 -106 -27 -150 -54 -104 -169 -180 -318 -211 -94 -20 -315 -14 -405 11 -136 38 -274 117 -388 224 l-48 45 -74 -74 c-41 -41 -75 -80 -75 -86 0 -19 148 -153 225 -204 85 -55 192 -102 303 -132 67 -19 104 -22 287 -22 186 0 219 2 290 22 134 37 239 95 325 182 120 120 170 238 170 405 0 166 -50 286 -162 390 -114 106 -189 137 -713 300 -179 56 -271 101 -330 160 -99 98 -96 271 6 374 87 88 197 130 364 138 217 11 402 -51 568 -189 27 -22 52 -37 56 -32 4 5 35 46 69 91 l61 81 -44 41 c-103 95 -255 174 -407 212 -95 24 -325 34 -423 19z"/> <path d="M3733 3206 c-211 -40 -372 -130 -515 -285 -340 -372 -382 -1039 -91 -1478 90 -137 266 -289 407 -353 144 -66 346 -96 522 -79 205 19 355 77 499 193 75 60 185 181 185 204 0 5 -39 42 -87 81 l-87 70 -85 -88 c-97 -99 -183 -155 -306 -198 -73 -25 -93 -27 -225 -28 -133 0 -152 2 -233 29 -88 29 -178 80 -250 141 -132 113 -239 338 -263 553 l-7 62 812 0 811 0 2 38 c16 388 -123 759 -356 953 -86 71 -215 140 -316 169 -97 27 -313 36 -417 16z m312 -231 c232 -49 418 -241 485 -500 11 -44 23 -115 27 -157 l6 -76 -664 3 c-365 1 -672 3 -683 4 -16 1 -18 7 -11 58 18 145 101 345 184 445 92 112 224 195 351 222 86 19 218 19 305 1z"/> <path d="M8695 3205 c-177 -39 -329 -139 -435 -284 l-45 -62 -7 53 c-3 29 -6 97 -7 151 l-1 97 -115 0 -115 0 0 -1060 0 -1060 125 0 124 0 3 693 3 692 28 88 c87 279 246 434 480 468 120 17 230 -6 325 -69 104 -68 175 -196 219 -397 13 -59 17 -183 20 -772 l4 -703 119 0 119 0 3 688 c4 665 4 689 25 763 53 188 152 338 275 415 137 86 324 103 486 42 114 -42 218 -177 262 -340 36 -135 40 -226 40 -906 l0 -663 123 3 122 3 3 635 c3 669 -4 849 -38 989 -91 373 -346 567 -720 548 -122 -6 -223 -35 -327 -92 -87 -49 -225 -186 -277 -277 -21 -38 -41 -68 -45 -68 -3 1 -26 42 -51 93 -85 176 -234 293 -422 331 -92 19 -220 19 -303 1z"/> <path d="M12125 3211 c-467 -76 -784 -420 -856 -930 -16 -112 -6 -340 20 -451 90 -394 369 -701 719 -790 295 -74 595 -29 826 125 86 58 257 238 256 271 0 5 -41 39 -90 77 l-89 67 -108 -109 c-97 -98 -117 -113 -203 -154 -52 -25 -120 -51 -150 -58 -70 -18 -268 -17 -340 0 -79 19 -205 81 -276 134 -216 164 -337 492 -304 822 40 391 245 665 562 751 96 26 271 24 373 -5 145 -41 277 -127 375 -245 25 -30 48 -54 53 -53 16 4 177 151 177 162 0 21 -113 144 -185 200 -155 123 -339 184 -570 190 -77 2 -162 0 -190 -4z"/> <path d="M7200 2100 l0 -1061 123 3 122 3 3 1058 2 1057 -125 0 -125 0 0 -1060z"/> <path d="M13510 2100 l0 -1060 125 0 125 0 0 1060 0 1060 -125 0 -125 0 0 -1060z"/> </g> </svg>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-left:10px;padding-top:6px;min-width:0;overflow:hidden;">
@@ -3680,7 +3681,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       <button type="button" class="field-input picker-btn" id="temel-govde-btn"></button>
     </div>
 
-    <button class="btn-primary" id="temel-1ayak-btn" type="button" style="margin-top:14px; width:100%;" hidden>1 Ayak İçin Hesapla</button>
+    <button class="btn-primary" id="temel-1ayak-btn" type="button" style="margin-top:14px; width:100%;" hidden>Hesapla</button>
 
     <div class="error-box" id="temel-error-box" role="alert" aria-live="assertive" hidden></div>
 
@@ -3694,10 +3695,8 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       <div id="temel-donati-list" style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:4px 12px;"></div>
     </div>
 
-    <button class="btn-primary" id="temel-4ayak-btn" type="button" style="margin-top:18px; width:100%;" hidden>1 Direk İçin Hesapla</button>
-
     <div id="temel-4ayak-wrap" hidden style="margin-top:18px;">
-      <p class="it-section-title">4 Ayak Toplamı (1 Direk İçin)</p>
+      <p class="it-section-title">Çap Bazında Toplam Donatı (1 Ayak / 4 Ayak — 1 Direk)</p>
       <div id="temel-4ayak-details"></div>
       <button class="btn-secondary" id="temel-4ayak-save-btn" type="button" style="margin-top:14px; width:100%;">Kaydet ve Hesaplamaya Devam Et</button>
     </div>
@@ -4083,7 +4082,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 
     <div id="harita-map-wrap" style="width:100%; height:369px; border-radius:12px; overflow:hidden; border:1px solid var(--border); position:relative; z-index:0; background:var(--surface); margin:0 12px 10px; width:calc(100% - 24px);">
       <div id="harita-map" style="width:100%; height:100%;"></div>
-      <button type="button" id="harita-katman-btn" style="position:absolute;top:8px;right:8px;z-index:410;background:#122E43;color:#fff;border:none;border-radius:8px;padding:6px 11px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.25);">🗺️ Harita</button>
+      <button type="button" id="harita-katman-btn" style="position:absolute;top:8px;left:46px;z-index:410;background:#122E43;color:#fff;border:none;border-radius:8px;padding:6px 11px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.25);">🗺️ Harita</button>
       <div style="position:absolute;bottom:18px;left:4px;z-index:400;pointer-events:none;opacity:1.0;"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:auto;" viewBox="0 0 1414.877550 512.433301"  preserveAspectRatio="xMidYMid meet">  <g transform="translate(-103.000000,612.942871) scale(0.100000,-0.100000)" fill="#122E43" stroke="none"> <path d="M13593 6119 c-6 -6 -37 -98 -69 -205 -32 -107 -61 -194 -65 -194 -13 0 -607 -266 -623 -279 -23 -19 -20 -52 5 -58 32 -9 22 -57 -13 -61 -31 -4 -46 -30 -20 -38 58 -19 59 -21 20 -37 -21 -9 -38 -19 -38 -22 0 -3 14 -11 30 -16 37 -13 38 -26 5 -35 -27 -7 -34 -32 -10 -39 51 -16 51 -16 15 -33 -41 -20 -41 -34 0 -45 45 -11 39 -40 -31 -143 -124 -182 -271 -340 -452 -486 -150 -120 -288 -207 -502 -313 -277 -137 -520 -219 -845 -285 -243 -49 -373 -62 -700 -69 l-305 -6 -3 -27 c-3 -22 2 -29 23 -34 15 -4 156 -4 313 -1 367 7 569 33 883 112 705 178 1308 566 1633 1049 32 47 64 86 71 86 7 0 19 -8 26 -17 38 -45 214 -138 312 -164 26 -7 47 -19 47 -26 0 -13 -18 -94 -189 -848 -62 -271 -86 -394 -79 -402 6 -7 21 -13 33 -13 18 0 25 8 34 43 11 37 39 66 263 269 l251 226 111 -101 c61 -56 175 -160 253 -230 116 -105 143 -134 150 -165 9 -39 34 -51 62 -33 16 10 25 -33 -150 736 -44 193 -89 388 -100 434 -11 47 -16 87 -12 91 5 3 35 14 68 24 89 27 199 84 267 139 l60 49 15 -24 c37 -57 214 -216 291 -262 136 -81 299 -133 468 -150 63 -6 96 12 78 41 -8 13 -34 21 -100 31 -276 39 -472 143 -652 346 -57 64 -67 107 -27 114 11 2 24 8 29 13 13 11 -12 39 -35 39 -29 0 -22 17 12 29 36 13 34 35 -4 39 -35 4 -35 30 1 34 34 4 36 30 3 38 -30 7 -40 30 -13 30 11 0 25 7 32 15 11 13 8 17 -19 28 -37 14 -42 46 -11 77 15 15 18 25 11 38 -5 10 -72 45 -148 79 -274 122 -488 217 -491 219 -2 1 -29 88 -61 194 -61 199 -77 230 -108 199z m83 -361 l6 -28 -70 0 -70 0 30 103 c16 56 32 109 35 117 5 13 52 -119 69 -192z m28 -125 c3 -16 8 -63 12 -105 l6 -78 -112 0 c-111 0 -112 0 -107 23 3 12 9 56 13 97 3 41 9 78 11 83 2 4 42 7 88 7 83 0 83 0 89 -27z m-258 -65 c-13 -132 13 -118 -225 -118 l-206 0 210 94 c116 52 214 95 219 95 5 1 6 -31 2 -71z m510 -4 c93 -42 187 -84 209 -94 l40 -19 -206 0 -206 -1 -7 73 c-4 39 -10 82 -13 95 -3 12 -1 22 4 22 6 0 86 -34 179 -76z m-536 -206 c0 -42 -40 -272 -73 -423 l-32 -150 -30 3 c-43 5 -171 58 -230 95 -128 81 -171 154 -104 173 41 12 41 25 1 44 -33 16 -34 30 -2 30 10 0 23 7 30 15 10 13 6 18 -26 31 l-39 17 32 11 c48 17 50 24 7 42 l-39 17 33 14 c37 15 38 35 1 43 -17 4 -25 14 -27 33 l-3 27 250 0 251 0 0 -22z m321 -28 c4 -25 9 -70 13 -100 l7 -56 -72 -21 -71 -21 -74 20 c-85 23 -81 14 -62 146 l11 83 121 -3 121 -3 6 -45z m559 20 c0 -26 -5 -31 -30 -36 -16 -4 -30 -10 -30 -13 0 -14 24 -31 43 -31 26 0 16 -23 -13 -30 -35 -8 -35 -26 0 -38 38 -14 38 -28 0 -35 -16 -4 -30 -11 -30 -17 0 -6 14 -16 30 -21 17 -6 30 -14 30 -18 0 -4 -13 -12 -30 -18 -39 -14 -38 -32 1 -40 28 -5 30 -9 27 -42 -3 -29 -12 -43 -60 -81 -31 -25 -89 -62 -130 -82 -79 -38 -184 -75 -193 -66 -9 8 -74 324 -90 433 -8 55 -17 115 -20 133 l-6 32 251 0 250 0 0 -30z m-687 -280 c17 0 57 7 89 16 35 10 62 13 67 8 5 -5 16 -47 25 -94 l16 -85 -27 -20 c-15 -11 -60 -48 -100 -82 l-71 -63 -96 82 c-53 45 -96 87 -96 94 0 14 28 153 35 171 3 8 21 6 65 -8 34 -10 76 -19 93 -19z m-122 -306 c12 -15 9 -16 -41 -9 -30 4 -58 10 -61 14 -3 3 -2 21 3 39 l9 33 38 -30 c21 -17 44 -38 52 -47z m345 41 c3 -20 5 -38 2 -40 -2 -2 -31 -7 -64 -11 l-59 -6 50 45 c28 26 53 46 57 47 4 0 10 -16 14 -35z m-348 -90 c34 -4 62 -10 62 -13 -1 -11 -212 -183 -217 -178 -3 2 5 50 18 106 22 99 23 101 48 96 14 -3 54 -8 89 -11z m371 -22 c22 -83 39 -168 35 -172 -2 -2 -12 2 -21 11 -10 8 -61 50 -113 94 l-94 79 79 11 c44 6 85 12 92 13 7 0 17 -16 22 -36z m-183 -85 c34 -29 103 -88 153 -131 51 -43 91 -83 89 -88 -2 -4 -70 -71 -153 -147 l-150 -140 -35 29 c-19 15 -91 81 -159 146 l-124 119 140 116 c77 64 145 124 153 132 7 9 15 16 19 16 3 0 34 -24 67 -52z m-177 -495 l64 -59 -143 -129 c-239 -217 -274 -247 -277 -238 -3 8 118 555 133 606 6 18 6 18 223 -180z m519 -119 c40 -175 71 -318 70 -319 -3 -3 -146 125 -359 318 l-64 59 135 129 c74 70 137 129 140 129 3 0 38 -142 78 -316z"/> <path d="M5230 2595 l0 -1555 120 0 120 0 0 613 c0 663 4 737 51 882 38 120 89 205 175 291 115 117 232 160 410 152 83 -4 109 -9 159 -33 122 -58 205 -176 257 -360 22 -79 23 -88 26 -812 l3 -733 125 0 125 0 -4 758 -3 757 -27 110 c-89 369 -339 569 -687 552 -58 -3 -132 -13 -165 -22 -145 -39 -305 -150 -395 -274 l-45 -62 -3 646 -2 645 -120 0 -120 0 0 -1555z"/> <path d="M7250 4048 c-49 -17 -107 -79 -121 -130 -6 -24 -9 -65 -5 -92 18 -153 198 -225 325 -129 100 76 92 252 -15 326 -46 32 -128 43 -184 25z"/> <path d="M1675 3210 c-91 -15 -162 -37 -255 -82 -105 -51 -222 -161 -263 -250 -72 -154 -74 -322 -5 -468 12 -25 53 -77 92 -115 107 -106 185 -140 671 -290 251 -78 375 -150 428 -250 18 -33 22 -57 22 -140 0 -89 -3 -106 -27 -150 -54 -104 -169 -180 -318 -211 -94 -20 -315 -14 -405 11 -136 38 -274 117 -388 224 l-48 45 -74 -74 c-41 -41 -75 -80 -75 -86 0 -19 148 -153 225 -204 85 -55 192 -102 303 -132 67 -19 104 -22 287 -22 186 0 219 2 290 22 134 37 239 95 325 182 120 120 170 238 170 405 0 166 -50 286 -162 390 -114 106 -189 137 -713 300 -179 56 -271 101 -330 160 -99 98 -96 271 6 374 87 88 197 130 364 138 217 11 402 -51 568 -189 27 -22 52 -37 56 -32 4 5 35 46 69 91 l61 81 -44 41 c-103 95 -255 174 -407 212 -95 24 -325 34 -423 19z"/> <path d="M3733 3206 c-211 -40 -372 -130 -515 -285 -340 -372 -382 -1039 -91 -1478 90 -137 266 -289 407 -353 144 -66 346 -96 522 -79 205 19 355 77 499 193 75 60 185 181 185 204 0 5 -39 42 -87 81 l-87 70 -85 -88 c-97 -99 -183 -155 -306 -198 -73 -25 -93 -27 -225 -28 -133 0 -152 2 -233 29 -88 29 -178 80 -250 141 -132 113 -239 338 -263 553 l-7 62 812 0 811 0 2 38 c16 388 -123 759 -356 953 -86 71 -215 140 -316 169 -97 27 -313 36 -417 16z m312 -231 c232 -49 418 -241 485 -500 11 -44 23 -115 27 -157 l6 -76 -664 3 c-365 1 -672 3 -683 4 -16 1 -18 7 -11 58 18 145 101 345 184 445 92 112 224 195 351 222 86 19 218 19 305 1z"/> <path d="M8695 3205 c-177 -39 -329 -139 -435 -284 l-45 -62 -7 53 c-3 29 -6 97 -7 151 l-1 97 -115 0 -115 0 0 -1060 0 -1060 125 0 124 0 3 693 3 692 28 88 c87 279 246 434 480 468 120 17 230 -6 325 -69 104 -68 175 -196 219 -397 13 -59 17 -183 20 -772 l4 -703 119 0 119 0 3 688 c4 665 4 689 25 763 53 188 152 338 275 415 137 86 324 103 486 42 114 -42 218 -177 262 -340 36 -135 40 -226 40 -906 l0 -663 123 3 122 3 3 635 c3 669 -4 849 -38 989 -91 373 -346 567 -720 548 -122 -6 -223 -35 -327 -92 -87 -49 -225 -186 -277 -277 -21 -38 -41 -68 -45 -68 -3 1 -26 42 -51 93 -85 176 -234 293 -422 331 -92 19 -220 19 -303 1z"/> <path d="M12125 3211 c-467 -76 -784 -420 -856 -930 -16 -112 -6 -340 20 -451 90 -394 369 -701 719 -790 295 -74 595 -29 826 125 86 58 257 238 256 271 0 5 -41 39 -90 77 l-89 67 -108 -109 c-97 -98 -117 -113 -203 -154 -52 -25 -120 -51 -150 -58 -70 -18 -268 -17 -340 0 -79 19 -205 81 -276 134 -216 164 -337 492 -304 822 40 391 245 665 562 751 96 26 271 24 373 -5 145 -41 277 -127 375 -245 25 -30 48 -54 53 -53 16 4 177 151 177 162 0 21 -113 144 -185 200 -155 123 -339 184 -570 190 -77 2 -162 0 -190 -4z"/> <path d="M7200 2100 l0 -1061 123 3 122 3 3 1058 2 1057 -125 0 -125 0 0 -1060z"/> <path d="M13510 2100 l0 -1060 125 0 125 0 0 1060 0 1060 -125 0 -125 0 0 -1060z"/> </g> </svg></div>
       <div id="harita-map-placeholder" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; pointer-events:none;">
         <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="var(--border)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 C14 4 6 12 6 22 C6 34 24 44 24 44 C24 44 42 34 42 22 C42 12 34 4 24 4Z"/><circle cx="24" cy="22" r="6"/></svg>
@@ -4314,7 +4313,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     </div>
 
     <!-- Not Detay Overlay -->
-    <div id="nd-detay-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:calc(62px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));z-index:150;background:var(--bg);overflow-y:auto;">
+    <div id="nd-detay-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:calc(70px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));z-index:150;background:var(--bg);overflow-y:auto;">
       <div style="max-width:480px;margin:0 auto;padding:calc(16px + max(env(safe-area-inset-top,0px), 28px)) 20px 40px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
           <div id="nd-detay-kat-badge" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;color:#fff;"></div>
@@ -5370,7 +5369,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         </div>
       </div>
       <p style="margin:-10px 0 3px;font-size:10.5px;color:var(--text-muted);">D2: Gerilim kazığı mesafesi</p>
-      <p style="margin:0 0 16px;font-size:11.5px;font-weight:600;color:#1A3E6E;">Adım sayıları ortalama bir adım ≈ 75 cm kabul edilerek hesaplanmıştır.</p>
+      <p id="to-adim-notu" hidden style="margin:0 0 16px;font-size:11.5px;color:#1A3E6E;">Adım sayıları ortalama bir adım ≈ 75 cm kabul edilerek hesaplanmıştır.</p>
 
       <div style="text-align:center;margin-bottom:16px;">
         <button class="btn-primary" type="button" id="to-hesapla-btn" style="display:inline-block;width:auto;min-width:220px;">Grafik Oluştur &amp; Analiz Et</button>
@@ -13744,6 +13743,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     };
     sahaRecords.push(record);
     saveSahaRecords(sahaRecords);
+    if(window.showToast) showToast('✓ Kaydedildi', 'success');
 
     sahaSonucList.hidden = true;
   });
@@ -17992,7 +17992,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
   var temelDonatiWrap = document.getElementById('temel-donati-wrap');
   var temelDonatiList = document.getElementById('temel-donati-list');
   var temelKaynakNote = document.getElementById('temel-kaynak-note');
-  var temel4ayakBtn = document.getElementById('temel-4ayak-btn');
   var temel4ayakWrap = document.getElementById('temel-4ayak-wrap');
   var temel4ayakDetails = document.getElementById('temel-4ayak-details');
   var temel4ayakSaveBtn = document.getElementById('temel-4ayak-save-btn');
@@ -18020,7 +18019,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     temelReadout.hidden = true;
     temelDonatiWrap.hidden = true;
     temelKaynakNote.hidden = true;
-    temel4ayakBtn.hidden = true;
     temel4ayakWrap.hidden = true;
 
     var d = temelGetData(temelState);
@@ -18077,7 +18075,28 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     return temelRow(capLabel, formatTR(agirlik, 0) + ' kg — ' + formatTR(uzunluk, 1) + ' m toplam');
   }
 
+  // 2026-08-04: "1 Ayak" ve "4 Ayak (1 Direk)" için AYRI iki tablo/adım vardı — kullanıcı isteğiyle
+  // TEK tabloda birleştirildi. Bu satır: bir miktarın hem 1 ayak hem 4 ayak (1 direk) değerini
+  // yan yana (iki sütun) gösterir. Kaydetme mantığına (temel4ayakSaveBtn) HİÇ dokunulmadı — o hâlâ
+  // aynı temelCurrentD (1 ayak ham veri) + CARPAN_4_AYAK çarpımıyla, önceden olduğu gibi çalışıyor.
+  function temelRowIkili(label, deger1, deger4){
+    return '<div class="temel-row">' +
+      '<div class="temel-row-label">' + label + '</div>' +
+      '<div class="temel-row-value" style="display:flex;gap:16px;">' +
+        '<span style="flex:1;"><span style="font-size:11px;font-weight:700;letter-spacing:0.03em;opacity:0.85;display:block;margin-bottom:2px;font-family:\'IBM Plex Sans\',sans-serif;">1 AYAK</span>' + deger1 + '</span>' +
+        '<span style="flex:1;color:var(--accent);border-left:1.5px solid var(--border);padding-left:16px;"><span style="font-size:11px;font-weight:700;letter-spacing:0.03em;opacity:1;display:block;margin-bottom:2px;font-family:\'IBM Plex Sans\',sans-serif;">4 AYAK (1 DİREK)</span>' + deger4 + '</span>' +
+      '</div>' +
+    '</div>';
+  }
+  function temelOzetRowIkiliHtml(grup){
+    var capLabel = grup.cap + (grup.sinifEtiket ? ' (' + grup.sinifEtiket + ')' : '');
+    var u1 = Math.round(grup.toplamUzunluk * 10) / 10, a1 = Math.round(grup.agirlik);
+    var u4 = Math.round(grup.toplamUzunluk * CARPAN_4_AYAK * 10) / 10, a4 = Math.round(grup.agirlik * CARPAN_4_AYAK);
+    return temelRowIkili(capLabel, formatTR(a1,0) + ' kg — ' + formatTR(u1,1) + ' m', formatTR(a4,0) + ' kg — ' + formatTR(u4,1) + ' m');
+  }
+
   var temelCurrentD = null;
+  var CARPAN_4_AYAK = 4;
 
   function renderTemelSonuc(){
     var d = temelGetData(temelState);
@@ -18086,17 +18105,17 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       temelReadout.hidden = true;
       temelDonatiWrap.hidden = true;
       temelKaynakNote.hidden = true;
-      temel4ayakBtn.hidden = true;
+      temel4ayakWrap.hidden = true;
       return;
     }
 
     temelReadoutLabel.textContent = d.adi;
     temelDetails.innerHTML =
       (d.zeminTasimaKapasitesi ? temelRow('Zemin Taşıma Kapasitesi', d.zeminTasimaKapasitesi) : '') +
-      temelRow('Kazı Miktarı (1 ayak)', formatTR(d.kazi, 1) + ' m³') +
-      temelRow('Beton Miktarı — C25', formatTR(d.betonHacim, 2) + ' m³') +
-      temelRow('Grobeton Miktarı — 200 Doz', formatTR(d.grobetonHacim, 2) + ' m³') +
-      temelRow('Toplam Donatı Ağırlığı', formatTR(d.donatiToplamAgirlik, 0) + ' kg') +
+      temelRowIkili('Kazı Miktarı', formatTR(d.kazi, 1) + ' m³', formatTR(d.kazi * CARPAN_4_AYAK, 1) + ' m³') +
+      temelRowIkili('Beton Miktarı — C25', formatTR(d.betonHacim, 2) + ' m³', formatTR(d.betonHacim * CARPAN_4_AYAK, 2) + ' m³') +
+      temelRowIkili('Grobeton Miktarı — 200 Doz', formatTR(d.grobetonHacim, 2) + ' m³', formatTR(d.grobetonHacim * CARPAN_4_AYAK, 2) + ' m³') +
+      temelRowIkili('Toplam Donatı Ağırlığı', formatTR(d.donatiToplamAgirlik, 0) + ' kg', formatTR(d.donatiToplamAgirlik * CARPAN_4_AYAK, 0) + ' kg') +
       (typeof d.temelDerinligi === 'number' ? temelRow('Temel Derinliği', formatTR(d.temelDerinligi, 0) + ' cm') : '') +
       temelRow('Temel Taban Genişliği', d.temelTabanGenisligi) +
       (typeof d.kademe1 === 'number' ? temelRow('Kademe-1 Kalıp Ölçüsü (alt pabuç)', formatTR(d.kademe1, 0) + ' × ' + formatTR(d.kademe1, 0) + ' cm') : '') +
@@ -18117,7 +18136,12 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }).join('');
 
     temelDonatiWrap.hidden = false;
-    temel4ayakBtn.hidden = false;
+
+    // Çap bazında toplam (1 ayak / 4 ayak — 1 direk) — eskiden ayrı bir buton/adımdı, artık
+    // hesaplamayla birlikte otomatik dolup gösteriliyor.
+    var gruplar = temelGrupla(d);
+    temel4ayakDetails.innerHTML = gruplar.map(function(g){ return temelOzetRowIkiliHtml(g); }).join('');
+    temel4ayakWrap.hidden = false;
 
     function dtDonatiPozisyonMetni(sayisi){
       var etiketler = [
@@ -18164,29 +18188,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     if(window.markModuleUsed){ window.markModuleUsed('temel-hesap'); }
     requestAnimationFrame(function(){
       temelReadout.scrollIntoView({ behavior:'smooth', block:'start' });
-    });
-  });
-
-  // ───────────────────────── 4 Ayak (1 Direk) Toplamı ─────────────────────────
-  var CARPAN_4_AYAK = 4;
-
-  temel4ayakBtn.addEventListener('click', function(){
-    if(!temelCurrentD) return;
-    var d = temelCurrentD;
-    var gruplar = temelGrupla(d);
-    var temelBetonToplam = d.betonHacim * CARPAN_4_AYAK;
-    var temelGrobetonToplam = d.grobetonHacim * CARPAN_4_AYAK;
-    var temelBetonGrobetonToplam = temelBetonToplam + temelGrobetonToplam;
-    temel4ayakDetails.innerHTML =
-      temelRowVurgulu('Toplam Kazı (4 ayak)', formatTR(d.kazi * CARPAN_4_AYAK, 1) + ' m³') +
-      temelRowVurgulu('Toplam Beton C25 (4 ayak)', formatTR(temelBetonToplam, 2) + ' m³') +
-      temelRowVurgulu('Toplam Grobeton 200 Doz (4 ayak)', formatTR(temelGrobetonToplam, 2) + ' m³') +
-      temelRowVurgulu('Toplam Donatı Ağırlığı (4 ayak)', formatTR(d.donatiToplamAgirlik * CARPAN_4_AYAK, 0) + ' kg') +
-      gruplar.map(function(g){ return temelOzetRowHtml(g, CARPAN_4_AYAK); }).join('');
-
-    temel4ayakWrap.hidden = false;
-    requestAnimationFrame(function(){
-      temel4ayakWrap.scrollIntoView({ behavior:'smooth', block:'start' });
     });
   });
 
@@ -18330,6 +18331,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     });
     temelSaveKayitlar();
     temelRenderKayitlar();
+    if(window.showToast) showToast('✓ Kaydedildi', 'success');
 
     temel4ayakWrap.hidden = true;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -23889,6 +23891,17 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
   })();
 
   window._moduleOpenHooks['harita'] = function(){
+      // Modül her açıldığında önceki oturumdan kalan "seçili nokta" durumunu temizle —
+      // sayfa/script hiç yeniden yüklenmediği için (SPA), bu değerler modülden çıkıp
+      // tekrar girilse bile hafızada kalıyordu: kullanıcı haritada henüz bir nokta
+      // seçmemişken bile eski notlar bloğu ve son bakılan dosyanın adı görünmeye
+      // devam ediyordu. Aşağıdaki 4 satır bunu sıfırlıyor; pendingNoteInfo varsa
+      // (arama/bildirimden gelme) zaten hemen altta currentPointInfo tekrar set ediliyor.
+      currentPointInfo = null;
+      if(seciliNotlarWrap) seciliNotlarWrap.hidden = true;
+      seciliPaylasPi = null;
+      if(dropdownLabel) dropdownLabel.textContent = '📂 Dosya Seç';
+
       var pendingNoteInfo = null;
       if(window._sehimciSearchPending && window._sehimciSearchPending.module === 'harita'){
         pendingNoteInfo = window._sehimciSearchPending;
@@ -27570,6 +27583,7 @@ function toAyakGuncelle(){
   var d2s=toD2Hesapla(ayak);
   document.querySelectorAll('#to-olcum-satirlari .to-d2').forEach(function(inp,i){inp.value=i<d2s.length?formatTR(d2s[i],2):'';});
   toAdimGuncelle();
+  var notEl=document.getElementById('to-adim-notu'); if(notEl) notEl.hidden=false;
 }
 function toRefreshButtons(){
   var tb=document.getElementById('to-tipi-btn'),gb=document.getElementById('to-govde-btn'),zb=document.getElementById('to-zemin-btn');
@@ -27995,7 +28009,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   // Elle D1
   var eb=document.getElementById('to-d1-elle-btn'),mw=document.getElementById('to-d1-manuel-input-wrap'),mi=document.getElementById('to-d1-manuel'),ub=document.getElementById('to-d1-manuel-uygula'),ob=document.getElementById('to-d1-otomatik-btn');
   if(eb)eb.onclick=function(){eb.style.display='none';if(mw)mw.style.display='flex';if(document.getElementById('to-d1').value&&mi)mi.value=document.getElementById('to-d1').value;setTimeout(function(){if(mi)mi.focus();},100);};
-  if(ub)ub.onclick=function(){if(!mi)return;var v=parseFloat(mi.value.replace(',','.'));if(isNaN(v)||v<=0){mi.focus();return;}toState._manuelD1=v;document.getElementById('to-d1').value=v;var lbl=document.getElementById('to-d1-label');if(lbl)lbl.textContent='D1 = '+formatTR(v,2)+' m (Manuel)';var ks=[0.05,0.10,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90];document.querySelectorAll('#to-olcum-satirlari .to-d2').forEach(function(inp,i){inp.value=formatTR(Math.round(v*ks[i]*100)/100,2);});toAdimGuncelle();if(eb)eb.style.display='none';};
+  if(ub)ub.onclick=function(){if(!mi)return;var v=parseFloat(mi.value.replace(',','.'));if(isNaN(v)||v<=0){mi.focus();return;}toState._manuelD1=v;document.getElementById('to-d1').value=v;var lbl=document.getElementById('to-d1-label');if(lbl)lbl.textContent='D1 = '+formatTR(v,2)+' m (Manuel)';var ks=[0.05,0.10,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90];document.querySelectorAll('#to-olcum-satirlari .to-d2').forEach(function(inp,i){inp.value=formatTR(Math.round(v*ks[i]*100)/100,2);});toAdimGuncelle();if(eb)eb.style.display='none';var notEl2=document.getElementById('to-adim-notu'); if(notEl2) notEl2.hidden=false;};
   if(ob)ob.onclick=function(){toState._manuelD1=null;if(mi)mi.value='';if(mw)mw.style.display='none';if(eb)eb.style.display='';toAyakGuncelle();};
   // Picker
   var tb=document.getElementById('to-tipi-btn'),gb=document.getElementById('to-govde-btn'),zb=document.getElementById('to-zemin-btn');
@@ -28015,7 +28029,33 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   toState._manuelD1=null;if(mw)mw.style.display='none';if(eb)eb.style.display='';
   // Kayit butonlari
   var kbd=document.getElementById('to-kaydet-btn'),kbl=document.getElementById('to-kayitlar-btn'),ko=document.getElementById('to-kayit-onayla'),ki=document.getElementById('to-kayit-iptal'),kk2=document.getElementById('to-kayitlar-kapat');
-  if(kbd)kbd.onclick=function(){var secili=(window._toHatDropdown&&window._toHatDropdown.getSecili())||'';var kilitliAlan=document.getElementById('to-kayit-kilitli-alan');var serbestAlan=document.getElementById('to-kayit-serbest-alan');if(secili){if(kilitliAlan)kilitliAlan.hidden=false;if(serbestAlan)serbestAlan.hidden=true;var eihEl=document.getElementById('to-kayit-eih-kilitli');if(eihEl)eihEl.textContent=secili;var dnEl=document.getElementById('to-kayit-direk-no');if(dnEl)dnEl.value='';if(toKayitSheetCtrl)toKayitSheetCtrl.show();setTimeout(function(){var el=document.getElementById('to-kayit-direk-no');if(el)el.focus();},400);}else{if(kilitliAlan)kilitliAlan.hidden=true;if(serbestAlan)serbestAlan.hidden=false;document.getElementById('to-kayit-isim').value='';if(toKayitSheetCtrl)toKayitSheetCtrl.show();setTimeout(function(){var el=document.getElementById('to-kayit-isim');if(el)el.focus();},400);}};
+  // 2026-08-04: Bu kaydetme akışı ÖNCEDEN özel bir alttan-açılır panel (#to-kayit-overlay) ile
+  // isim/Direk No soruyordu — klavye açılınca bu panel bazı cihazlarda klavyenin arkasında kalıp
+  // kullanıcı ne yazdığını göremiyordu. Ayak Ayar / Direk Temel Hesabı modüllerindeki native
+  // window.prompt() ile AYNI, güvenilir yönteme geçirildi — native diyalog klavyeyle asla
+  // çakışmaz. Eski panel HTML'i (#to-kayit-overlay) kullanılmıyor ama zararsız, dokunulmadı.
+  if(kbd)kbd.onclick=function(){
+    if(!toAktifSonuc) return;
+    var secili=(window._toHatDropdown&&window._toHatDropdown.getSecili())||'';
+    var isim;
+    if(secili){
+      var dn = window.prompt('Direk No Giriniz');
+      if(dn===null) return;
+      dn = dn.trim();
+      if(!dn) return;
+      isim = secili + ' / ' + dn;
+    } else {
+      var girilen = window.prompt('EİH Adı / Direk No Giriniz');
+      if(girilen===null) return;
+      girilen = girilen.trim();
+      if(!girilen) return;
+      isim = girilen;
+    }
+    var kayitlar=toKayitlariYukle();
+    kayitlar.unshift({id:Date.now(),isim:isim,ts:new Date().toLocaleDateString('tr-TR')+' '+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}),tipi:toState.tipi||'\u2014',govde:toState.govde!==null?(toState.govde>=0?'+':'')+toState.govde:'\u2014',zemin:toState.zemin||null,d1:toAktifSonuc.d1,esdeger:toAktifSonuc.esdeger,yontem:toAktifSonuc.yontem,pairs:toAktifSonuc.pairs,tagg_direnc:toAktifSonuc.tagg_direnc,tagg_mu:toAktifSonuc.tagg_mu,tagg_oran:toAktifSonuc.tagg_oran,tagg_mesafe:toAktifSonuc.tagg_mesafe,r62:toAktifSonuc.r62,m62:toAktifSonuc.m62,band:toAktifSonuc.band,bandSayisi:toAktifSonuc.bandSayisi,sehimci_direnc:toAktifSonuc.sehimci_direnc,sehimci_bolge:toAktifSonuc.sehimci_bolge,sehimci_noktaSayisi:toAktifSonuc.sehimci_noktaSayisi,sehimci_baslangicIdx:toAktifSonuc.sehimci_baslangicIdx,sehimci_bitisIdx:toAktifSonuc.sehimci_bitisIdx,tagg_revize:toAktifSonuc.tagg_revize||false,tagg_uclu:toAktifSonuc.tagg_uclu||null});
+    try{localStorage.setItem(TO_KAYIT_KEY,JSON.stringify(kayitlar));}catch(e){}
+    if(window.showToast) showToast('✓ Kaydedildi', 'success');
+  };
   if(kbl)kbl.onclick=function(){toKayitlarListesiGuncelle();if(toKayitlarSheetCtrl)toKayitlarSheetCtrl.show();};
   var nob=document.getElementById('to-nasil-olculur-btn'), nok=document.getElementById('to-nasil-kapat');
   if(nob)nob.onclick=function(){if(toNasilSheetCtrl)toNasilSheetCtrl.show();};
@@ -28181,8 +28221,6 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     if(adb){ adb.disabled=true; adb.style.opacity='0.5'; }
     if(abilgi){ abilgi.hidden=true; abilgi.textContent=''; }
   };
-  if(ko)ko.onclick=function(){var kilitliAlan=document.getElementById('to-kayit-kilitli-alan');var isim;if(kilitliAlan&&!kilitliAlan.hidden){var eih=(document.getElementById('to-kayit-eih-kilitli')||{}).textContent||'';var dn=((document.getElementById('to-kayit-direk-no')||{}).value||'').trim();if(!dn||!toAktifSonuc)return;isim=eih+' / '+dn;}else{isim=(document.getElementById('to-kayit-isim')||{}).value;if(!isim||!isim.trim()||!toAktifSonuc)return;isim=isim.trim();}var kayitlar=toKayitlariYukle();kayitlar.unshift({id:Date.now(),isim:isim,ts:new Date().toLocaleDateString('tr-TR')+' '+new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}),tipi:toState.tipi||'\u2014',govde:toState.govde!==null?(toState.govde>=0?'+':'')+toState.govde:'\u2014',zemin:toState.zemin||null,d1:toAktifSonuc.d1,esdeger:toAktifSonuc.esdeger,yontem:toAktifSonuc.yontem,pairs:toAktifSonuc.pairs,tagg_direnc:toAktifSonuc.tagg_direnc,tagg_mu:toAktifSonuc.tagg_mu,tagg_oran:toAktifSonuc.tagg_oran,tagg_mesafe:toAktifSonuc.tagg_mesafe,r62:toAktifSonuc.r62,m62:toAktifSonuc.m62,band:toAktifSonuc.band,bandSayisi:toAktifSonuc.bandSayisi,sehimci_direnc:toAktifSonuc.sehimci_direnc,sehimci_bolge:toAktifSonuc.sehimci_bolge,sehimci_noktaSayisi:toAktifSonuc.sehimci_noktaSayisi,sehimci_baslangicIdx:toAktifSonuc.sehimci_baslangicIdx,sehimci_bitisIdx:toAktifSonuc.sehimci_bitisIdx,tagg_revize:toAktifSonuc.tagg_revize||false,tagg_uclu:toAktifSonuc.tagg_uclu||null});try{localStorage.setItem(TO_KAYIT_KEY,JSON.stringify(kayitlar));}catch(e){}if(toKayitSheetCtrl)toKayitSheetCtrl.hide();if(window.showToast)showToast('Ol\u00e7\u00fcm kaydedildi.','success');};
-  if(ki)ki.onclick=function(){if(toKayitSheetCtrl)toKayitSheetCtrl.hide();};
   if(kk2)kk2.onclick=function(){if(toKayitlarSheetCtrl)toKayitlarSheetCtrl.hide();};
   if(window._sehimciSearchPending && window._sehimciSearchPending.module === 'topraklama-olcumu'){
     window._sehimciSearchPending = null;
