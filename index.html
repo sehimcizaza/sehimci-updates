@@ -18660,10 +18660,15 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       // fetch() ise bu elevation API'lerinin CORS politikasına takılıp her zaman başarısız olabiliyor
       // (tarayıcıda doğrudan açınca çalışması ama uygulama içinde çalışmaması bunun işareti). Native
       // köprü henüz eklenmediyse (eski APK) sessizce aşağıdaki fetch zincirine düşülür.
+      // NOT: lat/lng köprüye SAYI değil METİN olarak gönderiliyor — WebView'in JS↔Kotlin köprüsü
+      // Double parametrelerini bazı cihazlarda güvenilir taşımıyor (sessizce 0'a düşebiliyor, ki bu
+      // tam olarak "rakım hep sıfır geliyor" bugunun nedeniydi — 0,0 koordinatının gerçek rakımı da
+      // sıfıra yakın, o yüzden hata vermeden yanlış sonuç dönüyordu). Native taraf artık metni kendi
+      // ayrıştırıyor.
       if(typeof AndroidBridge !== 'undefined' && typeof AndroidBridge.rakimSorgula === 'function'){
         var istekId = 'r' + buIstekNo;
         _haritaRakimBekleyenler[istekId] = goster;
-        try{ AndroidBridge.rakimSorgula(lat, lng, istekId); return; }catch(nativeHata){ delete _haritaRakimBekleyenler[istekId]; }
+        try{ AndroidBridge.rakimSorgula(String(lat), String(lng), istekId); return; }catch(nativeHata){ delete _haritaRakimBekleyenler[istekId]; }
       }
       if(typeof fetch !== 'function'){ goster(null); return; }
       // Sunucu hiç yanıt vermezse (opentopodata.org zaman zaman donuyor/çok yavaş kalıyor) çıplak
