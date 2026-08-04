@@ -2679,34 +2679,34 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     </div>
 
     <!-- ═══ TEĞET AÇISI + SEHİM HATASI — BİRLEŞİK KART ═══ -->
-    <div style="background:#122E43;border-radius:16px;padding:16px 14px;display:flex;flex-direction:column;gap:12px;margin-bottom:14px;">
+    <div style="background:#122E43;border-radius:14px;padding:12px 12px;display:flex;flex-direction:column;gap:9px;margin-bottom:10px;">
 
       <!-- Başlık -->
       <div style="display:flex;align-items:center;gap:7px;">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M3 13 L8 3 L13 13" stroke="#7EB3D8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10 A4 4 0 0 1 10.5 10" stroke="#7EB3D8" stroke-width="1.2" fill="none"/></svg>
-        <span style="flex:1;text-align:center;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Teğet Açısı · Sehim Hatası</span>
+        <svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M3 13 L8 3 L13 13" stroke="#7EB3D8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10 A4 4 0 0 1 10.5 10" stroke="#7EB3D8" stroke-width="1.2" fill="none"/></svg>
+        <span style="flex:1;text-align:center;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Teğet Açısı · Sehim Hatası</span>
       </div>
 
       <!-- Ana satır: Hesaplanan | Ölçülen — iki eş kutu, aynı stil, aynı hizada -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
 
         <!-- SOL: Hesaplanan Teğet Açısı -->
-        <div id="s1-sonuc-kutu" style="background:rgba(255,255,255,0.08);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden;">
+        <div id="s1-sonuc-kutu" style="background:rgba(255,255,255,0.08);border-radius:10px;padding:7px 10px;display:flex;flex-direction:column;gap:1px;min-width:0;overflow:hidden;">
           <span style="font-family:'IBM Plex Sans',sans-serif;font-size:9px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;white-space:nowrap;">Hesaplanan</span>
-          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px;margin-top:1px;min-width:0;">
-            <span id="readout-number" style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:700;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;">—</span>
+          <div style="display:flex;flex-wrap:nowrap;align-items:baseline;gap:4px;margin-top:1px;min-width:0;">
+            <span id="readout-number" style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;display:block;">—</span>
             <span id="s1-grad-label" style="font-family:'IBM Plex Sans',sans-serif;font-size:9px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.04em;flex-shrink:0;">grad</span>
           </div>
-          <span id="s1-bekleme" style="font-family:'IBM Plex Sans',sans-serif;font-size:9.5px;font-weight:600;color:rgba(255,255,255,0.6);margin-top:3px;line-height:1.3;display:block;">Veriler girilmeli…</span>
+          <span id="s1-bekleme" style="font-family:'IBM Plex Sans',sans-serif;font-size:9px;font-weight:600;color:rgba(255,255,255,0.6);margin-top:2px;line-height:1.25;display:block;">Veriler girilmeli…</span>
         </div>
 
         <!-- SAĞ: Ölçülen Teğet Açısı — solla birebir aynı kutu stili -->
-        <div style="background:rgba(255,255,255,0.08);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden;" onclick="document.getElementById('in-olculen-teget').focus()">
+        <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:7px 10px;display:flex;flex-direction:column;gap:1px;min-width:0;overflow:hidden;" onclick="document.getElementById('in-olculen-teget').focus()">
           <span style="font-family:'IBM Plex Sans',sans-serif;font-size:9px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;white-space:nowrap;">Ölçülen Teğet</span>
-          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:4px;margin-top:1px;min-width:0;">
+          <div style="display:flex;flex-wrap:nowrap;align-items:baseline;gap:4px;margin-top:1px;min-width:0;">
             <input type="text" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false"
               id="in-olculen-teget" placeholder="—"
-              style="border:none;outline:none;background:transparent;padding:0;min-width:0;width:auto;max-width:100%;flex:1 1 auto;font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:700;color:#fff;line-height:1.2;">
+              style="border:none;outline:none;background:transparent;padding:0;min-width:0;width:auto;max-width:100%;flex:1 1 auto;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;color:#fff;line-height:1.2;">
             <span style="font-family:'IBM Plex Sans',sans-serif;font-size:9px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.04em;flex-shrink:0;">grad</span>
           </div>
         </div>
@@ -2715,31 +2715,35 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 
       <!-- Hata Hesapla butonu — tam genişlik -->
       <button id="btn-sehim-hesapla" type="button" disabled
-        style="width:100%;padding:11px 6px;font-size:12.5px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:7px;background:#fff;border:none;cursor:not-allowed;opacity:0.5;font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:0.05em;color:#122E43;">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/></svg>
+        style="width:100%;padding:8px 6px;font-size:11px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;background:#fff;border:none;cursor:not-allowed;opacity:0.5;font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:0.05em;color:#122E43;">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="currentColor"/></svg>
         SEHİM HATASINI HESAPLA
       </button>
+    </div>
+
+    <!-- ═══ SEHİM HATASI — AYRI KART, "Sehim Hatasını Hesapla"ya basılınca açılır ═══ -->
+    <div id="s2-kart" hidden tabindex="-1" style="background:#122E43;border-radius:14px;padding:12px 12px;display:flex;flex-direction:column;gap:9px;margin-bottom:10px;outline:none;">
 
       <!-- Detaylar — her zaman görünür, toggle yok -->
-      <div id="details" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;">
+      <div id="details">
         <div id="details-list" style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;">
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.5);white-space:nowrap;">Kot Farkı <span id="detail-kotfarki" style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#C8DEF0;">—</span></span>
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.5);white-space:nowrap;">Target <span id="detail-target" style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#C8DEF0;">—</span></span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;color:rgba(255,255,255,0.5);white-space:nowrap;">Kot Farkı <span id="detail-kotfarki" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:700;color:#C8DEF0;">—</span></span>
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;color:rgba(255,255,255,0.5);white-space:nowrap;">Target <span id="detail-target" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:700;color:#C8DEF0;">—</span></span>
         </div>
       </div>
 
-      <!-- Sehim Hatası sonucu — değer solda, durum rozeti sağda küçük kare kutu -->
-      <div id="s2-sonuc-kutu" style="background:rgba(255,255,255,0.08);border-radius:10px;border:1px solid rgba(255,255,255,0.1);padding:12px 10px;display:flex;flex-direction:column;gap:3px;min-width:0;overflow:hidden;">
-        <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.07em;font-weight:600;">Sehim Hatası</span>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px;min-width:0;">
-          <div style="display:flex;align-items:baseline;gap:5px;min-width:0;flex-shrink:1;overflow:hidden;">
-            <span id="readout-number-2" style="font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:700;color:#fff;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;">—</span>
-            <span id="s2-m-label" style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.05em;display:none;flex-shrink:0;">m</span>
+      <!-- Sehim Hatası sonucu — başlık solda, değer AYNI SATIRDA karşısında (sağda) -->
+      <div id="s2-sonuc-kutu" style="background:rgba(255,255,255,0.08);border-radius:10px;border:1px solid rgba(255,255,255,0.1);padding:9px 10px;display:flex;flex-direction:column;gap:6px;min-width:0;overflow:hidden;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;min-width:0;">
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.07em;font-weight:600;flex-shrink:0;">Sehim Hatası</span>
+          <div style="display:flex;align-items:baseline;gap:4px;min-width:0;overflow:hidden;flex-shrink:1;justify-content:flex-end;">
+            <span id="readout-number-2" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:700;color:#fff;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</span>
+            <span id="s2-m-label" style="font-family:'IBM Plex Sans',sans-serif;font-size:9.5px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.05em;display:none;flex-shrink:0;">m</span>
           </div>
-          <div id="sehim-status" style="display:none;width:78px;height:78px;flex-shrink:0;padding:4px;border-radius:12px;font-family:'Oswald',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:0.02em;text-transform:uppercase;text-align:center;line-height:1.25;white-space:normal;flex-direction:column;align-items:center;justify-content:center;gap:2px;"></div>
         </div>
-        <div id="detail-bulunan-wrap" style="display:none;margin-top:4px;min-width:0;">
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:0.03em;white-space:nowrap;">Bulunan Sehim: <span id="detail-bulunan" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:#C8DEF0;">—</span> <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.4);">m</span></span>
+        <div id="sehim-status" style="display:none;width:100%;padding:6px 8px;border-radius:8px;font-family:'Oswald',sans-serif;font-weight:700;font-size:10px;letter-spacing:0.02em;text-transform:uppercase;text-align:center;line-height:1.2;white-space:normal;flex-direction:row;align-items:center;justify-content:center;gap:6px;"></div>
+        <div id="detail-bulunan-wrap" style="display:none;min-width:0;">
+          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:9.5px;color:rgba(255,255,255,0.45);letter-spacing:0.03em;white-space:nowrap;">Bulunan Sehim: <span id="detail-bulunan" style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#C8DEF0;">—</span> <span style="font-family:'IBM Plex Sans',sans-serif;font-size:9.5px;color:rgba(255,255,255,0.4);">m</span></span>
         </div>
       </div>
 
@@ -3236,9 +3240,11 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       <div style="background:#122E43;border-radius:14px;padding:16px;width:100%;max-width:340px;position:relative;">
         <button type="button" id="ayar-hat-elle-gir-kapat" aria-label="Kapat" style="position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;padding:4px;">✕</button>
         <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah</p>
-        <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-        <input type="text" autocomplete="off" id="ayar-hat-elle-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-          style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
+        <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+        <div id="ayar-hat-elle-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+        <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+        <div id="ayar-hat-elle-devre-secim" style="display:flex;gap:6px;margin-bottom:12px;"></div>
+        <div id="ayar-hat-elle-devreler-wrap"></div>
         <button type="button" id="ayar-hat-elle-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
         <input type="file" id="ayar-hat-elle-dosya-input" accept=".kml,.kmz" style="display:none;">
         <p id="ayar-hat-elle-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
@@ -3369,9 +3375,11 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         <div style="background:#122E43;border-radius:14px;padding:16px;width:100%;max-width:340px;position:relative;">
           <button type="button" id="ikaz-hat-elle-gir-kapat" aria-label="Kapat" style="position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;padding:4px;">✕</button>
           <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah</p>
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-          <input type="text" autocomplete="off" id="ikaz-hat-elle-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-            style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+          <div id="ikaz-hat-elle-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+          <div id="ikaz-hat-elle-devre-secim" style="display:flex;gap:6px;margin-bottom:12px;"></div>
+          <div id="ikaz-hat-elle-devreler-wrap"></div>
           <button type="button" id="ikaz-hat-elle-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
           <input type="file" id="ikaz-hat-elle-dosya-input" accept=".kml,.kmz" style="display:none;">
           <p id="ikaz-hat-elle-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
@@ -4397,9 +4405,11 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
           <div style="background:#122E43;border-radius:14px;padding:16px;width:100%;max-width:340px;position:relative;">
             <button type="button" id="nd-hat-elle-gir-kapat" aria-label="Kapat" style="position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;padding:4px;">✕</button>
             <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah</p>
-            <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-            <input type="text" autocomplete="off" id="nd-hat-elle-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-              style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
+            <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+            <div id="nd-hat-elle-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+            <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+            <div id="nd-hat-elle-devre-secim" style="display:flex;gap:6px;margin-bottom:12px;"></div>
+            <div id="nd-hat-elle-devreler-wrap"></div>
             <button type="button" id="nd-hat-elle-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
             <input type="file" id="nd-hat-elle-dosya-input" accept=".kml,.kmz" style="display:none;">
             <p id="nd-hat-elle-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
@@ -4459,9 +4469,11 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         <div style="background:#122E43;border-radius:14px;padding:16px;width:100%;max-width:340px;position:relative;">
           <button type="button" id="dh-hat-elle-gir-kapat" aria-label="Kapat" style="position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;padding:4px;">✕</button>
           <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah</p>
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-          <input type="text" autocomplete="off" id="dh-hat-elle-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-            style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+          <div id="dh-hat-elle-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+          <div id="dh-hat-elle-devre-secim" style="display:flex;gap:6px;margin-bottom:12px;"></div>
+          <div id="dh-hat-elle-devreler-wrap"></div>
           <button type="button" id="dh-hat-elle-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
           <input type="file" id="dh-hat-elle-dosya-input" accept=".kml,.kmz" style="display:none;">
           <p id="dh-hat-elle-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
@@ -4594,9 +4606,11 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         <div style="background:#122E43;border-radius:14px;padding:16px;width:100%;max-width:340px;position:relative;">
           <button type="button" id="pd-hat-elle-gir-kapat" aria-label="Kapat" style="position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;padding:4px;">✕</button>
           <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah</p>
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-          <input type="text" autocomplete="off" id="pd-hat-elle-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-            style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+          <div id="pd-hat-elle-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+          <div id="pd-hat-elle-devre-secim" style="display:flex;gap:6px;margin-bottom:12px;"></div>
+          <div id="pd-hat-elle-devreler-wrap"></div>
           <button type="button" id="pd-hat-elle-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
           <input type="file" id="pd-hat-elle-dosya-input" accept=".kml,.kmz" style="display:none;">
           <p id="pd-hat-elle-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
@@ -4793,9 +4807,11 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         <div style="background:#122E43;border-radius:14px;padding:16px;width:100%;max-width:340px;position:relative;">
           <button type="button" id="sd-hat-elle-gir-kapat" aria-label="Kapat" style="position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;padding:4px;">✕</button>
           <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah</p>
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-          <input type="text" autocomplete="off" id="sd-hat-elle-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-            style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+          <div id="sd-hat-elle-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+          <div id="sd-hat-elle-devre-secim" style="display:flex;gap:6px;margin-bottom:12px;"></div>
+          <div id="sd-hat-elle-devreler-wrap"></div>
           <button type="button" id="sd-hat-elle-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
           <input type="file" id="sd-hat-elle-dosya-input" accept=".kml,.kmz" style="display:none;">
           <p id="sd-hat-elle-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
@@ -4982,11 +4998,13 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     <div class="module" style="padding:16px 16px 80px;">
 
       <div style="background:#122E43;border-radius:14px;padding:14px 12px;margin-bottom:16px;">
-        <p style="margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah Kaydı</p>
-        <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-        <input type="text" autocomplete="off" id="hg-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-          style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
-        <button type="button" id="hg-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12.5px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
+        <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah Kaydı</p>
+        <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+        <div id="hg-hat-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+        <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+        <div id="hg-hat-devre-secim" style="display:flex;gap:6px;margin-bottom:14px;"></div>
+        <div id="hg-hat-devreler-wrap"></div>
+        <button type="button" id="hg-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12.5px;font-weight:700;color:#fff;cursor:pointer;margin:6px 0;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
         <input type="file" id="hg-dosya-input" accept=".kml,.kmz" style="display:none;">
         <p id="hg-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
         <div class="error-box" id="hg-error-box" role="alert" aria-live="assertive" hidden style="margin:0 0 10px;background:#FDEDEC;border-color:#C0392B;color:#B01E1E;"></div>
@@ -4995,7 +5013,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 
       <div style="background:#EAF4FB;border-left:4px solid #2E6BB0;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:16px;">
         <p style="margin:0;font-size:11.5px;color:#122E43;line-height:1.6;font-family:'IBM Plex Sans',sans-serif;">
-          Buradan kaydedeceğiniz hat ve güzergahları diğer hesaplama modüllerinde ve not defterinde oluşturacağınız kayıtlarda seçip ölçüm / not kayıtlarınızda kullanabileceksiniz. Ayrıca KML veya KMZ dosyası yüklerseniz bunları uygulama içerisindeki haritalarda görüntüleyebilirsiniz.
+          Buradan kaydedeceğiniz hatları diğer hesaplama modüllerinde ve not defterinde oluşturacağınız kayıtlarda seçip ölçüm / not kayıtlarınızda kullanabileceksiniz. KML veya KMZ dosyası eklerseniz o dosya EİH adıyla haritada da görüntülenir.
         </p>
       </div>
 
@@ -5441,9 +5459,11 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         <div style="background:#122E43;border-radius:14px;padding:16px;width:100%;max-width:340px;position:relative;">
           <button type="button" id="to-hat-elle-gir-kapat" aria-label="Kapat" style="position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;padding:4px;">✕</button>
           <p style="margin:0 0 12px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;">Yeni Hat / Güzergah</p>
-          <span style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,0.7);font-weight:600;display:block;margin-bottom:4px;">Hat / Güzergah Adı</span>
-          <input type="text" autocomplete="off" id="to-hat-elle-ad" placeholder="örn. TM1 - TM2 Enerji İletim Hattı"
-            style="width:100%;box-sizing:border-box;padding:10px;font-size:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;margin-bottom:10px;">
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Gerilim Seviyesi</p>
+          <div id="to-hat-elle-gerilim-secim" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+          <p style="margin:0 0 7px;font-size:11px;font-weight:700;color:#fff;">Devre Sayısı</p>
+          <div id="to-hat-elle-devre-secim" style="display:flex;gap:6px;margin-bottom:12px;"></div>
+          <div id="to-hat-elle-devreler-wrap"></div>
           <button type="button" id="to-hat-elle-dosya-btn" style="width:100%;padding:10px;border-radius:8px;border:1.5px dashed rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:#fff;cursor:pointer;margin-bottom:6px;font-family:inherit;">+ KML / KMZ Dosyası Seç (opsiyonel)</button>
           <input type="file" id="to-hat-elle-dosya-input" accept=".kml,.kmz" style="display:none;">
           <p id="to-hat-elle-dosya-secili" style="margin:0 0 10px;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);word-break:break-all;" hidden></p>
@@ -6926,7 +6946,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     }
 
     if(h.type === 'sehim'){
-      var good = Math.abs(h.sehimHatasi) <= 0.4;
+      var good = Math.abs(h.sehimHatasi) <= 0.12;
       var cls = good ? 'history-item--good' : 'history-item--bad';
       var resCls = good ? 'history-item-result--good' : 'history-item-result--bad';
       var kaNum = parseFloat(String(h.ka).replace(',', '.'));
@@ -7241,7 +7261,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     sehimSimGuncelle();
 
     var st = sehimStatus;
-    if(Math.abs(sehimHatasi) <= 0.4){
+    if(Math.abs(sehimHatasi) <= 0.12){
       // ✅ Harika — yeşil
       st.innerHTML = '<span style="display:block;font-size:15px;line-height:1;">★</span><span style="display:block;">Harika Sehim</span>';
       st.style.background = '#0F3320';
@@ -7271,6 +7291,23 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     if(bulunanWrap) bulunanWrap.style.display = 'block';
     var sehimStatusEl = document.getElementById('sehim-status');
     if(sehimStatusEl) sehimStatusEl.style.display = 'flex';
+
+    // "Sehim Hatası" artık ayrı bir kart (#s2-kart) — Hesapla'ya basılana kadar gizli, ilk başarılı
+    // hesaplamada açılır.
+    var s2Kart = document.getElementById('s2-kart');
+    if(s2Kart) s2Kart.hidden = false;
+
+    // Ard arda basmaları önlemek için: hesaplama başarıyla tamamlandıktan sonra buton pasif olur;
+    // yeniden aktif olması için kullanıcının "Ölçülen Teğet" alanına YENİ bir değer girmesi gerekir
+    // (yukarıdaki 'input' dinleyicisi zaten her girişte butonu tekrar aktif ediyor).
+    btnSehimHesapla.disabled = true;
+    btnSehimHesapla.style.opacity = '0.5';
+    btnSehimHesapla.style.cursor = 'not-allowed';
+
+    // Otomatik kaydırma 12 farklı teknikle denendi, hiçbiri kullanıcının test ortamında güvenilir
+    // çalışmadı (bkz. sehimci.md hafıza notu, "Sehim Kontrolleri kaydırma" bölümü). Kalıcı olarak
+    // KALDIRILDI. Kart yine de Hesapla'ya basınca açılıyor, kullanıcı parmakla kaydırarak görüyor
+    // (bunun sorunsuz çalıştığı zaten doğrulanmıştı). BİR DAHA otomatik kaydırma eklenmemeli.
 
     var hasGeo2 = ('geolocation' in navigator);
     var newId2 = addHistoryEntry({
@@ -7317,6 +7354,8 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     if(errorBox) errorBox.hidden = true;
 
     // Sehim hatası sütununu sıfırla
+    var s2KartReset = document.getElementById('s2-kart');
+    if(s2KartReset) s2KartReset.hidden = true;
     var rn2 = document.getElementById('readout-number-2');
     if(rn2){ rn2.textContent = '—'; rn2.style.fontSize = ''; rn2.style.lineHeight = ''; rn2.style.fontWeight = ''; }
     var s2mLabel = document.getElementById('s2-m-label');
@@ -7603,7 +7642,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 
     var sehimFarki = ikiEgriVar ? (Solculen - Shedef) : 0;
     var kaymaMiktari = ikiEgriVar ? (Math.abs(olculenVertexX - hedefVertexX) / scaleX) : 0;
-    var uygun = Math.abs(sehimFarki) <= 0.4;
+    var uygun = Math.abs(sehimFarki) <= 0.12;
     var durumRenk = uygun ? '#4ADE80' : '#FF8080';
     var durumBg = uygun ? '#0F3320' : '#3A1212';
     var durumMetin = uygun ? 'UYGUN' : (sehimFarki<0 ? 'GERGİN (+' + formatTR(Math.abs(sehimFarki),2) + 'm)' : 'GEVŞEK (+' + formatTR(sehimFarki,2) + 'm)');
@@ -7667,11 +7706,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         // eğriler (gökyüzüne karşı yüksek kontrastlı renkler)
         (ikiEgriVar ? '<path d="'+hedefPath+'" fill="none" stroke="#E8590C" stroke-width="2.2" stroke-dasharray="4,4"/>' : '')+
         '<path d="'+olculenPath+'" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="0.1,7"/>'+
-        // meme noktaları — hem eğri üzerinde hem zeminde
-        (ikiEgriVar ? '<circle cx="'+hedefVertexX+'" cy="'+hedefVertexY+'" r="5" fill="#E8590C" stroke="#fff" stroke-width="1.8"/>' : '')+
-        '<circle cx="'+olculenVertexX+'" cy="'+olculenVertexY+'" r="5.5" fill="#111" stroke="#fff" stroke-width="1.8"/>'+
-        (ikiEgriVar ? '<circle cx="'+hedefVertexX+'" cy="'+groundY+'" r="5" fill="#E8590C"/>' : '')+
-        '<circle cx="'+olculenVertexX+'" cy="'+groundY+'" r="5.5" fill="#111"/>'+
+        // (meme noktası işaretçileri kaldırıldı — sadece katener eğrileri çiziliyor)
         // dikey sehim farkı ölçü çizgisi — iki eğri arasındaki gerçek dikey mesafeyi net gösterir
         (ikiEgriVar && Math.abs(sehimFarki) > 0.05 ? (
           '<line x1="'+farkX+'" y1="'+farkYUst+'" x2="'+farkX+'" y2="'+farkYAlt+'" stroke="#122E43" stroke-width="2" stroke-dasharray="3,2.5"/>'+
@@ -7686,17 +7721,15 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       (ikiEgriVar ? (
       '<div style="display:flex;flex-direction:column;gap:5px;">'+
         '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:16px;height:0;border-top:2.5px dashed #E8590C;display:inline-block;"></span></span><span style="font-size:11px;color:var(--text-muted);">Ölçülen (Saha): <b style="color:var(--text);">'+formatTR(Shedef,2)+' m</b></span></div>'+
-        '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:7px;height:7px;border-radius:50%;background:#E8590C;display:inline-block;"></span></span><span style="font-size:11px;color:var(--text-muted);">A\'ya Uzaklık: <b style="color:var(--text);">'+formatTR(xHedefM,1)+' m</b></span></div>'+
       '</div>') : '<div></div>')+
       '<div style="display:flex;flex-direction:column;gap:5px;">'+
         '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:16px;height:2.5px;background:#111;display:inline-block;"></span></span><span style="font-size:11px;color:var(--text-muted);">Hedef Sehim: <b style="color:var(--text);">'+formatTR(Solculen,2)+' m</b></span></div>'+
-        '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:7px;height:7px;border-radius:50%;background:#111;display:inline-block;"></span></span><span style="font-size:11px;color:var(--text-muted);">A\'ya Uzaklık: <b style="color:var(--text);">'+formatTR(xOlculenM,1)+' m</b></span></div>'+
       '</div>'+
       '</div>';
 
     var uyariHtml = (ikiEgriVar && kaymaMiktari > 0.5) ? (
       '<div style="background:#FDEAEA;border:1.5px solid #E0554A;border-radius:10px;padding:12px 14px;margin-top:14px;">'+
-        '<p style="margin:0;font-size:12px;color:#B3261E;font-weight:600;line-height:1.5;">⚠ Sehim farkı (Cetvel − Hedef = '+formatTR(sehimFarki,2)+' m), iletkenin en dip noktasını (meme noktasını) yaklaşık <b>'+formatTR(kaymaMiktari,1)+' metre</b> kaydırmıştır. Bu durum orta açıklıktaki gabari mesafesini daraltabilir — iletkeni tekrar kontrol edin.</p>'+
+        '<p style="margin:0;font-size:12px;color:#B3261E;font-weight:600;line-height:1.5;">⚠ Sehim farkı (Cetvel − Hedef = '+formatTR(sehimFarki,2)+' m), iletkenin en dip noktasını yaklaşık <b>'+formatTR(kaymaMiktari,1)+' metre</b> kaydırmıştır. Bu durum orta açıklıktaki gabari mesafesini daraltabilir — iletkeni tekrar kontrol edin.</p>'+
       '</div>'
     ) : '';
 
@@ -13743,7 +13776,84 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     });
   }
 
+  var AYAR_HAT_GERILIM_SEVIYELERI = ['34','66','154','220','400'];
+  var AYAR_HAT_DEVRE_SAYILARI = [1,2,4,6];
+  var ayarHatElleState = { gerilim:null, devreSayisi:1, devreler:[{merkez1:'',merkez2:''}] };
+
+  function ayarHatElleSecimButonlariCiz(){
+    var gerilimWrap = document.getElementById('ayar-hat-elle-gerilim-secim');
+    var devreWrap = document.getElementById('ayar-hat-elle-devre-secim');
+    if(gerilimWrap){
+      gerilimWrap.innerHTML = AYAR_HAT_GERILIM_SEVIYELERI.map(function(g){
+        var secili = ayarHatElleState.gerilim === g;
+        return '<button type="button" data-ayar-elle-gerilim="'+g+'" style="padding:7px 12px;border-radius:7px;border:1.5px solid '+(secili?'#4AA8FF':'rgba(255,255,255,0.3)')+';background:'+(secili?'#4AA8FF':'rgba(255,255,255,0.06)')+';color:#fff;font-size:12px;font-weight:700;cursor:pointer;">'+g+' kV</button>';
+      }).join('');
+    }
+    if(devreWrap){
+      devreWrap.innerHTML = AYAR_HAT_DEVRE_SAYILARI.map(function(d){
+        var secili = ayarHatElleState.devreSayisi === d;
+        return '<button type="button" data-ayar-elle-devre-sayisi="'+d+'" style="flex:1;padding:7px 0;border-radius:7px;border:1.5px solid '+(secili?'#4AA8FF':'rgba(255,255,255,0.3)')+';background:'+(secili?'#4AA8FF':'rgba(255,255,255,0.06)')+';color:#fff;font-size:12px;font-weight:700;cursor:pointer;">'+d+'</button>';
+      }).join('');
+    }
+  }
+  function ayarHatElleDevreSatirlariCiz(){
+    var wrap = document.getElementById('ayar-hat-elle-devreler-wrap');
+    if(!wrap) return;
+    var n = ayarHatElleState.devreSayisi;
+    while(ayarHatElleState.devreler.length < n) ayarHatElleState.devreler.push({merkez1:'',merkez2:''});
+    ayarHatElleState.devreler.length = n;
+    var html = '';
+    for(var i=0;i<n;i++){
+      var m1 = (ayarHatElleState.devreler[i].merkez1||'').replace(/"/g,'&quot;');
+      var m2 = (ayarHatElleState.devreler[i].merkez2||'').replace(/"/g,'&quot;');
+      html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);border-radius:8px;">' +
+        '<p style="margin:0 0 8px;font-size:10.5px;font-weight:700;color:#4AA8FF;">Devre '+(i+1)+'</p>' +
+        '<div style="display:flex;gap:8px;">' +
+          '<div style="flex:1;">' +
+            '<label style="display:block;font-size:9.5px;color:rgba(255,255,255,0.65);margin-bottom:3px;">Merkez 1</label>' +
+            '<input type="text" data-ayar-elle-devre-idx="'+i+'" data-ayar-elle-merkez="1" value="'+m1+'" placeholder="örn. Adıyaman" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid rgba(255,255,255,0.25);border-radius:6px;font-size:12px;background:rgba(255,255,255,0.1);color:#fff;">' +
+          '</div>' +
+          '<div style="flex:1;">' +
+            '<label style="display:block;font-size:9.5px;color:rgba(255,255,255,0.65);margin-bottom:3px;">Merkez 2</label>' +
+            '<input type="text" data-ayar-elle-devre-idx="'+i+'" data-ayar-elle-merkez="2" value="'+m2+'" placeholder="örn. Gözebaşı" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid rgba(255,255,255,0.25);border-radius:6px;font-size:12px;background:rgba(255,255,255,0.1);color:#fff;">' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('input[data-ayar-elle-devre-idx]').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        var idx = parseInt(inp.getAttribute('data-ayar-elle-devre-idx'),10);
+        var alan = inp.getAttribute('data-ayar-elle-merkez')==='1' ? 'merkez1' : 'merkez2';
+        ayarHatElleState.devreler[idx][alan] = inp.value;
+      });
+    });
+  }
+  function ayarHatElleFormuSifirla(){
+    ayarHatElleState = { gerilim:null, devreSayisi:1, devreler:[{merkez1:'',merkez2:''}] };
+    ayarHatElleSecimButonlariCiz();
+    ayarHatElleDevreSatirlariCiz();
+  }
+  var ayarHatElleGerilimSecimEl = document.getElementById('ayar-hat-elle-gerilim-secim');
+  if(ayarHatElleGerilimSecimEl) ayarHatElleGerilimSecimEl.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('[data-ayar-elle-gerilim]') : null;
+    if(!btn) return;
+    ayarHatElleState.gerilim = btn.getAttribute('data-ayar-elle-gerilim');
+    ayarHatElleSecimButonlariCiz();
+  });
+  var ayarHatElleDevreSecimEl = document.getElementById('ayar-hat-elle-devre-secim');
+  if(ayarHatElleDevreSecimEl) ayarHatElleDevreSecimEl.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('[data-ayar-elle-devre-sayisi]') : null;
+    if(!btn) return;
+    ayarHatElleState.devreSayisi = parseInt(btn.getAttribute('data-ayar-elle-devre-sayisi'),10);
+    ayarHatElleSecimButonlariCiz();
+    ayarHatElleDevreSatirlariCiz();
+  });
+  ayarHatElleSecimButonlariCiz();
+  ayarHatElleDevreSatirlariCiz();
+
   function ayarHatElleGirAc(){
+    ayarHatElleFormuSifirla();
     var overlay = document.getElementById('ayar-hat-elle-gir-overlay');
     if(overlay) overlay.style.display = 'flex';
   }
@@ -13797,20 +13907,21 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
   if(ayarHatElleKaydetBtn){
     ayarHatElleKaydetBtn.addEventListener('click', function(){
       if(ayarHatElleErrorBox) ayarHatElleErrorBox.hidden = true;
-      var adEl = document.getElementById('ayar-hat-elle-ad');
-      var ad = adEl ? adEl.value.trim() : '';
-      if(!ad){
-        if(ayarHatElleErrorBox){ ayarHatElleErrorBox.textContent = 'Lütfen hat/güzergah adını girin.'; ayarHatElleErrorBox.hidden = false; }
-        return;
-      }
-      if(!window.hatGuzergahKaydet){
+      if(!window.hatGuzergahKaydetYapilandirilmis){
         if(ayarHatElleErrorBox){ ayarHatElleErrorBox.textContent = 'Hat/Güzergah Kaydı modülü yüklenemedi.'; ayarHatElleErrorBox.hidden = false; }
         return;
       }
-      window.hatGuzergahKaydet(ad, ayarHatElleSeciliDosya ? ayarHatElleSeciliDosya.ad : null, ayarHatElleSeciliDosya ? ayarHatElleSeciliDosya.kmlMetni : null);
-      ayarHatDropdownDoldur(ad); // yeni kaydı seçili yap
+      var sonuc = window.hatGuzergahKaydetYapilandirilmis(ayarHatElleState.gerilim, ayarHatElleState.devreSayisi, ayarHatElleState.devreler, ayarHatElleSeciliDosya ? ayarHatElleSeciliDosya.ad : null, ayarHatElleSeciliDosya ? ayarHatElleSeciliDosya.kmlMetni : null);
+      if(!sonuc.ok){
+        if(ayarHatElleErrorBox){ ayarHatElleErrorBox.textContent = sonuc.hata; ayarHatElleErrorBox.hidden = false; }
+        return;
+      }
+      var yeniAdlar = sonuc.record.dosyaAdi
+        ? (window._haritaHatOzetGetir ? window._haritaHatOzetGetir(sonuc.record.dosyaAdi) : null)
+        : ayarHatElleState.devreler.map(function(d){ return ayarHatElleState.gerilim + ' kV ' + d.merkez1.trim() + ' - ' + d.merkez2.trim() + ' EİH'; });
+      var yeniAd = (yeniAdlar && yeniAdlar.length) ? yeniAdlar.join(' & ') : null;
+      ayarHatDropdownDoldur(yeniAd); // yeni kaydı seçili yap
 
-      adEl.value = '';
       ayarHatElleSeciliDosya = null;
       var p = document.getElementById('ayar-hat-elle-dosya-secili');
       if(p) p.hidden = true;
@@ -19399,8 +19510,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         '<line x1="'+toPx(L)+'" y1="'+toPy(poleBTop)+'" x2="'+toPx(L)+'" y2="'+toPy(poleBGround)+'" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>'+
         '<circle cx="'+toPx(0)+'" cy="'+toPy(poleATop)+'" r="4" fill="#111"/>'+
         '<circle cx="'+toPx(L)+'" cy="'+toPy(poleBTop)+'" r="4" fill="#111"/>'+
-        (kirmiziVar ? '<circle cx="'+toPx(vxH)+'" cy="'+toPy(vyH)+'" r="4.5" fill="#E8590C" stroke="#fff" stroke-width="1.6"/>' : '')+
-        '<circle cx="'+toPx(vxO)+'" cy="'+toPy(vyO)+'" r="5" fill="#111" stroke="#fff" stroke-width="1.6"/>'+
         siyahUyariIkon + kirmiziUyariIkon +
         '<text x="'+toPx(0)+'" y="'+(toPy(poleATop)-10)+'" font-size="12" font-weight="700" fill="#122E43" text-anchor="middle" font-family="Oswald,sans-serif">'+(samples._adA||'A')+'</text>'+
         '<text x="'+toPx(0)+'" y="'+(toPy(poleATop)-24)+'" font-size="10" font-weight="700" fill="#5B7488" text-anchor="middle" font-family=\'IBM Plex Mono,monospace\'>'+T.toFixed(1).replace('.', ',')+' m</text>'+
@@ -19413,11 +19522,9 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         (kirmiziVar ? (
         '<div style="display:flex;flex-direction:column;gap:5px;">'+
           '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:14px;height:0;border-top:2.5px dashed #E8590C;display:inline-block;"></span></span><span style="font-size:10.5px;color:#5B7488;">Hedef Sehim: <b style="color:#122E43;">'+formatMesafeBasit(Shedef)+' m</b></span></div>'+
-          '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:7px;height:7px;border-radius:50%;background:#E8590C;display:inline-block;"></span></span><span style="font-size:10px;color:#5B7488;">'+adA+'\'ya Uzaklık: <b style="color:#122E43;">'+formatMesafeBasit(vxH)+' m</b></span></div>'+
         '</div>') : '')+
         '<div style="display:flex;flex-direction:column;gap:5px;">'+
           '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:14px;height:2.5px;background:#111;display:inline-block;"></span></span><span style="font-size:10.5px;color:#5B7488;">Ölçülen (Cetvel): <b style="color:#122E43;">'+formatMesafeBasit(Solculen)+' m</b></span></div>'+
-          '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="width:7px;height:7px;border-radius:50%;background:#111;display:inline-block;"></span></span><span style="font-size:10px;color:#5B7488;">'+adA+'\'ya Uzaklık: <b style="color:#122E43;">'+formatMesafeBasit(vxO)+' m</b></span></div>'+
         '</div>'+
       '</div>';
 
@@ -19454,7 +19561,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         var kaymaMiktari = Math.abs(vxO - vxH);
         if(kaymaMiktari > 0.5){
           kutular += '<div style="margin-top:10px;padding:12px;border-radius:10px;background:#EFF3F8;border:1.5px solid #7C93AC;">'+
-            '<div style="font-size:11px;color:#3A4D5C;line-height:1.5;">📏 Sehim farkı (Cetvel − Hedef = '+formatMesafeBasit(sehimHatasi)+' m), iletkenin en dip noktasını (meme noktasını) yaklaşık <b>'+formatMesafeBasit(kaymaMiktari)+' metre</b> kaydırmıştır.</div>'+
+            '<div style="font-size:11px;color:#3A4D5C;line-height:1.5;">📏 Sehim farkı (Cetvel − Hedef = '+formatMesafeBasit(sehimHatasi)+' m), iletkenin en dip noktasını yaklaşık <b>'+formatMesafeBasit(kaymaMiktari)+' metre</b> kaydırmıştır.</div>'+
           '</div>';
         }
       } else {
@@ -26009,13 +26116,25 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
   })();
 
   // ── Hat / Güzergah Kaydı Modülü JS ──────────────────────────────────────────
-  // Kendi deposu (sehimci_hat_guzergah_v1): isim + opsiyonel KML/KMZ metni. Bir dosya eklendiğinde,
-  // ayrıca "KML Görüntüleyici" ve "Gabari Kontrol" modüllerinin ZATEN okuduğu paylaşılan depoya
-  // (sehimci_kml_files_v1) da aynı içerik kopyalanır — böylece buraya kaydedilen bir dosya, ekstra
-  // bir işlem gerekmeden o iki modülde de görünür. Kayıt silinirse, eşleşen paylaşılan kayıt da silinir.
+  // Kendi deposu (sehimci_hat_guzergah_v1). 2026-08-04: modülün KENDİ Kaydet formu artık KML/KMZ
+  // Görüntüleyici'deki "Hat Bilgilerini Düzenle" ile AYNI mantığı kullanıyor — Gerilim Seviyesi +
+  // Devre Sayısı + devre başına Merkez 1/Merkez 2 (serbest metin "ad" alanı KALDIRILDI). KML/KMZ
+  // dosyası hâlâ opsiyonel: eklenirse, gerilim/devre verisi dosya adına göre PAYLAŞILAN depoya
+  // (sehimci_kml_hat_bilgileri_v1 — KML modülünün de okuduğu AYNI anahtar) yazılır, böylece o dosya
+  // KML/KMZ Görüntüleyici'nin dosya listesinde de otomatik olarak EİH adıyla görünür (aynı dosya
+  // aynı zamanda sehimci_kml_files_v1'e de eklenir, haritada gösterilebilsin diye). Dosya EKLENMEDEN
+  // kaydedilirse, gerilim/devre verisi bu modülün kendi kaydında (HG_KEY) tutulur.
+  // NOT: `window.hatGuzergahKaydet(ad,dosyaAdi,kmlMetni)` (serbest-metin API'si) BİLEREK
+  // DEĞİŞTİRİLMEDİ — diğer modüllerdeki ("Ayak Ayar" vb.) "Elle Gir" mini-kayıt kutuları hâlâ bunu
+  // kullanıyor, o akışlar bu değişiklikten etkilenmesin diye eski `{ad,...}` biçimini üretmeye devam
+  // ediyor. İki kayıt biçimi (eski serbest-metin `.ad` / yeni yapılandırılmış `.gerilim+.devreler`)
+  // aynı listede bir arada yaşıyor, aşağıdaki fonksiyonlar ikisini de doğru gösterir.
   (function(){
     var HG_KEY = 'sehimci_hat_guzergah_v1';
     var KML_SHARED_KEY = 'sehimci_kml_files_v1';
+    var KML_HAT_KEY = 'sehimci_kml_hat_bilgileri_v1';
+    var HG_GERILIM_SEVIYELERI = ['34','66','154','220','400'];
+    var HG_DEVRE_SAYILARI = [1,2,4,6];
 
     function hgLoadRecords(){
       try{
@@ -26034,24 +26153,52 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       if(r.id >= hgRecordIdCounter) hgRecordIdCounter = r.id + 1;
     });
 
-    // Diğer modüllerin ileride kendi içinden çağırıp kayıtlı hat/güzergah listesini okuyabilmesi için.
-    // KML/KMZ Görüntüleyici modülünün "Hat Bilgilerini Düzenle" ile tanımladığı EİH isimleri de
-    // (varsa) buraya otomatik eklenir — window._haritaHatOzetGetir zaten her dosya için "&" ile
-    // BİRLEŞTİRİLMEMİŞ, ayrı ayrı hat adları dizisi döndürüyor, o yüzden birden fazla EİH'si olan
-    // bir dosya burada kendiliğinden ayrı ayrı satırlar olarak listelenir. Hat/Güzergah Kaydı'na
-    // manuel eklenmiş bir isimle birebir aynıysa (ad bazlı) tekrar eklenmez.
+    function hgKmlHatVerisiYukle(){
+      try{ var d = localStorage.getItem(KML_HAT_KEY); return d ? JSON.parse(d) : {}; }catch(err){ return {}; }
+    }
+    function hgKmlHatVerisiKaydet(obj){
+      try{ localStorage.setItem(KML_HAT_KEY, JSON.stringify(obj)); }catch(err){}
+    }
+    function hgHatAdiOlustur(gerilim, m1, m2){
+      if(!gerilim || !m1 || !m2) return '';
+      return gerilim + ' kV ' + m1.trim() + ' - ' + m2.trim() + ' EİH';
+    }
+    // Bir kaydın (eski serbest-metin VEYA yeni yapılandırılmış) TÜM görünen hat adlarını dizi olarak verir.
+    function hgKaydinAdlari(r){
+      if(r.dosyaAdi){
+        var adlar = window._haritaHatOzetGetir ? window._haritaHatOzetGetir(r.dosyaAdi) : null;
+        if(adlar && adlar.length) return adlar;
+        return r.ad ? [r.ad] : [r.dosyaAdi];
+      }
+      if(r.gerilim && r.devreler && r.devreler.length){
+        return r.devreler.map(function(d){ return hgHatAdiOlustur(r.gerilim, d.merkez1, d.merkez2); }).filter(Boolean);
+      }
+      return r.ad ? [r.ad] : [];
+    }
+
+    // Diğer modüllerin kayıtlı hat/güzergah listesini okuyabilmesi için (paylaşılan "Kayıtlı Hat
+    // Seçiniz" dropdown'ı). KML/KMZ Görüntüleyici'nin "Hat Bilgilerini Düzenle" ile tanımladığı TÜM
+    // dosyaların EİH isimleri de (bu modülden dosya eklenerek oluşturulanlar dahil, aynı ortak depoyu
+    // kullandıkları için) otomatik olarak eklenir. Ad bazlı dedupe var.
     window.hatGuzergahListesiGetir = function(){
-      var kayitlar = hgLoadRecords().slice();
+      var kayitlar = [];
+      var mevcutAdlar = {};
+      function ekle(ad){ if(ad && !mevcutAdlar[ad]){ mevcutAdlar[ad] = true; kayitlar.push({ad: ad}); } }
+      var kmlHatVerisi = hgKmlHatVerisiYukle();
+      hgLoadRecords().forEach(function(r){
+        if(r.dosyaAdi){
+          // Dosyaya bağlı kayıt: hat-bilgileri deposunda bu dosya için veri VARSA adları aşağıdaki
+          // tarama zaten ekleyecek. YOKSA (eski serbest-metin "Elle Gir + dosya" kaydı) kendi .ad'ını
+          // ekle — aksi halde bu tip eski kayıtlar listeden tamamen kaybolurdu.
+          if(!kmlHatVerisi[r.dosyaAdi] && r.ad) ekle(r.ad);
+          return;
+        }
+        hgKaydinAdlari(r).forEach(ekle);
+      });
       try{
         if(window._haritaHatOzetGetir){
-          var kmlHatVerisi = JSON.parse(localStorage.getItem('sehimci_kml_hat_bilgileri_v1') || '{}');
-          var mevcutAdlar = {};
-          kayitlar.forEach(function(r){ if(r && r.ad) mevcutAdlar[r.ad] = true; });
           Object.keys(kmlHatVerisi).forEach(function(dosyaAdi){
-            var adlar = window._haritaHatOzetGetir(dosyaAdi) || [];
-            adlar.forEach(function(ad){
-              if(ad && !mevcutAdlar[ad]){ mevcutAdlar[ad] = true; kayitlar.push({ad: ad}); }
-            });
+            (window._haritaHatOzetGetir(dosyaAdi) || []).forEach(ekle);
           });
         }
       }catch(kmlHatOkumaHatasi){}
@@ -26078,12 +26225,14 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }
 
     function hgRecordHtml(r, no){
+      var adlar = hgKaydinAdlari(r);
+      var baslik = adlar.length ? adlar.join(' & ') : 'Başlıksız';
       var dosyaSatiri = r.dosyaAdi
         ? '<div class="history-item-inputs">📎 ' + escapeHtml(r.dosyaAdi) + '</div>'
         : '<div class="history-item-inputs" style="color:var(--text-muted);">Dosya eklenmedi</div>';
       return '<div class="history-item" style="margin-bottom:10px;">' +
         '<div class="history-item-top">' +
-          '<span class="history-item-time">' + no + '. <span style="color:var(--accent); font-weight:600;">' + escapeHtml(r.ad) + '</span></span>' +
+          '<span class="history-item-time">' + no + '. <span style="color:var(--accent); font-weight:600;">' + escapeHtml(baslik) + '</span></span>' +
           '<button type="button" class="cum-delete-btn" data-hg-id="' + r.id + '" aria-label="Kaydı sil">✕</button>' +
         '</div>' +
         dosyaSatiri +
@@ -26147,8 +26296,8 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }
 
     // Diğer modüllerin (ör. Direk Ayak Ayar Ölçüleri'ndeki "Elle Gir" kutusu) buradan yeni bir
-    // hat/güzergah kaydı oluşturabilmesi için — bu modülün kendi Kaydet butonuyla TAM AYNI mantığı
-    // kullanır, böylece iki yerde de tutarlı davranış/format garanti olur.
+    // hat/güzergah kaydı oluşturabilmesi için — ESKİ serbest-metin API'si, bilerek değiştirilmedi
+    // (bkz. yukarıdaki NOT). Bu modülün KENDİ formu artık bunu ÇAĞIRMIYOR, bkz. hgYapilandirilmisKaydet.
     function hgKaydetYeniHat(ad, dosyaAdi, kmlMetni){
       var now = new Date();
       function p2(n){ return String(n).padStart(2,'0'); }
@@ -26176,22 +26325,138 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }
     window.hatGuzergahKaydet = hgKaydetYeniHat;
 
+    // ── Bu modülün KENDİ formu: Gerilim Seviyesi + Devre Sayısı + Merkez 1/Merkez 2 ──
+    var hgHatState = { gerilim:null, devreSayisi:1, devreler:[{merkez1:'',merkez2:''}] };
+
+    function hgHatSecimButonlariCiz(){
+      var gerilimWrap = document.getElementById('hg-hat-gerilim-secim');
+      var devreWrap = document.getElementById('hg-hat-devre-secim');
+      if(gerilimWrap){
+        gerilimWrap.innerHTML = HG_GERILIM_SEVIYELERI.map(function(g){
+          var secili = hgHatState.gerilim === g;
+          return '<button type="button" data-hg-gerilim="'+g+'" style="padding:7px 12px;border-radius:7px;border:1.5px solid '+(secili?'#4AA8FF':'rgba(255,255,255,0.3)')+';background:'+(secili?'#4AA8FF':'rgba(255,255,255,0.06)')+';color:#fff;font-size:12px;font-weight:700;cursor:pointer;">'+g+' kV</button>';
+        }).join('');
+      }
+      if(devreWrap){
+        devreWrap.innerHTML = HG_DEVRE_SAYILARI.map(function(d){
+          var secili = hgHatState.devreSayisi === d;
+          return '<button type="button" data-hg-devre-sayisi="'+d+'" style="flex:1;padding:7px 0;border-radius:7px;border:1.5px solid '+(secili?'#4AA8FF':'rgba(255,255,255,0.3)')+';background:'+(secili?'#4AA8FF':'rgba(255,255,255,0.06)')+';color:#fff;font-size:12px;font-weight:700;cursor:pointer;">'+d+'</button>';
+        }).join('');
+      }
+    }
+    function hgHatDevreSatirlariCiz(){
+      var wrap = document.getElementById('hg-hat-devreler-wrap');
+      if(!wrap) return;
+      var n = hgHatState.devreSayisi;
+      while(hgHatState.devreler.length < n) hgHatState.devreler.push({merkez1:'',merkez2:''});
+      hgHatState.devreler.length = n;
+      var html = '';
+      for(var i=0;i<n;i++){
+        var m1 = (hgHatState.devreler[i].merkez1||'').replace(/"/g,'&quot;');
+        var m2 = (hgHatState.devreler[i].merkez2||'').replace(/"/g,'&quot;');
+        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);border-radius:8px;">' +
+          '<p style="margin:0 0 8px;font-size:10.5px;font-weight:700;color:#4AA8FF;">Devre '+(i+1)+'</p>' +
+          '<div style="display:flex;gap:8px;">' +
+            '<div style="flex:1;">' +
+              '<label style="display:block;font-size:9.5px;color:rgba(255,255,255,0.65);margin-bottom:3px;">Merkez 1</label>' +
+              '<input type="text" data-hg-devre-idx="'+i+'" data-hg-merkez="1" value="'+m1+'" placeholder="örn. Adıyaman" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid rgba(255,255,255,0.25);border-radius:6px;font-size:12px;background:rgba(255,255,255,0.1);color:#fff;">' +
+            '</div>' +
+            '<div style="flex:1;">' +
+              '<label style="display:block;font-size:9.5px;color:rgba(255,255,255,0.65);margin-bottom:3px;">Merkez 2</label>' +
+              '<input type="text" data-hg-devre-idx="'+i+'" data-hg-merkez="2" value="'+m2+'" placeholder="örn. Gözebaşı" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid rgba(255,255,255,0.25);border-radius:6px;font-size:12px;background:rgba(255,255,255,0.1);color:#fff;">' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
+      wrap.innerHTML = html;
+      wrap.querySelectorAll('input[data-hg-devre-idx]').forEach(function(inp){
+        inp.addEventListener('input', function(){
+          var idx = parseInt(inp.getAttribute('data-hg-devre-idx'),10);
+          var alan = inp.getAttribute('data-hg-merkez')==='1' ? 'merkez1' : 'merkez2';
+          hgHatState.devreler[idx][alan] = inp.value;
+        });
+      });
+    }
+    function hgHatFormuSifirla(){
+      hgHatState = { gerilim:null, devreSayisi:1, devreler:[{merkez1:'',merkez2:''}] };
+      hgHatSecimButonlariCiz();
+      hgHatDevreSatirlariCiz();
+    }
+    var hgHatGerilimSecimEl = document.getElementById('hg-hat-gerilim-secim');
+    if(hgHatGerilimSecimEl) hgHatGerilimSecimEl.addEventListener('click', function(e){
+      var btn = e.target.closest ? e.target.closest('[data-hg-gerilim]') : null;
+      if(!btn) return;
+      hgHatState.gerilim = btn.getAttribute('data-hg-gerilim');
+      hgHatSecimButonlariCiz();
+    });
+    var hgHatDevreSecimEl = document.getElementById('hg-hat-devre-secim');
+    if(hgHatDevreSecimEl) hgHatDevreSecimEl.addEventListener('click', function(e){
+      var btn = e.target.closest ? e.target.closest('[data-hg-devre-sayisi]') : null;
+      if(!btn) return;
+      hgHatState.devreSayisi = parseInt(btn.getAttribute('data-hg-devre-sayisi'),10);
+      hgHatSecimButonlariCiz();
+      hgHatDevreSatirlariCiz();
+    });
+    hgHatSecimButonlariCiz();
+    hgHatDevreSatirlariCiz();
+
+    // Yapılandırılmış (gerilim+devreler) kaydı oluşturur — parametreli çekirdek, hem bu modülün
+    // KENDİ Kaydet butonu hem de diğer modüllerdeki "Elle Gir" mini kayıt kutuları (bkz. aşağı
+    // window.hatGuzergahKaydetYapilandirilmis) TEK bir yerden, AYNI mantıkla kaydetsin diye.
+    function hgYapilandirilmisKaydetCore(gerilim, devreSayisi, devreler, dosyaAdi, kmlMetni){
+      if(!gerilim) return { ok:false, hata:'Lütfen gerilim seviyesi seçiniz.' };
+      var eksik = devreler.some(function(d){ return !d.merkez1 || !d.merkez1.trim() || !d.merkez2 || !d.merkez2.trim(); });
+      if(eksik) return { ok:false, hata:'Lütfen tüm devreler için Merkez 1 ve Merkez 2 giriniz.' };
+      var now = new Date();
+      function p2(n){ return String(n).padStart(2,'0'); }
+      var tarih = p2(now.getDate())+'.'+p2(now.getMonth()+1)+'.'+now.getFullYear()+' '+p2(now.getHours())+':'+p2(now.getMinutes());
+      var id = hgRecordIdCounter++;
+      var devrelerTrim = devreler.map(function(d){ return {merkez1:d.merkez1.trim(), merkez2:d.merkez2.trim()}; });
+      var record;
+      if(dosyaAdi){
+        // Dosya eklenmiş: gerilim/devre verisi PAYLAŞILAN depoya (KML modülünün de okuduğu) dosya
+        // adına göre yazılır — böylece dosya, KML/KMZ Görüntüleyici'nin listesinde de otomatik
+        // olarak bu EİH adlarıyla görünür ve haritada gösterilebilir.
+        var kmlHatVerisi = hgKmlHatVerisiYukle();
+        kmlHatVerisi[dosyaAdi] = { gerilim: gerilim, devreSayisi: devreSayisi, devreler: devrelerTrim };
+        hgKmlHatVerisiKaydet(kmlHatVerisi);
+        var features = window.parseKMLGenel ? window.parseKMLGenel(kmlMetni) : [];
+        var kmlFileId = 'kml-hg-' + id;
+        hgKmlFilesEkle({
+          id: kmlFileId,
+          name: dosyaAdi,
+          text: kmlMetni,
+          featureCount: features.length,
+          lineCount: features.filter(function(f){ return f.type === 'line'; }).length,
+          pointCount: features.filter(function(f){ return f.type === 'point'; }).length
+        });
+        record = { id:id, tarih:tarih, dosyaAdi: dosyaAdi, _kmlFileId: kmlFileId };
+      } else {
+        record = { id:id, tarih:tarih, gerilim: gerilim, devreSayisi: devreSayisi, devreler: devrelerTrim };
+      }
+      hgRecords.push(record);
+      hgSaveRecords(hgRecords);
+      hgListeyiCiz();
+      if(window.markModuleUsed) window.markModuleUsed('hat-guzergah-kaydi');
+      return { ok:true, record:record };
+    }
+    // Diğer modüllerdeki ("Ayak Ayar" vb.) "Elle Gir" mini kutularının kullanması için — bu modülün
+    // kendi Kaydet butonuyla TAM AYNI mantığı/depoyu kullanır. devreler: [{merkez1,merkez2},...]
+    window.hatGuzergahKaydetYapilandirilmis = hgYapilandirilmisKaydetCore;
+
     var hgKaydetBtn = document.getElementById('hg-kaydet-btn');
     if(hgKaydetBtn){
       hgKaydetBtn.addEventListener('click', function(){
         if(hgErrorBox) hgErrorBox.hidden = true;
-        var adEl = document.getElementById('hg-ad');
-        var ad = adEl ? adEl.value.trim() : '';
-        if(!ad){
-          if(hgErrorBox){ hgErrorBox.textContent = 'Lütfen hat/güzergah adını girin.'; hgErrorBox.hidden = false; }
+        var sonuc = hgYapilandirilmisKaydetCore(hgHatState.gerilim, hgHatState.devreSayisi, hgHatState.devreler, hgSeciliDosya ? hgSeciliDosya.ad : null, hgSeciliDosya ? hgSeciliDosya.kmlMetni : null);
+        if(!sonuc.ok){
+          if(hgErrorBox){ hgErrorBox.textContent = sonuc.hata; hgErrorBox.hidden = false; }
           return;
         }
-        hgKaydetYeniHat(ad, hgSeciliDosya ? hgSeciliDosya.ad : null, hgSeciliDosya ? hgSeciliDosya.kmlMetni : null);
-
-        adEl.value = '';
         hgSeciliDosya = null;
         var p = document.getElementById('hg-dosya-secili');
         if(p) p.hidden = true;
+        hgHatFormuSifirla();
         if(window.showToast) showToast('✓ Kaydedildi', 'success');
       });
     }
@@ -26207,6 +26472,12 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         hgRecords = hgRecords.filter(function(r){ return r.id !== id; });
         hgSaveRecords(hgRecords);
         if(silinen && silinen._kmlFileId) hgKmlFilesSil(silinen._kmlFileId);
+        if(silinen && silinen.dosyaAdi && !silinen.ad){
+          // Yapılandırılmış (bu modülden dosya eklenerek oluşturulmuş) kayıt siliniyor —
+          // paylaşılan hat-bilgileri deposundaki eşleşen girdiyi de temizle, öksüz veri kalmasın.
+          var kmlHatVerisi = hgKmlHatVerisiYukle();
+          if(kmlHatVerisi[silinen.dosyaAdi]){ delete kmlHatVerisi[silinen.dosyaAdi]; hgKmlHatVerisiKaydet(kmlHatVerisi); }
+        }
         hgListeyiCiz();
       });
     }
@@ -26225,8 +26496,8 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
   // parametrik hale getirilmiş: her modül kendi benzersiz prefix'iyle çağırır (ör. 'ikaz-hat',
   // 'pd-hat', 'dh-hat', 'sd-hat'), böylece aynı sayfada birden fazla modülün dropdown'ı çakışmaz.
   // HTML tarafında her modül şu 3 bloğu prefix'e göre kendi kopyalamalı: dropdown-wrap/-btn/-label/
-  // -ok/-liste, ve "Elle Gir" mini kayıt kutusu (-elle-gir-overlay/-elle-ad/-elle-dosya-*/-elle-error/
-  // -elle-kaydet-btn/-elle-gir-kapat). Döndürülen nesnenin getSecili()'si o an seçili hat adını (veya
+  // -ok/-liste, ve "Elle Gir" mini kayıt kutusu (-elle-gir-overlay/-elle-gerilim-secim/-elle-devre-secim/
+  // -elle-devreler-wrap/-elle-dosya-*/-elle-error/-elle-kaydet-btn/-elle-gir-kapat). Döndürülen nesnenin getSecili()'si o an seçili hat adını (veya
   // hiçbiri seçili değilse null) verir — modülün kendi Kaydet/Ekle fonksiyonu bunu çağırıp kaydına
   // ekleyebilir.
   function kayitliHatDropdownKur(prefix){
@@ -26284,7 +26555,84 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }
     dropdownDoldur();
 
+    var KHD_GERILIM_SEVIYELERI = ['34','66','154','220','400'];
+    var KHD_DEVRE_SAYILARI = [1,2,4,6];
+    var elleHatState = { gerilim:null, devreSayisi:1, devreler:[{merkez1:'',merkez2:''}] };
+
+    function elleHatSecimButonlariCiz(){
+      var gerilimWrap = document.getElementById(prefix + '-elle-gerilim-secim');
+      var devreWrap = document.getElementById(prefix + '-elle-devre-secim');
+      if(gerilimWrap){
+        gerilimWrap.innerHTML = KHD_GERILIM_SEVIYELERI.map(function(g){
+          var secili = elleHatState.gerilim === g;
+          return '<button type="button" data-elle-gerilim="'+g+'" style="padding:7px 12px;border-radius:7px;border:1.5px solid '+(secili?'#4AA8FF':'rgba(255,255,255,0.3)')+';background:'+(secili?'#4AA8FF':'rgba(255,255,255,0.06)')+';color:#fff;font-size:12px;font-weight:700;cursor:pointer;">'+g+' kV</button>';
+        }).join('');
+      }
+      if(devreWrap){
+        devreWrap.innerHTML = KHD_DEVRE_SAYILARI.map(function(d){
+          var secili = elleHatState.devreSayisi === d;
+          return '<button type="button" data-elle-devre-sayisi="'+d+'" style="flex:1;padding:7px 0;border-radius:7px;border:1.5px solid '+(secili?'#4AA8FF':'rgba(255,255,255,0.3)')+';background:'+(secili?'#4AA8FF':'rgba(255,255,255,0.06)')+';color:#fff;font-size:12px;font-weight:700;cursor:pointer;">'+d+'</button>';
+        }).join('');
+      }
+    }
+    function elleHatDevreSatirlariCiz(){
+      var wrap = document.getElementById(prefix + '-elle-devreler-wrap');
+      if(!wrap) return;
+      var n = elleHatState.devreSayisi;
+      while(elleHatState.devreler.length < n) elleHatState.devreler.push({merkez1:'',merkez2:''});
+      elleHatState.devreler.length = n;
+      var html = '';
+      for(var i=0;i<n;i++){
+        var m1 = (elleHatState.devreler[i].merkez1||'').replace(/"/g,'&quot;');
+        var m2 = (elleHatState.devreler[i].merkez2||'').replace(/"/g,'&quot;');
+        html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);border-radius:8px;">' +
+          '<p style="margin:0 0 8px;font-size:10.5px;font-weight:700;color:#4AA8FF;">Devre '+(i+1)+'</p>' +
+          '<div style="display:flex;gap:8px;">' +
+            '<div style="flex:1;">' +
+              '<label style="display:block;font-size:9.5px;color:rgba(255,255,255,0.65);margin-bottom:3px;">Merkez 1</label>' +
+              '<input type="text" data-elle-devre-idx="'+i+'" data-elle-merkez="1" value="'+m1+'" placeholder="örn. Adıyaman" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid rgba(255,255,255,0.25);border-radius:6px;font-size:12px;background:rgba(255,255,255,0.1);color:#fff;">' +
+            '</div>' +
+            '<div style="flex:1;">' +
+              '<label style="display:block;font-size:9.5px;color:rgba(255,255,255,0.65);margin-bottom:3px;">Merkez 2</label>' +
+              '<input type="text" data-elle-devre-idx="'+i+'" data-elle-merkez="2" value="'+m2+'" placeholder="örn. Gözebaşı" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid rgba(255,255,255,0.25);border-radius:6px;font-size:12px;background:rgba(255,255,255,0.1);color:#fff;">' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
+      wrap.innerHTML = html;
+      wrap.querySelectorAll('input[data-elle-devre-idx]').forEach(function(inp){
+        inp.addEventListener('input', function(){
+          var idx = parseInt(inp.getAttribute('data-elle-devre-idx'),10);
+          var alan = inp.getAttribute('data-elle-merkez')==='1' ? 'merkez1' : 'merkez2';
+          elleHatState.devreler[idx][alan] = inp.value;
+        });
+      });
+    }
+    function elleHatFormuSifirla(){
+      elleHatState = { gerilim:null, devreSayisi:1, devreler:[{merkez1:'',merkez2:''}] };
+      elleHatSecimButonlariCiz();
+      elleHatDevreSatirlariCiz();
+    }
+    var elleGerilimSecimEl = document.getElementById(prefix + '-elle-gerilim-secim');
+    if(elleGerilimSecimEl) elleGerilimSecimEl.addEventListener('click', function(e){
+      var btn = e.target.closest ? e.target.closest('[data-elle-gerilim]') : null;
+      if(!btn) return;
+      elleHatState.gerilim = btn.getAttribute('data-elle-gerilim');
+      elleHatSecimButonlariCiz();
+    });
+    var elleDevreSecimEl = document.getElementById(prefix + '-elle-devre-secim');
+    if(elleDevreSecimEl) elleDevreSecimEl.addEventListener('click', function(e){
+      var btn = e.target.closest ? e.target.closest('[data-elle-devre-sayisi]') : null;
+      if(!btn) return;
+      elleHatState.devreSayisi = parseInt(btn.getAttribute('data-elle-devre-sayisi'),10);
+      elleHatSecimButonlariCiz();
+      elleHatDevreSatirlariCiz();
+    });
+    elleHatSecimButonlariCiz();
+    elleHatDevreSatirlariCiz();
+
     function elleGirAc(){
+      elleHatFormuSifirla();
       var overlay = document.getElementById(prefix + '-elle-gir-overlay');
       if(overlay) overlay.style.display = 'flex';
     }
@@ -26352,19 +26700,22 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     if(kaydetBtn){
       kaydetBtn.addEventListener('click', function(){
         if(errorBox) errorBox.hidden = true;
-        var adEl = document.getElementById(prefix + '-elle-ad');
-        var ad = adEl ? adEl.value.trim() : '';
-        if(!ad){
-          if(errorBox){ errorBox.textContent = 'Lütfen hat/güzergah adını girin.'; errorBox.hidden = false; }
-          return;
-        }
-        if(!window.hatGuzergahKaydet){
+        if(!window.hatGuzergahKaydetYapilandirilmis){
           if(errorBox){ errorBox.textContent = 'Hat/Güzergah Kaydı modülü yüklenemedi.'; errorBox.hidden = false; }
           return;
         }
-        window.hatGuzergahKaydet(ad, seciliDosya ? seciliDosya.ad : null, seciliDosya ? seciliDosya.kmlMetni : null);
-        dropdownDoldur(ad);
-        adEl.value = '';
+        var sonuc = window.hatGuzergahKaydetYapilandirilmis(elleHatState.gerilim, elleHatState.devreSayisi, elleHatState.devreler, seciliDosya ? seciliDosya.ad : null, seciliDosya ? seciliDosya.kmlMetni : null);
+        if(!sonuc.ok){
+          if(errorBox){ errorBox.textContent = sonuc.hata; errorBox.hidden = false; }
+          return;
+        }
+        // Kaydedilen EİH ad(lar)ını hesaplayıp seçili göster — dosya varsa paylaşılan hat-bilgileri
+        // deposundan (window._haritaHatOzetGetir), yoksa devre başına gerilim+merkez formülünden.
+        var yeniAdlar = sonuc.record.dosyaAdi
+          ? (window._haritaHatOzetGetir ? window._haritaHatOzetGetir(sonuc.record.dosyaAdi) : null)
+          : elleHatState.devreler.map(function(d){ return elleHatState.gerilim + ' kV ' + d.merkez1.trim() + ' - ' + d.merkez2.trim() + ' EİH'; });
+        var yeniAd = (yeniAdlar && yeniAdlar.length) ? yeniAdlar.join(' & ') : null;
+        dropdownDoldur(yeniAd);
         seciliDosya = null;
         var p = document.getElementById(prefix + '-elle-dosya-secili');
         if(p) p.hidden = true;
@@ -28228,14 +28579,12 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       '<path d="'+curveD+'" fill="none" stroke="#111" stroke-width="2.4"/>'+
       '<circle cx="'+toPx(0)+'" cy="'+toPy(top1)+'" r="4" fill="#111"/>'+
       '<circle cx="'+toPx(L)+'" cy="'+toPy(top2)+'" r="4" fill="#111"/>'+
-      '<circle cx="'+toPx(vx)+'" cy="'+toPy(vy)+'" r="5.5" fill="#E8590C" stroke="#fff" stroke-width="1.8"/>'+
       '<text x="'+toPx(0)+'" y="'+(toPy(top1)-10)+'" font-size="12" font-weight="700" fill="#122E43" text-anchor="middle" font-family="Oswald,sans-serif">A</text>'+
       '<text x="'+toPx(0)+'" y="'+(toPy(top1)-24)+'" font-size="10" font-weight="700" fill="#5B7488" text-anchor="middle" font-family=\'IBM Plex Mono,monospace\'>'+gkFormat(direkA.T)+' m</text>'+
       '<text x="'+toPx(L)+'" y="'+(toPy(top2)-10)+'" font-size="12" font-weight="700" fill="#122E43" text-anchor="middle" font-family="Oswald,sans-serif">B</text>'+
       '<text x="'+toPx(L)+'" y="'+(toPy(top2)-24)+'" font-size="10" font-weight="700" fill="#5B7488" text-anchor="middle" font-family=\'IBM Plex Mono,monospace\'>'+gkFormat(direkB.T)+' m</text>'+
     '</svg>';
 
-    var memeNotu = '<p style="margin:8px 2px 0;font-size:11px;color:#5B7488;text-align:center;">🔶 Meme noktasının A\'ya uzaklığı: <b style="color:#122E43;">'+gkFormat(vx)+' m</b></p>';
     var ozet = '<div style="margin-top:10px;padding:12px;border-radius:10px;background:#EAF6EE;border:1.5px solid #2E6B4E;">'+
       '<div style="font-size:12.5px;color:#122E43;">Hesaplanan Sehim (f): <b>'+gkFormat(f)+' m</b></div>'+
       '<div style="font-size:9.5px;color:#8A98A5;margin-top:6px;">A Askı Yüksekliği: '+gkFormat(direkA.T)+' m · B Askı Yüksekliği: '+gkFormat(direkB.T)+' m</div>'+
@@ -28250,7 +28599,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     var olcekNotu = gkGercekOlcek ? '' :
       '<p style="margin:6px 2px 0;font-size:9px;color:#9AABB8;text-align:center;">⚠️ Görünürlük için dikey eksen büyütülmüştür, gerçek oranları yansıtmaz.</p>';
 
-    return '<div class="gk-grafik-blok">' + olcekBasligi + svg + olcekNotu + memeNotu + ozet + '</div>';
+    return '<div class="gk-grafik-blok">' + olcekBasligi + svg + olcekNotu + ozet + '</div>';
   }
 
 
@@ -28927,7 +29276,6 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       '<line x1="'+toPx(L)+'" y1="'+toPy(top2)+'" x2="'+toPx(L)+'" y2="'+toPy(g2)+'" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>'+
       '<circle cx="'+toPx(0)+'" cy="'+toPy(top1)+'" r="4" fill="#111"/>'+
       '<circle cx="'+toPx(L)+'" cy="'+toPy(top2)+'" r="4" fill="#111"/>'+
-      '<circle cx="'+toPx(vx)+'" cy="'+toPy(vy)+'" r="5.5" fill="#E8590C" stroke="#fff" stroke-width="1.8"/>'+
       uyariIkon+
       '<text x="'+toPx(0)+'" y="'+(toPy(top1)-10)+'" font-size="12" font-weight="700" fill="#122E43" text-anchor="middle" font-family="Oswald,sans-serif">'+n1.name+'</text>'+
       '<text x="'+toPx(0)+'" y="'+(toPy(top1)-24)+'" font-size="10" font-weight="700" fill="#5B7488" text-anchor="middle" font-family=\'IBM Plex Mono,monospace\'>'+direk1.T.toFixed(1).replace('.',',')+' m</text>'+
@@ -28945,7 +29293,6 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       '<div style="font-size:9.5px;color:#8A98A5;margin-top:6px;">'+n1.name+' Askı Yüksekliği: '+gkFormat(direk1.T)+' m · '+n2.name+' Askı Yüksekliği: '+gkFormat(direk2.T)+' m</div>'+
       '<div style="font-size:9.5px;color:#8A98A5;margin-top:2px;">Tel Parametresi (c): '+gkFormat(c)+' m'+(cVarsayilanMi?' (varsayılan)':' (özel)')+'</div>'+
     '</div>';
-    var memeNotu = '<p style="margin:8px 2px 0;font-size:11px;color:#5B7488;text-align:center;">🔶 Meme noktasının '+n1.name+'\'e uzaklığı: <b style="color:#122E43;">'+gkFormat(vx)+' m</b></p>';
 
     var olcekBasligi = '<div class="gk-grafik-sarici" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'+
         '<span style="font-size:9.5px;font-weight:700;color:#5B7488;letter-spacing:0.03em;">'+(gkGercekOlcek?'1:1 GERÇEK ÖLÇEKLİ':'DİKEY EKSEN BÜYÜTÜLMÜŞ')+'</span>'+
@@ -28957,7 +29304,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     // "gk-grafik-blok" i\u015faretli bir sarmalayıcı — de\u011fi\u015ftir dü\u011fmesi t\u0131kland\u0131\u011f\u0131nda sadece
     // KENDİ en yak\u0131n bu sar\u0131c\u0131s\u0131n\u0131 de\u011fi\u015ftirir; hem canl\u0131 sonuç ekran\u0131nda hem kay\u0131tl\u0131 ölçüm detay\u0131nda
     // ayn\u0131 id'nin birden fazla yerde olmas\u0131 riskine gerek kalmadan güvenle çal\u0131\u015f\u0131r.
-    return '<div class="gk-grafik-blok">' + olcekBasligi + svg + olcekNotu + memeNotu + ozet + '</div>';
+    return '<div class="gk-grafik-blok">' + olcekBasligi + svg + olcekNotu + ozet + '</div>';
   }
 
   window._gkOlcekDegistir = function(btn){
