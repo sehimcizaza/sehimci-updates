@@ -44,6 +44,15 @@
   --accent:#007E8A;
   --accent-ink:#FFFFFF;
   --grid-line: rgba(10,42,74,0.05);
+
+  /* 2026-08-04: telefonun sistem navigasyon çubuğunun (gesture/3-tuşlu) O ANKİ
+     yüksekliği — native taraf (MainActivity.kt) window insets her değiştiğinde
+     window._navBarYuksekligiGuncelle(px) ile bunu günceller. Nav çubuğu
+     açıkken #bottom-nav bu kadar yukarı kayar, kapalıyken (0) en alta iner —
+     TAMAMEN DİNAMİK. Native köprü henüz yoksa/eski APK ise 0 kalır (statik
+     davranış, önceki sürümle aynı).
+  */
+  --nav-extra: 0px;
 }
 /* Dark mode OS tercihine göre CSS değişkenleri — kasıtlı devre dışı bırakıldı.
    Dark mode yönetimi JS tarafından body.dark class'ı ile yapılmaktadır.
@@ -703,7 +712,7 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 .picker-overlay{
   position:fixed; inset:0; z-index:250;
   display:flex; align-items:flex-end; justify-content:center;
-  padding-bottom: calc(62px + 50px + var(--kb-offset, 0px)); /* bottom nav yüksekliği + geçici 50px + klavye */
+  padding-bottom: calc(62px + var(--nav-extra, 0px) + var(--kb-offset, 0px)); /* bottom nav yüksekliği + dinamik nav-çubuğu boşluğu + klavye */
   transition: padding-bottom 150ms ease-out;
 }
 #harita-not-overlay,
@@ -731,7 +740,7 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 .picker-sheet{
   position:relative;
   width:100%; max-width:480px;
-  max-height: calc(72vh - 62px - 50px);
+  max-height: calc(72vh - 62px - var(--nav-extra, 0px));
   background:var(--surface);
   border-radius:20px 20px 0 0;
   border:1px solid var(--border);
@@ -1402,7 +1411,7 @@ body.dark footer p { color: var(--text-muted) !important; }
 /* ════ BOTTOM NAV BAR ════ */
 #bottom-nav {
   position: fixed;
-  bottom: 50px; /* GEÇİCİ: sistem navigasyon çubuğuyla çakışmayı önlemek için 50px boşluk (native düzeltme yapılana kadar) */
+  bottom: var(--nav-extra, 0px); /* dinamik: telefonun sistem nav çubuğu açıkken yukarı kayar, kapalıyken en alta iner */
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -1563,8 +1572,8 @@ body.dark .bnav-badge { border-color: #0E1621; }
 body.dark .toast { background: #1A2535; }
 
 /* ════ BOTTOM NAV için sayfa alt boşluğu ════ */
-.home { padding-bottom: 130px !important; }
-.module { padding-bottom: 178px !important; }
+.home { padding-bottom: calc(80px + var(--nav-extra, 0px)) !important; }
+.module { padding-bottom: calc(128px + var(--nav-extra, 0px)) !important; }
 
 
 
@@ -1695,7 +1704,7 @@ body.dark [style*="background:#1A4A6E"] {
 
 #fav-tray {
   position: absolute;
-  bottom: 112px; /* alt bar yüksekliği (62px) + geçici 50px boşluk */
+  bottom: calc(62px + var(--nav-extra, 0px)); /* alt bar yüksekliği (62px) + dinamik nav-çubuğu boşluğu */
   left: 50%;
   transform: translateX(-50%) translateY(100%);
   width: 100%;
@@ -2200,7 +2209,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 </div>
 
 <!-- Modül Sekme Çubuğu: geri / modül adı / favori — sadece bir modül açıkken görünür -->
-<nav id="module-tab-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:46px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(200,216,236,0.6);align-items:center;justify-content:space-between;z-index:199;box-sizing:border-box;padding:0 14px;bottom:calc(112px + env(safe-area-inset-bottom, 0px));">
+<nav id="module-tab-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:46px;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(200,216,236,0.6);align-items:center;justify-content:space-between;z-index:199;box-sizing:border-box;padding:0 14px;bottom:calc(62px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));">
   <button type="button" id="mtb-back-btn" aria-label="Geri" onclick="document.getElementById('back-btn').click()" style="width:34px;height:34px;border-radius:50%;background:rgba(46,107,176,0.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;">
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#2E6BB0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
@@ -2208,10 +2217,9 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
   <button type="button" id="mtb-fav-btn" aria-label="Favorilere ekle/kaldır" onclick="mtbFavToggle()" style="width:34px;height:34px;border-radius:50%;background:rgba(245,166,35,0.12);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;"></button>
 </nav>
 
-<!-- GEÇİCİ: bottom-nav'ın altındaki 50px boşluğu düz uygulama rengiyle kaplar — kaydırılan
-     içerik bu boşlukta görünmesin diye. Etkileşimsiz (pointer-events:none). Native düzeltme
-     yapılıp #bottom-nav tekrar bottom:0'a alınınca bu div ile birlikte kaldırılmalı. -->
-<div id="bottom-nav-alt-doldur" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:50px;background:var(--bg);z-index:200;pointer-events:none;"></div>
+<!-- Nav çubuğu açıkken bottom-nav'ın altındaki boşluğu düz uygulama rengiyle kaplar; nav
+     çubuğu kapalıyken (--nav-extra:0px) yüksekliği 0'a iner, hiç görünmez. -->
+<div id="bottom-nav-alt-doldur" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:var(--nav-extra, 0px);background:var(--bg);z-index:200;pointer-events:none;"></div>
 
 <!-- Bottom Navigation Bar -->
 <nav id="bottom-nav">
@@ -2299,7 +2307,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 <!-- Ayarlar / Profil Bottom Sheet -->
 <div id="settings-panel" class="picker-overlay" hidden style="z-index:500;align-items:flex-start;justify-content:flex-end;padding-bottom:0;">
   <div class="picker-backdrop" id="settings-backdrop" style="background:rgba(0,0,0,0.28);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);"></div>
-  <div id="settings-sheet" class="picker-sheet" style="width:52%;max-width:240px;min-width:190px;height:calc(100% - 112px);max-height:calc(100% - 112px);border-radius:16px 0 0 16px;border-right:none;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow-y:auto;padding-top:calc(20px + max(env(safe-area-inset-top,0px), 28px));padding-bottom:20px;position:relative;">
+  <div id="settings-sheet" class="picker-sheet" style="width:52%;max-width:240px;min-width:190px;height:calc(100% - 62px - var(--nav-extra, 0px));max-height:calc(100% - 62px - var(--nav-extra, 0px));border-radius:16px 0 0 16px;border-right:none;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow-y:auto;padding-top:calc(20px + max(env(safe-area-inset-top,0px), 28px));padding-bottom:20px;position:relative;">
     <!-- Sürükleme tutamacı — sol kenarda dikey çizgi -->
     <div id="settings-drag-handle" style="position:absolute;left:0;top:0;bottom:0;width:28px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;z-index:1;">
       <div style="width:4px;height:48px;border-radius:2px;background:var(--border,#C8D8EC);opacity:0.7;"></div>
@@ -4306,7 +4314,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     </div>
 
     <!-- Not Detay Overlay -->
-    <div id="nd-detay-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:calc(112px + env(safe-area-inset-bottom, 0px));z-index:150;background:var(--bg);overflow-y:auto;">
+    <div id="nd-detay-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:calc(62px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));z-index:150;background:var(--bg);overflow-y:auto;">
       <div style="max-width:480px;margin:0 auto;padding:calc(16px + max(env(safe-area-inset-top,0px), 28px)) 20px 40px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
           <div id="nd-detay-kat-badge" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;color:#fff;"></div>
@@ -6657,6 +6665,21 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       backBtn.click();
     }
     return true;
+  };
+
+  // 2026-08-04: Native taraf (MainActivity.kt), pencere insets'i her değiştiğinde
+  // (sistem navigasyon çubuğu gösterildiğinde/gizlendiğinde, gesture↔3-tuşlu mod
+  // değişiminde, ekran döndürmede vb.) bu fonksiyonu çağırır — px, o anki
+  // navigasyon çubuğu yüksekliğidir (dp/CSS-px cinsinden, native tarafta zaten
+  // yoğunluğa göre dönüştürülmüş). `--nav-extra` CSS değişkenini güncelleyerek
+  // #bottom-nav ve ona bağlı tüm elemanların (module-tab-bar, nd-detay-overlay,
+  // fav-tray, picker-overlay, settings-sheet, .home/.module padding'i) DİNAMİK
+  // olarak konumlanmasını sağlar — nav çubuğu açıkken yukarı kayar, kapalıyken
+  // (px=0) en alta iner. Native köprü henüz eklenmemiş eski bir APK'da bu fonksiyon
+  // hiç çağrılmaz, `--nav-extra` varsayılan 0px'te kalır (önceki statik davranış).
+  window._navBarYuksekligiGuncelle = function(px){
+    var deger = (typeof px === 'number' && px > 0) ? px : 0;
+    document.documentElement.style.setProperty('--nav-extra', deger + 'px');
   };
   // Kenardan (soldan ~24px içeride) başlayan, yatayda baskın bir sağa kaydırma
   // algılanırsa: bir modül açıksa gizli back-btn'e programatik click()
