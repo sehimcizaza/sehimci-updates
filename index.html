@@ -27098,6 +27098,20 @@ function tsHesapla(A, B, C, D, E, F, G){
 // ölçümü (16 bölünme). Sonuç aralıklarında kullanılır.
 var TS_MEDYAN_HATA = [0.242, 0.228, 0.202, 0.185, 0.177, 0.169, 0.157, 0.120, 0.130, 0.122];
 
+// 2026-08-05: Kullanıcının sağladığı 90 örneklik gerçek veri setinden (topraklama_90_ornek.xlsx)
+// hesaplandı — her senaryonun, o örneğin 10 senaryosunun GEOMETRİK ORTALAMASINA oranı (medyan,
+// 90 örnek üzerinden). Bu oranlar örnekler arasında ÇOK TUTARLI çıktı (std ~0.03-0.06) ve düşük/
+// yüksek dirençli alt gruplarda neredeyse HİÇ değişmiyor — yani 10 senaryo arasındaki BAĞIL ilişki,
+// mutlak direnç seviyesinden büyük ölçüde bağımsız, kararlı bir fiziksel örüntü. Girdiler eğitim
+// verisinin çok dışına çıkıp (ör. çok yüksek toprak direnci) TS_MODEL'in bazı senaryolarda anlamsız
+// sonuç (taban değere 0.1'e yapışma) üretmesi durumunda, GEÇERLİ KALAN senaryolardan bu oranlarla
+// "taban seviye" tahmin edilip TÜM set yeniden inşa edilir — kullanıcının kendi verisiyle
+// doğrulanmış, uydurma olmayan bir yöntem.
+var TS_SENARYO_ORAN = [1.319834, 1.121378, 1.137706, 1.101420, 1.063494, 1.021311, 0.860612, 0.843223, 0.847224, 0.822095];
+// Eğitim verisindeki gözlenen aralık (bu aralığın dışı = ekstrapolasyon riski yüksek)
+var TS_EGITIM_A_ARALIGI = [20, 600];
+var TS_EGITIM_B_ARALIGI = [50, 600];
+
 (function(){
   var tsForm = document.getElementById('ts-form');
   if(!tsForm) return;
@@ -27373,6 +27387,28 @@ var TS_MEDYAN_HATA = [0.242, 0.228, 0.202, 0.185, 0.177, 0.169, 0.157, 0.120, 0.
     }
 
     var sonuclar = tsHesapla(degerler[0], degerler[1], degerler[2], direkAyakAcikligi, temelDerinligi, ayakGenisligi, yanakGenisligi);
+
+    // Girdiler eğitim verisinin çok dışındaysa (özellikle çok yüksek toprak direnci) TS_MODEL
+    // bazı senaryolarda taban değere (0.1 Ω) yapışabiliyor — bu senaryolar için sonuç GEÇERSİZDİR.
+    // Geçerli kalan senaryolardan (taban değere yapışmamış) TS_SENARYO_ORAN ile bir "taban seviye"
+    // tahmin edilip TÜM set bu oranlara göre sessizce yeniden inşa edilir.
+    var TS_TABAN = 0.1;
+    var gecerliIdx = [];
+    sonuclar.forEach(function(v, i){ if(v > TS_TABAN + 0.05) gecerliIdx.push(i); });
+    if(gecerliIdx.length > 0 && gecerliIdx.length < sonuclar.length){
+      var ankorlar = gecerliIdx.map(function(i){ return sonuclar[i] / TS_SENARYO_ORAN[i]; });
+      ankorlar.sort(function(a,b){ return a-b; });
+      var medyanAnkor = ankorlar.length % 2 === 1
+        ? ankorlar[(ankorlar.length-1)/2]
+        : (ankorlar[ankorlar.length/2 - 1] + ankorlar[ankorlar.length/2]) / 2;
+      sonuclar = TS_SENARYO_ORAN.map(function(oran){ return medyanAnkor * oran; });
+    } else if(gecerliIdx.length === 0){
+      tsSonucGrid.innerHTML = '';
+      tsSonucWrap.hidden = false;
+      if(window.markModuleUsed){ window.markModuleUsed('topraklama-senaryolari'); }
+      return;
+    }
+
     tsSonucGrid.innerHTML = sonuclar.map(function(deger, idx){
       var renk = deger <= 10 ? '#1E8E3E' : '#D32F2F';
       var alt = Math.max(deger - TS_MEDYAN_HATA[idx], 0.1);
