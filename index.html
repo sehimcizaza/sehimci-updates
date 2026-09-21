@@ -22,6 +22,19 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
+/* 2026-09-19 EKLEME (kullanıcı fark etti: telefonun sistem yazı boyutu en yükseğe alınınca "Sık
+   Kullanılanlar" gibi dar/sabit-genişlikli kartlardaki yazılar taşıp yerleşimi bozuyordu) — bu,
+   Android WebView'ın sistem "yazı boyutu" erişilebilirlik ayarına göre TÜM metni otomatik
+   büyütmesinden (font boosting) kaynaklanıyor. text-size-adjust:100%, bu otomatik büyütmeyi
+   kapatıp uygulamanın KENDİ (zaten okunaklı, erişilebilir boyutlarda tasarlanmış) font
+   boyutlarının sabit kalmasını sağlıyor — cihazın yazı boyutu ayarından bağımsız.
+*/
+html{
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 :root{
   --graphite:#10151B;
   --paper:#EEF2F4;
@@ -297,6 +310,14 @@ button,input{font-family:inherit;}
   padding:4px 2px 0;
   word-break:keep-all;
 }
+
+.kit-std-block{ margin-bottom:4px; }
+.kit-std-baslik{ font-weight:700; font-size:13.5px; color:var(--text); margin:0 0 8px; line-height:1.4; }
+.kit-std-label{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.04em; text-transform:uppercase; color:var(--teias-teal-deep, #007E8A); margin:10px 0 3px; }
+.kit-std-metin{ font-size:13px; line-height:1.5; color:var(--text); margin:0 0 4px; }
+.kit-std-liste{ margin:2px 0 4px; padding-left:18px; }
+.kit-std-liste li{ font-size:12.5px; line-height:1.5; color:var(--text); margin-bottom:4px; }
+.kit-std-ayrac{ border:none; border-top:1px solid var(--border, #E1E8EE); margin:14px 0; }
 
 /* ── Modern veri giriş kartı (se-card) — renkli üst şeritli, net kart tasarımı ── */
 .se-card{
@@ -3876,6 +3897,34 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     </div>
   </main>
 
+  <main class="module module-screen hidden" id="screen-kompozit-izolator-testleri" data-module-screen="kompozit-izolator-testleri">
+    <div id="kit-level-kategori">
+      <p class="it-section-title">Test Grubunu Seçin</p>
+      <div class="it-grid" id="kit-kategori-grid"></div>
+    </div>
+
+    <div id="kit-level-testler" hidden>
+      <div class="it-back-row">
+        <button type="button" class="it-back-btn" id="kit-back-to-kategori">‹ Geri</button>
+        <span class="it-crumb" id="kit-crumb-kategori">—</span>
+      </div>
+      <div class="it-note" id="kit-list-note"></div>
+      <div class="it-grid" id="kit-test-list"></div>
+    </div>
+
+    <div id="kit-standart-overlay" hidden style="position:fixed;inset:0;background:rgba(10,42,74,0.45);z-index:500;align-items:flex-end;justify-content:center;">
+      <div id="kit-standart-panel" style="display:none;flex-direction:column;width:100%;max-width:480px;max-height:80vh;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(10,42,74,0.25);">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border, #E1E8EE);flex-shrink:0;">
+          <p style="margin:0;font-weight:700;font-size:14px;color:var(--text);">İlgili Standart Bilgisi</p>
+          <button type="button" id="kit-standart-kapat" style="background:none;border:none;padding:4px;cursor:pointer;color:var(--text-muted);">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="kit-standart-body" style="overflow-y:auto;padding:14px 16px 22px;"></div>
+      </div>
+    </div>
+  </main>
+
   <main class="module module-screen hidden" id="screen-aski-gergi-takimlari" data-module-screen="aski-gergi-takimlari">
     <div id="agt-level-kategori">
       <p class="it-section-title">Kategori Seçin</p>
@@ -5701,7 +5750,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       <div id="gevsekIrtibatSonuc" class="kpi-grid"></div>
     </div>
     <div id="stDigerPanel-amax" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">EKATY-Madde 44 formülü: a_max = √[((Lk−U/150)/(2·sin(αi/8))−L_zin)·8Tn/gn]. Konsol Uzunluğu (Lk), her direğin Direk Listesi'nde (Bölüm 2) kendisine atanmış Direk Tipi/Gövde'sinden okunuyor — bu yüzden her direk kendi tipiyle hesaplanır, hepsi aynı varsayılmaz. İzolatör Boyu (L_zin) aşağıdaki seçimden, Tn/gn (+5°C, %70 rüzgarlı) her etabın kendi referans gerilmesinden otomatik hesaplanıyor. αi ise her direğin kendi rüzgar/ağırlık açıklığından türetilen bir referans açı — kitaptaki gerçek yöntem (salınım diyagramları) grafik bir yöntem, burada yaklaşıklıkla temsil edildi.</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">EKATY-Madde 44 formülü: a_max = √[((Lk−U/150)/(2·sin(αi/8))−L_zin)·8Tn/gn]. Konsol Uzunluğu (Lk), her direğin Direk Listesi'nde (Bölüm 2) kendisine atanmış Direk Tipi/Gövde'sinden okunuyor — bu yüzden her direk kendi tipiyle hesaplanır, hepsi aynı varsayılmaz. İzolatör Boyu (L_zin) aşağıdaki seçimden, Tn/gn (+5°C, %70 rüzgarlı) her etabın kendi referans gerilmesinden otomatik hesaplanıyor. αi ise her direğin kendi rüzgar/ağırlık açıklığından türetilen bir referans açı — gerçek yöntem (salınım diyagramları) grafik bir yöntem, burada yaklaşıklıkla temsil edildi.</div>
       <div class="row" id="izolatorSatiri">
         <div class="stfield">
           <label>İzolatör Tipi</label>
@@ -7871,7 +7920,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       var m = moduleRegistry[id];
       var illus = getModuleIllus(id) || (m.icon || '');
       var kisaIsim = {
-        'teget-acisi':               'Sehim',
+        'teget-acisi':               'Sehim Kont.',
         'direk-agirliklari':         'Direk Ağırl.',
         'ayak-ayar':                 'Ayak Ayar',
         'hirdavat-menu':             'Hırdavat Hes.',
@@ -9448,7 +9497,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:834, 2:1026, 3:1360, 4:1528, 5:1873, 6:2123, 7:2414, 8:2697, 9:2932}, stub:{ iyi:1030, normal:1030, zayif:null, mikro:760, kaya:null } }
       ]
     },
-    '2PD1 (Transpozisyonlu)': {
+    '2PD1 (TRP)': {
       govdeler: [
         { govde:0,  agirlik:71046, group:0 },
         { govde:3,  agirlik:77751, group:0 },
@@ -9494,7 +9543,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:912, 2:1132, 3:1516, 4:1706, 5:2089, 6:2287, 7:2726, 8:2993, 9:3305}, stub:{ iyi:1272, normal:1151, zayif:null, mikro:960, kaya:null } }
       ]
     },
-    '2PF1 (Çevirme Konsolu Dahil)': {
+    '2PF1 (ÇK)': {
       govdeler: [
         { govde:0,  agirlik:85893,  group:0 },
         { govde:3,  agirlik:93255,  group:0 },
@@ -9557,7 +9606,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:254, 2:280, 3:349, 4:458, 5:576, 6:628, 7:704, 8:869, 9:1076}, stub:{ iyi:189, normal:189, zayif:178, mikro:133, kaya:null } }
       ]
     },
-    '2FD1 (Transpozisyonlar Dahil)': {
+    '2FD1 (TRP)': {
       govdeler: [
         { govde:0, agirlik:15291, group:0 },
         { govde:3, agirlik:17218, group:0 },
@@ -9588,7 +9637,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:390, 2:416, 3:509, 4:650, 5:803, 6:895, 7:999, 8:1172, 9:1468}, stub:{ iyi:361, normal:361, zayif:333, mikro:273, kaya:null } }
       ]
     },
-    '2FN1 (ND)': {
+    '2FN1': {
       govdeler: [
         { govde:0, agirlik:20189, group:0 },
         { govde:3, agirlik:23056, group:0 },
@@ -9605,7 +9654,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:575, 2:660, 3:771, 4:940, 5:1069, 6:1280, 7:1423, 8:1550, 9:1903}, stub:{ iyi:485, normal:485, zayif:437, mikro:382, kaya:null } }
       ]
     },
-    '2FN1 (ND) (Çevirme Konsolu Dahil)': {
+    '2FN1 (ÇK)': {
       govdeler: [
         { govde:0, agirlik:22804, group:0 },
         { govde:3, agirlik:25671, group:0 },
@@ -9706,7 +9755,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:260, 2:385, 3:534, 4:669, 5:821}, stub:{ radye:336, mikro:263, iyi:null, normal:null, zayif:null, kaya:null } }
       ]
     },
-    'CPDH (Transpozisyon Konsolları Dahil)': {
+    'CPDH (TRP)': {
       konsolTipiVar: true,
       singleLeg: true,
       zeminKisitli: ['radye', 'mikro'],
@@ -9760,7 +9809,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:362, 2:521, 3:715, 4:942, 5:1062, 6:1249, 7:1427}, stub:{ radye:606, mikro:448, iyi:null, normal:null, zayif:null, kaya:null } }
       ]
     },
-    'CPFH (ND)': {
+    'CPFH': {
       konsolTipiVar: true,
       singleLeg: true,
       zeminKisitli: ['radye', 'mikro'],
@@ -9789,7 +9838,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         { legs:{1:508, 2:734, 3:862, 4:922, 5:1203, 6:1357, 7:1495, 8:1683, 9:1868}, stub:{ radye:689, mikro:449, iyi:null, normal:null, zayif:null, kaya:null } }
       ]
     },
-    'CPFH (ND) (Çevirme Konsolları Dahil)': {
+    'CPFH (ÇK)': {
       konsolTipiVar: true,
       singleLeg: true,
       zeminKisitli: ['radye', 'mikro'],
@@ -9998,6 +10047,33 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     }
   };
 
+  // MASTER_DIREK_TIPLERI: uygulamada şimdiye kadar HERHANGİ bir modülde (Direk Ağırlıkları/
+  // DIREK_DATA, Direk Temel Hesabı/TEMEL_DATA, Gabari Kontrol-Gevşek İrtibat/DU_TIPLER)
+  // kullanılmış TÜM direk kodlarının BİRLEŞİMİ — 33 kod. Her modülün kendi seçicisi bu listeyi,
+  // KENDİ veri tablosunda GERÇEKTEN olan kodlarla filtreleyerek gösterir (bkz. her modüldeki
+  // "MASTER_DIREK_TIPLERI.filter(...)" kullanımı) — yani veri olmayan bir kod, o modülün
+  // listesinde hiç görünmez (2026-09-19, kullanıcı isteği: "tamamen değiştir, kırmızı kalksın").
+  // Modüle özel filtreler (ör. Gabari Kontrol'ün sadece durdurucu tipleri göstermesi) bu listenin
+  // ÜZERİNE, kendi iş kuralıyla ayrıca uygulanmaya devam eder — bu liste sadece "var olan tüm kodlar".
+  // 2026-09-19 DÜZELTME (kullanıcı bilgisi: "2PF1 ile 2PF1N aynı direk, ikisini ayrı gösterme,
+  // 2026-09-19 EKLEME (kullanıcı bilgisi: "PF1 (N) direği PF1 tipindedir, verisi var"): DIREK_DATA
+  // içinde düz 'PF1' anahtarı hiç yoktu, sadece 'PF1 (ND)' vardı (Nihayet Direği varyantı) — ama
+  // bu aslında PF1'in kendisi. Düz 'PF1' erişimi için alias ekleniyor.
+  if(DIREK_DATA['PF1 (ND)'] && !DIREK_DATA['PF1']){ DIREK_DATA['PF1'] = DIREK_DATA['PF1 (ND)']; }
+
+  // 2PF1 olarak göster sadece"): '2PF1N' listeden ÇIKARILDI — ayrı bir direk tipi değil, 2PF1'in
+  // kendisi. (Not: Direk Temel Hesabı'nda TEMEL_DATA['2PF1N'] verisi hâlâ duruyor ama artık hiçbir
+  // seçicide gösterilmediği için kullanılmıyor — silmek yerine dokunmadan bırakıldı.)
+  var MASTER_DIREK_TIPLERI = [
+    'PA1','PB1','PD1','PE1','PF1',
+    '2PA1','2PB1','2PD1','2PE1','2PF1',
+    '3PA1','3PB1','3PD1','3PE1','3PF1',
+    '2FA1','2FB1','2FD1','2FE1','2FN1',
+    'CPA','CPB','CPBH','CPD','CPDH','CPE','CPEH','CPF','CPFH',
+    'CP1','CP2','CP3','CP4'
+  ];
+  window.MASTER_DIREK_TIPLERI = MASTER_DIREK_TIPLERI;
+
   var ZEMIN_LABELS = [
     { key:'iyi',      label:'İyi Zemin' },
     { key:'normal',   label:'Normal Zemin' },
@@ -10047,10 +10123,12 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
   var dkState = { tipi:null, govde:null, zemin:null, konsol:null, a:null, b:null, c:null, d:null };
 
   function dkGovdeOptions(){
-    return DIREK_DATA[dkState.tipi].govdeler.map(function(g){ return g.govde; });
+    var d = DIREK_DATA[dkState.tipi];
+    return d ? d.govdeler.map(function(g){ return g.govde; }) : [];
   }
   function dkGovdeEntry(){
-    return DIREK_DATA[dkState.tipi].govdeler.filter(function(g){ return g.govde === dkState.govde; })[0];
+    var d = DIREK_DATA[dkState.tipi];
+    return d ? d.govdeler.filter(function(g){ return g.govde === dkState.govde; })[0] : undefined;
   }
   function dkLegOptions(){
     var entry = dkGovdeEntry();
@@ -10068,10 +10146,31 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     }
     return String(m);
   }
+  // 2026-09-19 EKLEME (kullanıcı bilgisi: "çevirme konsollu ve transpozisyonlu direklerin verisi
+  // vardı" — MASTER_DIREK_TIPLERI'ye geçince kayboldular, çünkü bunlar sadece bu modülde (Direk
+  // Ağırlıkları) var, başka modülde karşılığı yok — master'a eklenirse her yerde kırmızı çıkarlardı.
+  // Bu yüzden SADECE bu modülün listesine, master'ın üzerine ek olarak ekleniyor. (ÇK)=Çevirme
+  // Konsolu Dahil, (TRP)=Transpozisyon(lu/Konsolları Dahil) kısaltmaları — kullanıcı isteği.
+  var DK_EK_VARYANTLAR = ['2PD1 (TRP)', '2PF1 (ÇK)', '2FD1 (TRP)', '2FN1 (ÇK)', 'CPDH (TRP)', 'CPFH (ÇK)'];
+  // 2026-09-19 EKLEME (kullanıcı isteği: "görüntüleme sırası — 2FD1'den sonra 2FD1 (TRP) gelmeli"):
+  // varyantlar artık listenin sonuna değil, kendi TEMEL kodlarının HEMEN ARDINA seriliyor.
+  function dkTipListesiSirali(){
+    var sonuc = [];
+    MASTER_DIREK_TIPLERI.forEach(function(t){
+      sonuc.push(t);
+      DK_EK_VARYANTLAR.forEach(function(v){
+        var temelKodu = v.replace(/\s*\(.*\)$/, ''); // "2FD1 (TRP)" -> "2FD1"
+        if(temelKodu === t) sonuc.push(v);
+      });
+    });
+    return sonuc;
+  }
 
   var dkSteps = [
     { key:'tipi',  label:'Direk Tipi',
-      options: function(){ return direkTipleri.map(function(t){ return {value:t, label:t}; }); } },
+      options: function(){
+        return dkTipListesiSirali().filter(function(t){ return !!DIREK_DATA[t]; }).map(function(t){ return {value:t, label:t}; });
+      } },
     { key:'govde', label:'Gövde',
       options: function(){ return dkGovdeOptions().map(function(g){ return {value:g, label:dkGovdeLabel(g)}; }); } },
     { key:'konsol', label:'Konsol Tipi',
@@ -11760,6 +11859,16 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
   };
   window.registerSubModule(iletkenTestleriSubModule);
 
+  var kompozitIzolatorTestleriSubModule = {
+    id: 'kompozit-izolator-testleri',
+    title: 'Kompozit İzolatör Testleri',
+    desc: '170 kV ve 420 kV kompozit silikon izolatörler için Tip ve Kabul (Numune) testlerinin nasıl yapıldığını standart maddesiyle birlikte gösterir.',
+    meta: 'MYD 2005-017 — Tip ve Kabul (Numune) Testleri',
+    icon: '',
+    active: true
+  };
+  window.registerSubModule(kompozitIzolatorTestleriSubModule);
+
   var temelHesapSubModule = {
     id: 'temel-hesap',
     title: 'Direk Temel Hesabı',
@@ -11972,6 +12081,45 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         'Kaplama sınıfı için tanımlanan daldırma sayısı tamamlanana kadar yüzeyde sürekli bakır birikimi (çıplak çelik) görülmemelidir.')
     ];
 
+    var iletkenTestleriToprakTeli = [
+      T('TS-730', 'Çap Ölçümü (Komple Tel)',
+        'Çok yüksek mukavemetli galvanizli çelik (EHS) toprak telinin komple çapının garanti edilen değere uygunluğu doğrulanır.',
+        'Mikrometre ile birbirine dik en az iki yönde komple tel çapı ölçülür.',
+        'Ölçülen çap, Garanti Edilen Teknik Özellikler tablosundaki tolerans içinde olmalıdır (ör. 72 mm² için çap toleransı ±0,03 mm).'),
+      T('TS-730', 'Adım Oranı',
+        'Örgüdeki tellerin sarım adımının (lay length), o katmanın çapına oranının garanti edilen aralıkta olduğu doğrulanır.',
+        'Bir tam adım uzunluğu (bir telin başlangıç noktasına dönene kadar kat ettiği eksenel mesafe) ölçülüp katman çapına bölünerek oran hesaplanır.',
+        'Adım oranı, tabloda verilen aralıkta (ör. 72 mm² için 10\u201316) olmalıdır.'),
+      T('TS-730', 'İletkenin Metrik Birim Ağırlığı',
+        'Toprak telinin metre/kilometre başına ağırlığının garanti edilen değere uygunluğu doğrulanır.',
+        'Bilinen uzunlukta bir numune hassas terazide tartılır, sonuç kg/km cinsine çevrilir.',
+        'Ölçülen birim ağırlık, tablodaki değere %3 toleransla uymalıdır.'),
+      T('TS-730', 'Gerilme (Germe) Testi',
+        'Komple toprak telinin kopma dayanımının garanti edilen değere uygunluğu doğrulanır.',
+        'İmalatın her 150.000 metresinden alınan en az 10 m uzunluğundaki bir örnek, sıkıştırmalı veya uygun tipte sabitleştiricilerle çekme test makinesinde kopana kadar yüklenir.',
+        'Test edilen toprak telinin kopma dayanımı, belirlenmiş dayanımın en az %95\'i olmalı; ayrıca telin kopma kuvveti tablo değerinin %95\'ine kadar düşebilir.'),
+      T('TS-730', 'Çelik Tel Çapı',
+        'Örgüyü oluşturan tek bir galvanizli çelik telin çapının garanti edilen değere uygunluğu doğrulanır.',
+        'Mikrometre ile tek tel üzerinde iki dik yönde çap ölçülür.',
+        'Ölçülen çap, tablodaki nominal değer ve toleransı sağlamalıdır.'),
+      T('TS-730', '%1 Uzamada Gerilme (Çelik Tel)',
+        'Tek çelik telin akma davranışını temsilen, %1 uzamaya karşılık gelen gerilme değeri belirlenir.',
+        'Numune çekme test cihazında yüklenirken uzama bir ekstansometre ile izlenir; %1 uzamadaki yük kesite bölünerek gerilme bulunur.',
+        'Sonuç, tabloda verilen asgari değeri (ör. 72 mm² için 133 kgf/mm²) sağlamalıdır.'),
+      T('TS-730', 'Gerilme ve Uzama Testi (Çelik Tel)',
+        'Tek çelik telin örgüden sonraki kopma mukavemeti ve kopma anındaki yüzde uzaması (sünekliği) belirlenir.',
+        'Numune kopana kadar çekme test cihazında yüklenir; kopma yükü kesite bölünerek gerilme, 250 mm ölçü boyundaki uzama da yüzde olarak kaydedilir.',
+        'Kopma mukavemeti tabloda verilen asgari değeri (ör. 72 mm² için 147 kgf/mm²), kopma uzaması da asgari yüzdeyi (ör. %2,5) sağlamalıdır.'),
+      T('TS-730', 'Bükme (Sarma) Testi',
+        'Galvanizli çelik telin, çekme sırasında haddelenme/soğuk işlem sonrası kırılganlık göstermediği kontrol edilir.',
+        'Test edilen çelik telin çapının 3 katı çapında silindirik bir makaraya, dakikada 15 sarımı aşmayan hızla en az 8 tur sarılır.',
+        'Sarım sırasında tel kırılmamalıdır.'),
+      T('TS-730', 'Galvaniz Testi',
+        'Çelik tel yüzeyindeki çinko kaplama ağırlığının asgari değeri sağladığı ve kaplamanın bükülmeye dayandığı doğrulanır.',
+        'Kaplama ağırlığı tartım yöntemiyle (asit banyosunda çinko giderilip kütle farkı ölçülerek) belirlenir; ayrıca tel, kendi çapına yakın bir makaraya dakikada 15 sarımı aşmayan hızla en az 2 tur sarılıp galvaniz parmakla kazınır.',
+        'Çinko ağırlığı en az 214 g/m² olmalı (A sınıfı); sarım sırasında kazındığında galvaniz çatlamamalı veya pul pul dökülmemelidir.')
+    ];
+
     var DATA = {
       tip: {
         baslik: 'Tip Testleri',
@@ -11990,7 +12138,8 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
               return t.ad === 'Yüzey Şartı' || t.ad === 'Çap' || t.ad === 'Süreklilik' || t.ad === 'Adım Oranı ve Adım Yönü' || t.ad === 'Tellerin Tipi ve Sayısı' || t.ad === 'Birim Uzunluk Başına Kütle' || t.ad === 'Çekmede Kopma Dayanımı';
             }) },
           { id:'aluminyum', ad:'Alüminyum Teller İçin', desc:'Çap, çekme dayanımı, uzama, özdirenç, sarma testleri', testler: iletkenTestleriAluminyum.filter(function(t){ return t.ad !== 'Kaynak İşlemi'; }) },
-          { id:'celik', ad:'Çinko Kaplı Çelik Teller İçin', desc:'Gözle muayene, çap, gerilme, çekme, sarma ve çinko kaplama testleri', testler: iletkenTestleriCelik }
+          { id:'celik', ad:'Çinko Kaplı Çelik Teller İçin', desc:'Gözle muayene, çap, gerilme, çekme, sarma ve çinko kaplama testleri', testler: iletkenTestleriCelik },
+          { id:'toprak_teli', ad:'Toprak Teli (Koruma Teli) İçin', desc:'TS-730 esaslı: çap, adım oranı, birim ağırlık, gerilme, bükme ve galvaniz testleri', testler: iletkenTestleriToprakTeli }
         ]
       }
     };
@@ -12083,6 +12232,298 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     window.openModuleScreen = function(m, opts){
       if(m && m.id === 'iletken-testleri'){ showLevel('kategori'); }
       origOpenModuleScreen(m, opts);
+    };
+  })();
+
+  // ───────────────────────── Kompozit İzolatör Kabul Testleri ─────────────────────────
+  (function initKompozitIzolatorTestleri(){
+    var T = function(madde, ad, ne, nasil, kriter){
+      return { madde: madde, ad: ad, ne: ne, nasil: nasil, kriter: kriter || null };
+    };
+
+    var GENEL_KRITER = 'Test olumlu (kabul) sayılması için ilgili IEC standardındaki sınır/şart sağlanmalıdır. Kabul (Numune) testlerinden biri olumsuz sonuçlanırsa, standardında belirtilen sayıda numuneyle test bir kez daha tekrarlanır; bu tekrarda da olumsuz sonuç alınırsa parti reddedilir.';
+
+    var izolatorTipTestleri = [
+      T('IEC 61109 madde 10.2.1 / IEC 62217 madde 9.2', 'Uç Parçaların Bağlantıları ve Arayüze İlişkin Testler',
+        'Uç tutturma elemanları (metal armatürler) ile izolatör gövdesi arasındaki arayüzün ön zorlanma (sudden load release, ısıl-mekanik, suya daldırma) sonrası dayanımı ve sızdırmazlığı doğrulanır.',
+        'İzolatör numunesi sırasıyla ani yük salınması, ısıl-mekanik döngü ve suya daldırma ön zorlanmalarına tabi tutulur; ardından gözle muayene, dik cepheli darbe gerilim ve kuruda güç frekanslı gerilim testleriyle doğrulama yapılır.',
+        GENEL_KRITER),
+      T('IEC 61109 madde 11.1', 'Kuruda Yıldırım Darbe Dayanım Gerilim Testi',
+        'İzolatörün kuru koşulda yıldırım darbe gerilimine dayanımı doğrulanır (işletme gerilimi faz-faz 300 kV altında ise uygulanır).',
+        'Standart darbe dalga şekli izolatöre kuru ortamda uygulanır, atlama/delinme olup olmadığı gözlenir.',
+        GENEL_KRITER),
+      T('IEC 61109 madde 11.1', 'Yaşta Şebeke Frekanslı Gerilime Dayanım Testi',
+        'İzolatörün yağmur altında (yaş) şebeke frekanslı gerilime dayanımı doğrulanır.',
+        'Standartta tanımlanan yapay yağmur koşulunda izolatöre şebeke frekanslı gerilim uygulanır.',
+        GENEL_KRITER),
+      T('IEC 61109 madde 11.1', 'Yaşta Açma-Kapama Darbe Gerilimine Dayanım Testi',
+        'İzolatörün yağmur altında açma-kapama darbe gerilimine dayanımı doğrulanır (işletme gerilimi faz-faz 300 kV üzerinde ise uygulanır).',
+        'Yapay yağmur koşulunda izolatöre açma-kapama darbe dalga şekli uygulanır.',
+        GENEL_KRITER),
+      T('IEC 61109 madde 11.2', 'Hasar Sınırı İspatlama Testi ve Arayüz Sızdırmazlık Testi',
+        'İzolatörün mekanik hasar sınırı ve uç tutturma elemanları ile mahfaza arasındaki arayüzün sızdırmazlığı birlikte doğrulanır.',
+        'İzolatör kademeli olarak mekanik yüke tabi tutulur, ardından arayüzün sızdırmazlığı kontrol edilir.',
+        GENEL_KRITER),
+      T('IEC 60437', 'Radyo Girişim Testi',
+        'İzolatörün korona kaynaklı radyo frekans girişim seviyesinin sınır değeri aşmadığı doğrulanır.',
+        'İzolatör belirlenen gerilimde enerjilendirilir, radyo frekans girişim seviyesi ölçülür.',
+        GENEL_KRITER),
+      T('IEC 61467', 'Power Ark Testi',
+        'İzolatörün ark oluşumu sırasındaki mekanik ve termal dayanımı doğrulanır (Alıcının isteğine bağlı olarak yapılır).',
+        'İzolatör üzerinde kontrollü bir güç arkı oluşturulur, izolatörün ve armatürlerin arktan etkilenme derecesi incelenir.',
+        GENEL_KRITER),
+      T('—', 'Gevrek Kırılmaya Dayanım Testi',
+        'Fiberglas polimerik (FRP) izolatör çekirdeğinin (rod) asidik ortamda korozyona karşı mekanik direnci, ortam sıcaklığında doğrulanır.',
+        'İzolatör orta kısmından en az 150 mm boyda çekirdek açığa çıkarılır, silikon kalıntıları ince zımparayla temizlenir. Çekirdek etrafına en az 1 cm kalınlık ve 4 cm yükseklikte asit tabakası oluşturacak polietilen kap yerleştirilir. Uç parçalardan gerilme yükü sıfırdan SML\'nin %70\'ine hızlı ama düzgün şekilde çıkarılıp 96 saat bu değerde tutulur; yük uygulanır uygulanmaz kaba 1N derişimde (937 g suya 63 g HNO3) nitrik asit dökülür (asit uç parçalara temas etmez).',
+        '96 saatlik test süresince izolatör çekirdeğinde kırılma oluşmazsa test olumlu sayılır.'),
+      T('IEC 61284 / IEC 60437', 'Korona Gerilim Testi',
+        'İzolatörün belirlenen gerilim seviyesinde görünür korona oluşturmadığı doğrulanır.',
+        'İzolatör karanlık ortamda enerjilendirilir, korona sönme/başlama gerilimi ölçülür veya görsel/UV kamerayla korona varlığı kontrol edilir.',
+        GENEL_KRITER)
+    ];
+
+    var izolatorKabulTestleri = [
+      T('IEC 61109 madde 12.2', 'Boyutların Doğrulanması',
+        'İzolatörün onaylı teknik çizime göre tüm boyutlarının (uzunluk, sürünme mesafesi, uç bağlantı ölçüleri vb.) uygunluğu doğrulanır.',
+        'Numune üzerinde kumpas/şerit metre gibi ölçüm aletleriyle çizimdeki ölçüler tek tek kontrol edilir.',
+        GENEL_KRITER),
+      T('IEC 61109 madde 12.3', 'Uç Parçaların Doğrulanması',
+        'Uç bağlantı elemanlarının (armatür) tip, malzeme ve boyut olarak sipariş/çizim şartlarına uygunluğu doğrulanır.',
+        'Uç parçalar sökülmeden veya gerekiyorsa numune üzerinden gözle ve ölçüm yoluyla kontrol edilir.',
+        GENEL_KRITER),
+      T('IEC 61109 madde 12.4', 'Arayüz Sızdırmazlığı ve SML Doğrulanması',
+        'Uç tutturma elemanları ile izolatör mahfazası arasındaki arayüzün sızdırmazlığı ve izolatörün beyan edilen mekanik yükü (SML) taşıdığı doğrulanır.',
+        'Numune, sızdırmazlık kontrolüne tabi tutulur ve ardından SML seviyesinde mekanik yükleme yapılır.',
+        GENEL_KRITER),
+      T('IEC 61109 madde 12.5 / EN ISO 1461', 'Galvanizleme Testi',
+        'Metal uç parçalardaki çinko kaplamanın kalınlık ve sürekliliğinin standarda uygunluğu doğrulanır.',
+        'Kaplama kalınlığı manyetik/elektronik ölçüm cihazıyla veya EN ISO 1461\'de tanımlanan yöntemle ölçülür.',
+        GENEL_KRITER),
+      T('IEC 62217 madde 9.4.1', 'Boya Nüfuz Etme Testi (Porosity Test)',
+        'İzolatör çekirdeğinde (rod) gözeneklilik/boşluk bulunmadığı, boya nüfuzu yoluyla doğrulanır.',
+        'Rod numunesi kesilir, kesit yüzeyine boya nüfuz ettirilir; boyanın nüfuz ettiği boşluk olup olmadığı incelenir.',
+        GENEL_KRITER),
+      T('IEC 62217 madde 9.3.1', 'Sertlik Testi',
+        'Silikon gövde/yaprak malzemesinin sertlik değerinin şartname sınırları içinde olduğu doğrulanır (prosesten alınan nihai üründe Alıcı yılda en az 3 defa teste katılır).',
+        'Shore sertlik ölçüm cihazıyla silikon yüzeyden sertlik değeri okunur.',
+        GENEL_KRITER),
+      T('IEC 60587', 'Malzemenin İz Oluşumu Dayanımı (Tracking Resistance)',
+        'Silikon malzemenin elektriksel iz oluşumuna (tracking) ve erozyona karşı dayanımı doğrulanır (her kabulde son dört ay içinde yapılmış Alıcı gözetimli rapor sunulur; sunulamazsa bu kabul kapsamında test yapılır).',
+        'Numune, standartta tanımlanan elektrolit damlatma ve gerilim uygulama döngülerine tabi tutulur.',
+        GENEL_KRITER),
+      T('ISO 813', 'Koruyucu Kılıf Yapışkanlık Testi',
+        'Silikon mahfaza/yaprak malzemesinin izolatör çekirdeğine (rod) yapışma mukavemeti doğrulanır.',
+        'Bir kanat seçilip etrafındaki yapraklar temizlenir, kanadın 1\'er cm dışından mahfaza rod çevresi boyunca kesilir. Kanattan eksen boyunca 4 eşit parça roda kadar dikey kesilir, parçalardan birine pense ile kuvvet uygulanarak mahfaza koparılır.',
+        'Rod ile mahfaza arasındaki bağın kuvveti kanatların yırtılma kuvvetinden yüksek olmalı; kanat ve mahfaza tamamen koparıldığında rod üzerinde silikon malzemesi kaldığı görülmelidir.'),
+      T('IEC TR 62039 / IEC TR 61109', 'Gevrek Kırılmaya Dayanım Testi',
+        'Fiberglas polimerik (FRP) izolatör çekirdeğinin korozyona karşı mekanik direnci doğrulanır (prosesten alınan nihai üründe Alıcı yılda en az 3 defa teste katılır).',
+        'Tip testlerindeki Gevrek Kırılmaya Dayanım Testi ile aynı yöntemle (asit kabı + %70 SML yük + 96 saat) uygulanır.',
+        '96 saatlik test süresince izolatör çekirdeğinde kırılma oluşmazsa test olumlu sayılır.'),
+      T('IEC 62073-10', 'Hidrofobiklik Ölçümü',
+        'Silikon yüzeyin su itici (hidrofobik) özelliğinin hem statik hem dinamik koşulda yeterli olduğu doğrulanır.',
+        'Yüzeye su damlatılarak temas açısı veya sınıflandırma yöntemiyle (statik ve dinamik) hidrofobiklik derecesi belirlenir.',
+        GENEL_KRITER),
+      T('Cigre Ekim/2014-595', 'TGA ve DSC Termal Analiz',
+        'Silikon gövde/yaprak ve rod malzemesinin termal davranışının (bozunma sıcaklığı, camsı geçiş vb.) beyan edilen özelliklere uygunluğu doğrulanır.',
+        'Hem silikon gövde/yapraktan hem de roddan alınan numunelerde Termogravimetrik Analiz (TGA) ve Diferansiyel Taramalı Kalorimetri (DSC) yapılır, Cigre Ekim/2014-595 yayınına göre raporlanır.',
+        GENEL_KRITER),
+      T('Cigre Ekim/2014-595', 'IR Infrared Spektroskopi',
+        'Silikon gövde/yaprak ve rod malzemesinin kimyasal bileşiminin beyan edilen malzemeyle eşleniklik gösterdiği doğrulanır.',
+        'Hem silikon gövde/yapraktan hem de roddan alınan numunelerde IR spektroskopi yapılır, Cigre Ekim/2014-595 yayınına göre raporlanır.',
+        GENEL_KRITER),
+      T('Cigre Ekim/2014-595', 'Silikon Malzemede DM Yoğunluk Ölçümü',
+        'Silikon malzemenin yoğunluğunun beyan edilen değere uygunluğu doğrulanır.',
+        'Numune üzerinde DM (density measurement) yöntemiyle yoğunluk ölçülür, Cigre Ekim/2014-595 yayınına göre raporlanır.',
+        GENEL_KRITER),
+      T('WP 120 / TS EN 62231', 'Bükülme Yükü Testi (Euler Buckling Load)',
+        'İzolatörün eksenel bükülme (burkulma) yüküne dayanımı doğrulanır.',
+        'İzolatör 30° açı altında burulma/bükülme yüküne tabi tutulur (TS EN 62231\'e göre).',
+        GENEL_KRITER),
+      T('IEEE 957 / Şartname madde 2.3.7', 'Basınçlı Yıkama Testi',
+        'İzolatör yüzeyinin şartnamede belirtilen basınçlı yıkama gücüne dayanımı doğrulanır.',
+        'İzolatör yüzeyine IEEE 957 ve şartname madde 2.3.7\'de tanımlanan basınçta su püskürtülür, yüzeyde hasar oluşup oluşmadığı incelenir.',
+        GENEL_KRITER)
+    ];
+
+    var DATA = {
+      tip: {
+        baslik: 'Tip Testleri',
+        not: 'Bu testler izolatörün tasarımına esas olan temel karakteristiklerini doğrulamak için her tip ve karakteristiği temsilen, akredite bir laboratuvarda (veya Alıcının katıldığı diğer laboratuvarda) yapılır.',
+        testler: izolatorTipTestleri
+      },
+      numune: {
+        baslik: 'Kabul (Numune) Testleri',
+        not: 'Bu testler, rutin testlerden geçmiş izolatör partilerinden "3.5. Numune Alma" bölümüne uygun miktarda seçilen numuneler üzerinde, her parti izolatör teslimatı için Alıcı temsilcileri gözetiminde uygulanır.',
+        testler: izolatorKabulTestleri
+      }
+    };
+
+    var elKategoriGrid = document.getElementById('kit-kategori-grid');
+    var elTestList = document.getElementById('kit-test-list');
+    var elListNote = document.getElementById('kit-list-note');
+    var elCrumbKategori = document.getElementById('kit-crumb-kategori');
+
+    var lvlKategori = document.getElementById('kit-level-kategori');
+    var lvlTestler = document.getElementById('kit-level-testler');
+
+    function showLevel(level){
+      lvlKategori.hidden = level !== 'kategori';
+      lvlTestler.hidden = level !== 'testler';
+    }
+
+    ['tip','numune'].forEach(function(key){
+      var d = DATA[key];
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'it-pick-btn';
+      btn.innerHTML = '<p class="it-pick-title">' + d.baslik + '</p><p class="it-pick-desc">' + d.not + '</p>';
+      btn.addEventListener('click', function(){
+        elCrumbKategori.textContent = d.baslik;
+        elListNote.textContent = d.not;
+        renderTestList(d.testler);
+        showLevel('testler');
+        if(window.markModuleUsed){ window.markModuleUsed('kompozit-izolator-testleri'); }
+      });
+      elKategoriGrid.appendChild(btn);
+    });
+
+    var STANDART_BILGI = {
+      'IEC 61109': { baslik: 'IEC 61109 — Kompozit Askı/Gergi İzolatörleri (Tanımlar, Test Yöntemleri, Kabul Kriterleri)',
+        kapsam: 'AC 1000V üzeri (2025 baskısı ayrıca DC 1500V üzeri) hatlarda kullanılan, reçineli cam elyaf çekirdek + polimerik mahfaza + metal uç parçalardan oluşan kompozit askı/gergi izolatörlerini kapsar.',
+        maddeler: [
+          'Ek A — Hasar Sınırı ve Yük Koordinasyonu: "Hasar sınırı", izolatör çekirdeğinde kalıcı hasarın başladığı yük seviyesidir; servis yüklerinin aşmaması gereken NİHAİ sınırdır. SML (Specified Mechanical Load — Beyan Edilen Mekanik Yük), üreticinin belirlediği ve standart mekanik testlerde kullanılan referans değerdir.',
+          'RTL (Rutin Test Yükü) = SML\'nin en az %50\'si (+%10 toleransla), her izolatöre rutinde en az 10 saniye uygulanır',
+          'Isıl-mekanik ön zorlanma testinde uygulanan yük de RTL (≥%50 SML) ile aynıdır',
+          'Gevrek kırılma / 96 saat yük testinde uygulanan yük SML\'nin %70\'idir (bu değer, standardın SML altında bıraktığı güvenlik payını yansıtır)',
+          'Ek B — Ani yük salınması için iki örnek düzenek tarif edilir (bilgilendirme amaçlı)',
+          'Ek C — Standart-dışı mekanik zorlanmalar ve dinamik mekanik yükleme için rehberlik'
+        ] },
+      'IEC 62217': { baslik: 'IEC 62217 — Polimerik YG İzolatörleri (Genel Tanımlar, Test Yöntemleri, Kabul Kriterleri)',
+        kapsam: 'İç/dış mekân kullanımına yönelik, gövdesi organik malzemeden oluşan tüm polimerik izolatörler (dolu/boş çekirdekli, reçine) için ortak tasarım testi yöntemlerini tanımlar — ürün-özel standartlarla (ör. IEC 61109) birlikte kullanılır.',
+        maddeler: ['Sertlik testi (ISO 868 Shore sertlik yöntemiyle)', 'Hızlandırılmış hava şartlandırma testi (ISO 4892-2 UV/su püskürtme döngüleriyle)', 'İz oluşumu ve erozyon testi, 1000 saat tuzlu sis testi', 'Alevlenebilirlik testi', 'Boya nüfuz etme (gözeneklilik) ve su difüzyon testleri (çekirdek malzemesi, ayrıca sadece-çekirdek ve çekirdek+mahfaza olmak üzere iki ayrı test)', 'Hidrofobiklik Transfer Malzemesi (HTM) ayrımı: HTM olmayan mahfaza malzemesi tespit edilirse, izolatör IEC 60507/IEC TS 61245\'e göre de test edilebilir'] },
+      'IEC 60437': { baslik: 'IEC 60437 — Yüksek Gerilim İzolatörlerinde Radyo Girişim Testi',
+        kapsam: '1000V üzeri AC/DC hat ve traksiyon izolatörlerinde, laboratuvarda TEMİZ VE KURU numune üzerinde 0,5 MHz (referans) veya 1 MHz\'de yapılan radyo girişim (RI) testinin prosedürünü tanımlar.',
+        maddeler: ['Referans ölçüm frekansı 0,5 MHz ±%10 (alıcı/satıcı anlaşmasıyla 0,5–2 MHz arası alternatif frekanslar da kullanılabilir)', 'Servis koşulları (yağmur, kirlenme) tekrarlanabilir olmadığından SADECE temiz/kuru numune test edilir'] },
+      'IEC 61467': { baslik: 'IEC 61467 — AC Power Ark Testleri (İzolatör Zincirleri ve Takımları)',
+        kapsam: '1000V üzeri, 15–100 Hz AC hat/traksiyon/şalt sahası izolatör zincirleri ve takımları (seramik/cam/kompozit) için güç arkı testi prosedürünü tanımlar. Metalik olmayan direk/kulelere monte takımları kapsamaz.',
+        maddeler: ['Test = belirlenen akımın belirlenen süre uygulanması; Test dizisi = aynı takımda 3 ardışık test', 'Power ark testleri hat izolatör şartnamelerinde ZORUNLU bir unsur DEĞİLDİR — gerekli görüldüğünde rehberlik sağlar'] },
+      'IEC 61284': { baslik: 'IEC 61284 — Havai Hatlarda Kullanılan Malzemeler İçin Gereklilikler ve Testler',
+        kapsam: '45 kV üzeri havai hatlarda kullanılan hırdavat malzemeleri (kendi özel standardı olanlar — makaralar, damperler, izolatör uç parçaları hariç) için tasarım, ısıl çevrim, korona/radyo girişim gerilimi testleri ve kabul kriterlerini tanımlar; düşük gerilim hatları ve şalt sahası malzemelerine de uygulanabilir.',
+        maddeler: ['Korona etkisi sınırlı olacak şekilde tasarım şartı', 'Sıcak daldırma galvanizleme ve tahribatsız muayene (manyetik parçacık, ultrasonik, radyografi) yöntemleri'] },
+      'EN ISO 1461': { baslik: 'EN ISO 1461 — Demir/Çelik Malzemelerde Sıcak Daldırma Galvaniz Kaplama (Şartname ve Test Yöntemleri)',
+        kapsam: 'Demir/çelik parçaların çinko banyosuna daldırılarak kaplanmasında genel kaplama özellikleri ve test yöntemlerini tanımlar.',
+        maddeler: ['Çelik >6mm: yerel min. 70µm / ortalama min. 85µm', 'Çelik 3–6mm: yerel min. 55µm / ortalama min. 70µm', 'Çelik 1,5–3mm: yerel min. 45µm / ortalama min. 55µm', 'Döküm parçalar ≥6mm: 70µm / 80µm, <6mm: 60µm / 70µm', 'Santrifüjlenen (dişli) parçalarda daha düşük asgari değerler geçerlidir', 'Referans ölçüm alanı en az 10 cm²'] },
+      'IEC 60587': { baslik: 'IEC 60587 — İz Oluşumu ve Erozyon Direnci Test Yöntemleri (Eğik Düzlem Testi)',
+        kapsam: 'Ağır ortam koşullarında (45–65 Hz güç frekansı) kullanılan elektrik yalıtım malzemelerinin, sıvı kirletici + eğik düzlem (45°) numunesiyle iz oluşumu/erozyon direncinin değerlendirilmesini tanımlar.',
+        maddeler: ['Yöntem 1: sabit gerilim (en yaygın kullanılan) / Yöntem 2: kademeli artan gerilim', 'Kriter A (tercih edilen): akım 60 mA\'i aşarsa bitiş; Kriter B: iz, alt elektrottan 25 mm\'ye ulaşırsa bitiş', 'Sonuçlar "1A3.5" gibi sınıflandırılır (yöntem+kriter+kV)'] },
+      'ISO 813': { baslik: 'ISO 813 — Kauçuğun Sert Alttabakaya Yapışması (90° Soyma Yöntemi)',
+        kapsam: 'Vulkanize veya termoplastik kauçuğun, sert bir alttabakaya (metal vb.) bağlanmış tek bir plaka üzerinde, 90° soyma açısıyla yapışma mukavemetinin (N/mm) belirlenmesini tanımlar.',
+        maddeler: ['Sabit çekme hızıyla 90° açıda soyma kuvveti ölçülür, sonuç birim genişlik başına kuvvet (N/mm) olarak verilir', '85 IRHD üzerindeki çok sert kauçuklar için uygun değildir'] },
+      'IEC TR 62039': { baslik: 'IEC TR 62039 — Dış Mekân YG Kullanımı İçin Polimerik Malzeme Seçim Kılavuzu (Teknik Rapor)',
+        kapsam: '1000V üzeri AC sistemlerde dış mekân yalıtımında kullanılan polimerik MALZEMELERİN (izolatörün tamamı değil, sadece malzeme) önemli özelliklerini ve varsa ilgili standart test yöntemi + asgari şartlarını listeleyen bir Teknik Rapordur (normatif zorunlu test standardı değildir).',
+        maddeler: [
+          'Malzemeler 3 kategoride ele alınır: Mahfaza malzemeleri (silikon kauçuk, EPDM, EVA vb.), Çekirdek malzemeleri (FRP/cam elyaf-reçine), Yapısal malzemeler (epoksi vb.)',
+          'CIGRE Broşür 255 (2004, ÇG D1.14 "Material properties for non-ceramic outdoor insulation"), bu malzemeler için önemli olan ÖZELLİKLERİ tespit etmiştir; bunların 8 tanesi için o dönemde standart test yöntemi + asgari şart TANIMLIYDI, kalan 4 özellik için henüz tanımlı değildi (IEC TR 62039 bu 8+4 özelliği derleyip test yöntemi eşleştirmesini tamamlar)',
+          'İz oluşumu/erozyon direnci için IEC 60587\'deki eğik düzlem testi referans alınır (kolay uygulanabilir, iyi tekrarlanabilirlik)',
+          'Hidrofobiklik Transfer Malzemesi (HTM) kavramı burada tanımlanır — silikon gibi malzemelerin yüzeyindeki kirlilik tabakasına hidrofobikliği "aktarma" (self-healing) özelliğidir; IEC 62217 bu ayrıma göre farklı test/kriter uygular'
+        ] },
+      'IEC 62073-10': { baslik: 'IEC 62073 — İzolatör Yüzeyi Hidrofobiklik Ölçümü Rehberi',
+        kapsam: 'İzolatör yüzeyinin su itme (hidrofobiklik) özelliğinin ölçülmesi için temas açısı, yüzey gerilimi ve püskürtme (spray) yöntemlerini tanımlar; püskürtme yöntemi STRI Kılavuzu 1, 92/1 ile uyumludur.',
+        maddeler: ['Sınıflandırma HC1 (en hidrofobik) ile HC6/HC7 (en hidrofilik) arası', 'Püskürtme yöntemi saha çalışmaları için en pratik yöntemdir; sonuç gözlemciye bağlı öznellik taşır'] },
+      'Cigre Ekim/2014-595': { baslik: 'CIGRE Teknik Broşür 595 (2014) — Dış Mekân Polimerik Yalıtım Malzemelerinin "Parmak İzi" Çıkarılması',
+        kapsam: 'Dış mekân YG izolatörlerinde (kompozit, döküm reçine) kullanılan polimerik malzemelerin kimyasal/termal karakterizasyonu ("parmak izi") için güncel yöntemlerin derlemesidir — malzeme kimliğinin/tedarik tutarlılığının doğrulanmasında kullanılır.',
+        maddeler: ['Temel yöntemler: DSC (Diferansiyel Taramalı Kalorimetri), TGA (Termogravimetrik Analiz), IR Spektroskopisi, yoğunluk ölçümü', 'CIGRE D1 Çalışma Grubu (Malzemeler ve gelişen test teknikleri) tarafından hazırlanmıştır'] },
+      'TS EN 62231': { baslik: 'IEC/TS EN 62231 — 245 kV\'a Kadar Kompozit İstasyon Post İzolatörleri (Tanımlar, Test Yöntemleri, Kabul Kriterleri)',
+        kapsam: '1000V üzeri – 245 kV\'a kadar AC şalt sahalarında kullanılan, konsol/burulma/çekme/basınç yüklerine tabi tutulan kompozit istasyon post izolatörlerini (reçineli çekirdek + elastomer mahfaza + uç parçalar) kapsar.',
+        maddeler: [
+          'Ek A — Mekanik yük ve test notları: MDCL (Azami Tasarım Konsol Yükü — Maximum Design Cantilever Load), izolatör çekirdeğinde hasarın BAŞLADIĞI ve servis koşullarında aşılmaması gereken yük seviyesidir; sektör uygulamasında MDCL ≈ SML\'nin %50\'si olarak alınır (SML/MDCL oranı yaklaşık 2:1)',
+          'Ek B — Kombine Yük / Eşdeğer Eğilme Momenti: izolatör aynı anda konsol (eğilme) + çekme veya konsol + basınç yüküne maruz kalırsa, bu yükler TEK bir "eşdeğer eğilme momenti" değerine dönüştürülüp MDCL sınırıyla karşılaştırılır (basit toplam değil — moment + eksenel yük etkileşimi hesaba katılır); pratikte üreticinin "kombine yük eğrisi" (combined load curve) bu hesaba göre çizilir',
+          'Ek C — Burulma testi için örnek düzenek tarifi (bilgilendirme)',
+          'Ek D — Form/pozisyon toleransları (paralellik, eş-merkezlilik, delik açısal sapması) — NORMATİF (standardın zorunlu kısmı)',
+          'Ek E — Basınç ve burkulma testine ilişkin notlar: burkulma yükü, izolatör çekirdeğinde burkulmaya yol açan basınç yüküdür; kolon burkulması (Euler) mantığıyla değerlendirilir, izolatörün boyu/çapı oranı arttıkça burkulma yükü mekanik dayanımın belirleyici sınırı haline gelebilir',
+          'Radyo girişim ve korona testleri bu standarda dahil DEĞİLDİR (izolatörün tek başına özelliği sayılmaz, ayrı standartlarda — IEC 60437/61284 — ele alınır)'
+        ] },
+      'IEEE 957': { baslik: 'IEEE 957 — İzolatör Temizleme Kılavuzu',
+        kapsam: 'Kirlenmiş elektrik izolatörlerinin (nükleer/toksik/tehlikeli kimyasal kirleticiler hariç) çeşitli ekipman ve tekniklerle temizlenmesine ilişkin prosedürleri kapsar; enerjili temizlikte sızıntı akımı, çalışma mesafesi, su kalitesi/basıncı gibi teknik hususları tanımlar.',
+        maddeler: ['Yüksek basınç: 2750–7000 kPa (400–1000 psi)', 'Orta basınç: 2100–2750 kPa (300–400 psi)', 'Düşük basınç: 1400 kPa (200 psi)'] }
+    };
+    var STANDART_KOD_LISTESI = Object.keys(STANDART_BILGI).sort(function(a,b){ return b.length - a.length; });
+    function kitMaddedenKodlariCikar(madde){
+      if(!madde) return [];
+      var bulunan = [];
+      STANDART_KOD_LISTESI.forEach(function(kod){
+        if(madde.indexOf(kod) !== -1 && bulunan.indexOf(kod) === -1) bulunan.push(kod);
+      });
+      // IEC TR 61109 ayrı kayıtlı değil, IEC 61109 bilgisiyle eşleştir
+      if(madde.indexOf('IEC TR 61109') !== -1 && bulunan.indexOf('IEC 61109') === -1) bulunan.push('IEC 61109');
+      if(madde.indexOf('WP 120') !== -1 && bulunan.indexOf('TS EN 62231') === -1) bulunan.push('TS EN 62231');
+      return bulunan;
+    }
+
+    var kitStdOverlay = document.getElementById('kit-standart-overlay');
+    var kitStdBody = document.getElementById('kit-standart-body');
+    function kitStandartModalAc(madde){
+      var kodlar = kitMaddedenKodlariCikar(madde);
+      if(kodlar.length === 0){
+        kitStdBody.innerHTML = '<p style="font-size:13px;color:var(--text-muted);">Bu standart hakkında ek bilgi bulunamadı.</p>';
+      } else {
+        kitStdBody.innerHTML = kodlar.map(function(kod){
+          var b = STANDART_BILGI[kod];
+          return '<div class="kit-std-block">' +
+            '<p class="kit-std-baslik">' + b.baslik + '</p>' +
+            '<p class="kit-std-label">Kapsam</p><p class="kit-std-metin">' + b.kapsam + '</p>' +
+            '<p class="kit-std-label">Öne Çıkan Noktalar</p>' +
+            '<ul class="kit-std-liste">' + b.maddeler.map(function(m){ return '<li>' + m + '</li>'; }).join('') + '</ul>' +
+          '</div>';
+        }).join('<hr class="kit-std-ayrac">');
+      }
+      kitStdOverlay.hidden = false;
+      kitStdOverlay.style.display = 'flex';
+      document.getElementById('kit-standart-panel').style.display = 'flex';
+    }
+    function kitStandartModalKapat(){
+      kitStdOverlay.hidden = true;
+      kitStdOverlay.style.display = 'none';
+      document.getElementById('kit-standart-panel').style.display = 'none';
+    }
+    document.getElementById('kit-standart-kapat').addEventListener('click', kitStandartModalKapat);
+    kitStdOverlay.addEventListener('click', function(e){ if(e.target === kitStdOverlay) kitStandartModalKapat(); });
+    elTestList.addEventListener('click', function(e){
+      var btn = e.target.closest ? e.target.closest('.kit-standart-link') : null;
+      if(!btn) return;
+      kitStandartModalAc(btn.getAttribute('data-madde'));
+    });
+
+    function renderTestList(testler){
+      elTestList.innerHTML = '';
+      testler.forEach(function(t){
+        var card = document.createElement('details');
+        card.className = 'it-test-card';
+        var summary = document.createElement('summary');
+        summary.className = 'it-test-summary';
+        summary.innerHTML =
+          '<span><span class="it-test-name">' + t.ad + '</span></span>' +
+          '<span class="it-test-chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>';
+        var body = document.createElement('div');
+        body.className = 'it-test-body';
+        body.innerHTML =
+          '<p><span class="it-label">Ne Doğrulanır</span>' + t.ne + '</p>' +
+          '<p><span class="it-label">Nasıl Yapılır</span>' + t.nasil + '</p>' +
+          '<p><span class="it-label">Kabul Kriteri</span>' + (t.kriter ? t.kriter : '—') + (t.madde && t.madde !== '—' ? ' <button type="button" class="kit-standart-link" data-madde="' + t.madde.replace(/"/g,'&quot;') + '" style="font-size:10.5px;color:var(--accent);font-family:\'IBM Plex Mono\',monospace;background:none;border:none;padding:0;text-decoration:underline;cursor:pointer;">(İlgili standart: ' + t.madde + ')</button>' : '') + '</p>';
+        card.appendChild(summary);
+        card.appendChild(body);
+        elTestList.appendChild(card);
+      });
+    }
+
+    document.getElementById('kit-back-to-kategori').addEventListener('click', function(){
+      showLevel('kategori');
+    });
+
+    var origOpenModuleScreen2 = window.openModuleScreen;
+    window.openModuleScreen = function(m, opts){
+      if(m && m.id === 'kompozit-izolator-testleri'){ showLevel('kategori'); }
+      origOpenModuleScreen2(m, opts);
     };
   })();
 
@@ -14152,6 +14593,67 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }
   };
 
+  V_BLOK_DATA['CP1'] = {
+    mode: 'single',
+    govdeOptions: [-6, -3, 0, 3, 6, 9, 12],
+    maxAyak: {'-6': 4, '-3': 4, 0: 4, 3: 4, 6: 4, 9: 4, 12: 4},
+    table: {
+        '-6': { '-1':{x:2.300,y:3.253}, '0':{x:2.380,y:3.366}, '1':{x:2.460,y:3.479}, '2':{x:2.540,y:3.592} },
+        '-3': { '-1':{x:2.540,y:3.592}, '0':{x:2.620,y:3.705}, '1':{x:2.700,y:3.818}, '2':{x:2.780,y:3.932} },
+        0: { '-1':{x:2.780,y:3.932}, '0':{x:2.860,y:4.045}, '1':{x:2.940,y:4.158}, '2':{x:3.020,y:4.271} },
+        3: { '-1':{x:3.020,y:4.271}, '0':{x:3.100,y:4.384}, '1':{x:3.180,y:4.497}, '2':{x:3.260,y:4.610} },
+        6: { '-1':{x:3.260,y:4.610}, '0':{x:3.340,y:4.723}, '1':{x:3.420,y:4.837}, '2':{x:3.500,y:4.950} },
+        9: { '-1':{x:3.500,y:4.950}, '0':{x:3.580,y:5.063}, '1':{x:3.660,y:5.176}, '2':{x:3.740,y:5.289} },
+        12: { '-1':{x:3.740,y:5.289}, '0':{x:3.820,y:5.402}, '1':{x:3.900,y:5.515}, '2':{x:3.980,y:5.629} },
+    }
+  };
+
+  V_BLOK_DATA['CP2'] = {
+    mode: 'single',
+    govdeOptions: [-6, -3, 0, 3, 6, 9, 12, 24, 30],
+    maxAyak: {'-6': 4, '-3': 4, 0: 4, 3: 4, 6: 4, 9: 4, 12: 4, 24: 1, 30: 1},
+    table: {
+        '-6': { '-1':{x:2.885,y:4.080}, '0':{x:2.952,y:4.175}, '1':{x:3.019,y:4.270}, '2':{x:3.086,y:4.365} },
+        '-3': { '-1':{x:3.086,y:4.365}, '0':{x:3.153,y:4.459}, '1':{x:3.220,y:4.554}, '2':{x:3.287,y:4.649} },
+        0: { '-1':{x:3.286,y:4.647}, '0':{x:3.353,y:4.741}, '1':{x:3.420,y:4.836}, '2':{x:3.487,y:4.931} },
+        3: { '-1':{x:3.487,y:4.931}, '0':{x:3.554,y:5.026}, '1':{x:3.621,y:5.120}, '2':{x:3.688,y:5.215} },
+        6: { '-1':{x:3.688,y:5.215}, '0':{x:3.755,y:5.310}, '1':{x:3.822,y:5.405}, '2':{x:3.889,y:5.499} },
+        9: { '-1':{x:3.889,y:5.499}, '0':{x:3.956,y:5.594}, '1':{x:4.023,y:5.689}, '2':{x:4.090,y:5.784} },
+        12: { '-1':{x:4.090,y:5.784}, '0':{x:4.157,y:5.879}, '1':{x:4.224,y:5.973}, '2':{x:4.291,y:6.068} },
+        24: { '2':{x:5.123,y:7.245} },
+        30: { '2':{x:5.522,y:7.810} },
+    }
+  };
+
+  V_BLOK_DATA['CP3'] = {
+    mode: 'single',
+    govdeOptions: [-6, -3, 0, 3, 6, 15],
+    maxAyak: {'-6': 4, '-3': 4, 0: 4, 3: 4, 6: 4, 15: 4},
+    table: {
+        '-6': { '-1':{x:3.570,y:5.049}, '0':{x:3.670,y:5.190}, '1':{x:3.770,y:5.332}, '2':{x:3.870,y:5.473} },
+        '-3': { '-1':{x:3.860,y:5.459}, '0':{x:3.960,y:5.600}, '1':{x:4.060,y:5.742}, '2':{x:4.160,y:5.883} },
+        0: { '-1':{x:4.160,y:5.883}, '0':{x:4.260,y:6.025}, '1':{x:4.360,y:6.166}, '2':{x:4.460,y:6.307} },
+        3: { '-1':{x:4.475,y:6.329}, '0':{x:4.575,y:6.470}, '1':{x:4.675,y:6.611}, '2':{x:4.775,y:6.753} },
+        6: { '-1':{x:4.775,y:6.753}, '0':{x:4.875,y:6.894}, '1':{x:4.975,y:7.036}, '2':{x:5.075,y:7.177} },
+        15: { '-1':{x:5.675,y:8.026}, '0':{x:5.775,y:8.167}, '1':{x:5.875,y:8.308}, '2':{x:5.975,y:8.450} },
+    }
+  };
+
+  V_BLOK_DATA['CP4'] = {
+    mode: 'single',
+    govdeOptions: [0, 3, 6, 9, 12, 15, 18],
+    maxAyak: {0: 4, 3: 4, 6: 4, 9: 4, 12: 4, 15: 4, 18: 4},
+    table: {
+        0: { '-1':{x:5.472,y:7.738}, '0':{x:5.615,y:7.940}, '1':{x:5.757,y:8.142}, '2':{x:5.886,y:8.324} },
+        3: { '-1':{x:5.901,y:8.345}, '0':{x:6.043,y:8.547}, '1':{x:6.186,y:8.748}, '2':{x:6.315,y:8.930} },
+        6: { '-1':{x:6.334,y:8.958}, '0':{x:6.477,y:9.160}, '1':{x:6.620,y:9.362}, '2':{x:6.750,y:9.545} },
+        9: { '-1':{x:6.760,y:9.560}, '0':{x:6.903,y:9.762}, '1':{x:7.046,y:9.964}, '2':{x:7.176,y:10.148} },
+        12: { '-1':{x:7.184,y:10.160}, '0':{x:7.327,y:10.362}, '1':{x:7.469,y:10.563}, '2':{x:7.602,y:10.751} },
+        15: { '-1':{x:7.618,y:10.773}, '0':{x:7.760,y:10.975}, '1':{x:7.903,y:11.177}, '2':{x:8.036,y:11.365} },
+        18: { '-1':{x:8.042,y:11.374}, '0':{x:8.185,y:11.575}, '1':{x:8.328,y:11.777}, '2':{x:8.461,y:11.965} },
+    }
+  };
+
   V_BLOK_DATA['2FA1'] = {
     govdeOptions: [0, 3, 6, 9, 12, 15],
     maxAyak: {0: 6, 3: 6, 6: 6, 9: 7, 12: 7, 15: 7},
@@ -14554,6 +15056,12 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }
   };
 
+  // 2026-09-19 EKLEME (kullanıcı bilgisi: "2PF1N ile 2PF1 aynı direk"): V-Blok verisi 2PF1N için
+  // ayrı girilmemişti, ama fiziksel olarak 2PF1 ile aynı direk — o yüzden burada 2PF1'in verisine
+  // eşitleniyor (alias). Not: Direk Temel Hesabı'nda (TEMEL_DATA) 2PF1N'in KENDİ ayrı, gerçek
+  // verisi zaten var — orası bu aliasa tabi DEĞİL, dokunulmadı.
+  V_BLOK_DATA['2PF1N'] = V_BLOK_DATA['2PF1'];
+
   // 400 kV 3B 1272 MCM 3PA1 Direği V-Blok Ayar Ölçüleri (30.03.2021)
   V_BLOK_DATA['3PA1'] = {
     govdeOptions: [0, 3, 6, 9, 12, 15],
@@ -14841,22 +15349,43 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     }
   };
 
-  var ayarTipleri = ['PA1', 'PB1', 'PD1', 'PE1', 'PF1', 'CPA', 'CPB', 'CPD', 'CPE', 'CPF', '2PA1', '2PB1', '2PD1', '2PE1', '2PF1', '2FA1', '2FB1', '2FD1', '2FE1', '2FN1', '3PA1', '3PB1', '3PD1', '3PE1', '3PF1'].filter(function(t){ return V_BLOK_DATA.hasOwnProperty(t); });
+  var ayarTipleriGercek = ['PA1', 'PB1', 'PD1', 'PE1', 'PF1', 'CPA', 'CPB', 'CPD', 'CPE', 'CPF', 'CP1', 'CP2', 'CP3', 'CP4', '2PA1', '2PB1', '2PD1', '2PE1', '2PF1', '2FA1', '2FB1', '2FD1', '2FE1', '2FN1', '3PA1', '3PB1', '3PD1', '3PE1', '3PF1'].filter(function(t){ return V_BLOK_DATA.hasOwnProperty(t); });
+  var ayarTipleri = ayarTipleriGercek; // geriye dönük uyumluluk için isim korunuyor
   window.ayarTipleri = ayarTipleri;
   var ayarState = { tipi:null, govde:null, a:null, b:null, c:null, d:null };
 
   function ayarGovdeOptions(){
-    return V_BLOK_DATA[ayarState.tipi].govdeOptions;
+    var d = V_BLOK_DATA[ayarState.tipi];
+    return d ? d.govdeOptions : [];
   }
   function ayarMaxAyak(){
-    return V_BLOK_DATA[ayarState.tipi].maxAyak[ayarState.govde];
+    var d = V_BLOK_DATA[ayarState.tipi];
+    return d ? d.maxAyak[ayarState.govde] : undefined;
   }
+  // 2026-09-21 DÜZELTME (kullanıcı cihazda yakaladı — CP1 -6 gövde, "Ayak Uzunluğu: 2" seçince
+  // X=2380 çıkıyordu, beklenen 2540'tı): eski kod, seçeneklerin HER ZAMAN 1'den başlayan ardışık
+  // tamsayılar (1..max) olduğunu varsayıyordu — bu CPA gibi ESKİ tiplerde (kaynak verisi zaten
+  // 1'den başladığı için) sorun çıkarmıyordu, ama CP1-CP4'ün GERÇEK "Ayaklar" etiketleri (-1,0,1,2)
+  // 1'den başlamadığı için "2" seçimi yanlış satıra (fiziksel Ayaklar=0'a) denk geliyordu. Artık
+  // seçenekler ÜRETİLMİYOR, doğrudan o gövde için tabloda GERÇEKTEN VAR OLAN anahtarlardan
+  // okunuyor — tekil (single) modda anahtarların kendisi (örn. '-1','0','1','2'), eşleşmeli
+  // (PA1 tarzı 'N-M') modda anahtarlardaki TÜM tekil bacak indeksleri ayrıştırılıp sayısal sırayla
+  // döndürülüyor. Eski tipler için sonuç birebir aynı (zaten 1..max idi); CP2'nin 24/30 gövdesinde
+  // sadece "2" seçeneği varsa artık SADECE "2" listeleniyor (eskiden hatalı biçimde "1" tek
+  // seçenek gibi görünürdü).
   function ayarAyakOptions(){
-    var max = ayarMaxAyak();
-    if(!max) return [];
-    var opts = [];
-    for(var i=1;i<=max;i++){ opts.push(String(i)); }
-    return opts;
+    var d = V_BLOK_DATA[ayarState.tipi];
+    if(!d) return [];
+    var govdeTable = d.table[ayarState.govde];
+    if(!govdeTable) return [];
+    if(d.mode === 'single'){
+      return Object.keys(govdeTable).sort(function(a,b){ return Number(a)-Number(b); });
+    }
+    var seen = {};
+    Object.keys(govdeTable).forEach(function(k){
+      k.split('-').forEach(function(part){ seen[part] = true; });
+    });
+    return Object.keys(seen).map(Number).sort(function(a,b){ return a-b; }).map(String);
   }
   function ayarLookup(i, j){
     var a = Number(i), b = Number(j);
@@ -14909,7 +15438,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
   var ayarSteps = [
     { key:'tipi', label:'Direk Tipi',
-      options: function(){ return ayarTipleri.map(function(t){ return {value:t, label:t}; }); },
+      options: function(){ return MASTER_DIREK_TIPLERI.filter(function(t){ return V_BLOK_DATA.hasOwnProperty(t); }).map(function(t){ return {value:t, label:t}; }); },
       onSelect: function(s){ s.govde = null; s.a = s.b = s.c = s.d = null; ayarResetAdim1(); } },
     { key:'govde', label:'Gövde', numeric:true,
       options: function(){ return ayarGovdeOptions().map(function(g){ return {value:g, label: g>=0 ? ('+'+g) : String(g)}; }); },
@@ -19487,7 +20016,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
   var temelSteps = [
     { key:'tipi', label:'Direk Tipi',
-      options: function(){ return temelDirekTipleri.map(function(t){ return { value:t, label:t }; }); },
+      options: function(){ return MASTER_DIREK_TIPLERI.filter(function(t){ return !!TEMEL_DATA[t]; }).map(function(t){ return { value:t, label:t }; }); },
       onSelect: function(s){ s.temelTipi = null; s.govde = null; } },
     { key:'temelTipi', label:'Temel Tipi',
       options: function(s){ return temelTipiOptionsFor(s.tipi); },
@@ -20758,7 +21287,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var baslik, secenekler, mevcutDeger, tikla;
       if(adim === 1){
         baslik = 'Direk Tipi Seçin';
-        secenekler = window.DU_TIPLER;
+        secenekler = (window.MASTER_DIREK_TIPLERI || window.DU_TIPLER || []).filter(function(t){ return window.DU_DATA && window.DU_DATA[t]; });
         mevcutDeger = tip;
         tikla = function(v){
           document.getElementById('gab-direk-tip').value = v;
@@ -21804,14 +22333,14 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     // dkGovdeOptions/dkGovdeEntry/dkLegOptions/dkLegLabel'ın haritaDirekState'e göre
     // parametreli karşılıkları — dkGovdeLabel ve dkIsSingleMode zaten parametreli
     // olduğu için doğrudan (dk* önekiyle) yeniden kullanılıyor.
-    function haritaDirekGovdeOptions(){ return DIREK_DATA[haritaDirekState.tipi].govdeler.map(function(g){ return g.govde; }); }
-    function haritaDirekGovdeEntry(){ return DIREK_DATA[haritaDirekState.tipi].govdeler.filter(function(g){ return g.govde === haritaDirekState.govde; })[0]; }
-    function haritaDirekLegOptions(){ var entry=haritaDirekGovdeEntry(); if(!entry) return []; return Object.keys(DIREK_DATA[haritaDirekState.tipi].groups[entry.group].legs); }
-    function haritaDirekLegLabel(m){ var unit=DIREK_DATA[haritaDirekState.tipi].legUnit||'m'; if(unit==='fark'){ var n=Number(m); return n>0?('+'+n):String(n); } return String(m); }
+    function haritaDirekGovdeOptions(){ var d=DIREK_DATA[haritaDirekState.tipi]; return d ? d.govdeler.map(function(g){ return g.govde; }) : []; }
+    function haritaDirekGovdeEntry(){ var d=DIREK_DATA[haritaDirekState.tipi]; return d ? d.govdeler.filter(function(g){ return g.govde === haritaDirekState.govde; })[0] : undefined; }
+    function haritaDirekLegOptions(){ var entry=haritaDirekGovdeEntry(); if(!entry) return []; var d=DIREK_DATA[haritaDirekState.tipi]; return d ? Object.keys(d.groups[entry.group].legs) : []; }
+    function haritaDirekLegLabel(m){ var d=DIREK_DATA[haritaDirekState.tipi]; var unit=(d&&d.legUnit)||'m'; if(unit==='fark'){ var n=Number(m); return n>0?('+'+n):String(n); } return String(m); }
 
     var haritaDirekSteps = [
       { key:'tipi', label:'Direk Tipi',
-        options: function(){ return direkTipleri.map(function(t){ return {value:t, label:t}; }); },
+        options: function(){ return dkTipListesiSirali().filter(function(t){ return !!DIREK_DATA[t]; }).map(function(t){ return {value:t, label:t}; }); },
         onSelect: function(s){ s.govde=null; s.konsol = dkTowerHasKonsol(s.tipi) ? 'standart' : null; s.zemin=null; s.a=s.b=s.c=s.d=null; } },
       { key:'govde', label:'Gövde',
         options: function(){ return haritaDirekGovdeOptions().map(function(g){ return {value:g, label:dkGovdeLabel(g)}; }); },
@@ -23017,7 +23546,9 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     if(!grid) return;
     var subModules = [
       { id: 'iletken-testleri', title: 'İletken Testleri',
-        illus: (typeof MOD_ILLUS !== 'undefined' && MOD_ILLUS['iletken-testleri-alt']) ? MOD_ILLUS['iletken-testleri-alt'] : '' }
+        illus: (typeof MOD_ILLUS !== 'undefined' && MOD_ILLUS['iletken-testleri-alt']) ? MOD_ILLUS['iletken-testleri-alt'] : '' },
+      { id: 'kompozit-izolator-testleri', title: 'Kompozit İzolatör Testleri',
+        illus: '<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="80" fill="#EEF4FB" rx="16"/><line x1="40" y1="10" x2="40" y2="70" stroke="#5B7488" stroke-width="2"/><ellipse cx="40" cy="20" rx="16" ry="5" fill="#C8D8EC" stroke="#5B7488" stroke-width="1.5"/><ellipse cx="40" cy="30" rx="16" ry="5" fill="#C8D8EC" stroke="#5B7488" stroke-width="1.5"/><ellipse cx="40" cy="40" rx="16" ry="5" fill="#C8D8EC" stroke="#5B7488" stroke-width="1.5"/><ellipse cx="40" cy="50" rx="16" ry="5" fill="#C8D8EC" stroke="#5B7488" stroke-width="1.5"/><rect x="34" y="58" width="12" height="10" rx="2" fill="#0A2A4A"/><rect x="35" y="8" width="10" height="8" rx="2" fill="#0A2A4A"/><circle cx="60" cy="20" r="9" fill="#2E9B4E"/><polyline points="56,20 59,23 65,16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' }
     ];
     grid.innerHTML = subModules.map(function(sm){
       return '<button type="button" class="mod-btn" data-sub-id="' + sm.id + '">' +
@@ -27243,20 +27774,25 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
     var duSteps = [
       { key:'tip', label:'Direk Tipi', numeric:false,
-        options:function(){ return DU_TIPLER.map(function(t){ return {label:t, value:t}; }); },
-        onSelect:function(s){ s.govde = DU_DATA[s.tip].govdeler[0]; s.ayak = null;
+        options:function(){ return MASTER_DIREK_TIPLERI.filter(function(t){ return !!DU_DATA[t]; }).map(function(t){ return {label:t, value:t}; }); },
+        onSelect:function(s){
+          // Liste zaten sadece DU_DATA'da gerçek verisi olan tipleri gösteriyor, ama yine de
+          // ek bir güvenlik için kontrol ediliyor.
+          if(!DU_DATA[s.tip]){ s.govde = null; s.ayak = null; return; }
+          s.govde = DU_DATA[s.tip].govdeler[0]; s.ayak = null;
           var dr = document.getElementById('du-readout'); if(dr){ dr.hidden = true; dr.classList.remove('is-visible'); }
         }
       },
       { key:'govde', label:'Gövde', numeric:true,
-        options:function(s){ return DU_DATA[s.tip].govdeler.map(function(g){ return {label:(g>0?'+':'')+g, value:g}; }); },
+        options:function(s){ return (DU_DATA[s.tip] ? DU_DATA[s.tip].govdeler : []).map(function(g){ return {label:(g>0?'+':'')+g, value:g}; }); },
         onSelect:function(s){ s.ayak = null;
           var dr = document.getElementById('du-readout'); if(dr){ dr.hidden = true; dr.classList.remove('is-visible'); }
         }
       },
       { key:'ayak', label:'En Küçük Ayak', numeric:true,
         options:function(s){
-          var row = DU_DATA[s.tip].rows[String(s.govde)];
+          var d = DU_DATA[s.tip];
+          var row = d ? d.rows[String(s.govde)] : null;
           return (row ? row.ayaklar : []).map(function(a){ return {label:String(a), value:a}; });
         }
       }
@@ -27662,16 +28198,18 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
     var iaSteps = [
       { key:'tip',   label:'Direk Tipi',
-        options: function(){ return Object.keys(IA_DATA).map(function(k){ return {label:k, value:k}; }); },
-        onSelect: function(s){ s.govde = IA_DATA[s.tip].govdeler[0]; s.ayak = null; }
+        options: function(){ return (window.MASTER_DIREK_TIPLERI||Object.keys(IA_DATA)).filter(function(k){ return !!IA_DATA[k]; }).map(function(k){ return {label:k, value:k}; }); },
+        onSelect: function(s){ var d = IA_DATA[s.tip]; s.govde = d ? d.govdeler[0] : null; s.ayak = null; }
       },
       { key:'govde', label:'Gövde', numeric:true,
-        options: function(s){ return IA_DATA[s.tip].govdeler.map(function(g){ return {label:(g>0?'+':'')+g, value:g}; }); },
+        options: function(s){ var d = IA_DATA[s.tip]; return d ? d.govdeler.map(function(g){ return {label:(g>0?'+':'')+g, value:g}; }) : []; },
         onSelect: function(s){ s.ayak = null; }
       },
       { key:'ayak',  label:'Ayak', numeric:true,
         options: function(s){
-          var row = IA_DATA[s.tip].rows[String(s.govde)] || IA_DATA[s.tip].rows[s.govde] || {};
+          var d = IA_DATA[s.tip];
+          if(!d) return [];
+          var row = d.rows[String(s.govde)] || d.rows[s.govde] || {};
           return Object.keys(row).map(function(k){ return {label:k+' m', value:parseInt(k)}; });
         }
       }
@@ -28409,15 +28947,20 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 // TUTARSIZ hale gelmişti — "ACSR (Kor.Teli, TT)" adı ana veride "AACSR" olarak düzeltilmişti ama
 // burada eski adıyla kalmıştı; tek "OPGW/HASÇ" satırı da ana veride 3 ayrı tipe (88-24/96-24/118-24)
 // bölünmüştü ama burada tek satır kalmıştı. İkisi de burada da düzeltildi/senkronize edildi.
+// 2026-09-21 DÜZELTME: HAWK/DRAKE/RAIL/CARDINAL/PHEASANT değerleri kullanıcının paylaştığı
+// gerçek TEİAŞ "Çelik Özlü Alüminyum İletkenler" şartnamesindeki tabloyla karşılaştırılıp
+// düzeltildi (E/UTS/çap hataları); 70mm² Kor.Teli uts/E değerleri "Toprak Koruma İletkeni
+// Şartnamesi" ekindeki 70mm² tablosuyla düzeltildi. Bu tablo sadece BİLGİ AMAÇLI (ana
+// hesaplarda kullanılmıyor — bkz. yukarıdaki not).
 var EXCEL_ILETKEN_TABLOSU = [
   { ad:'PATRIDGE',  kod:'266 MCM',  kesit:156.86, uts:5100,     cap:16.28, g0:0.5454, E:7600,  beta:1.89e-5 },
-  { ad:'HAWK',      kod:'477 MCM',  kesit:281.14, uts:8700,     cap:21.80, g0:0.973,  E:7600,  beta:1.89e-5 },
-  { ad:'DRAKE',     kod:'795 MCM',  kesit:468.00, uts:14020,    cap:28.11, g0:1.62,   E:7600,  beta:1.89e-5 },
-  { ad:'RAIL',      kod:'954 MCM',  kesit:516.80, uts:11864,    cap:29.61, g0:1.6,    E:6700,  beta:2.08e-5 },
-  { ad:'CARDINAL',  kod:'954 MCM',  kesit:547.34, uts:15589,    cap:30.38, g0:1.829,  E:6900,  beta:1.93e-5 },
-  { ad:'PHEASANT',  kod:'1272 MCM', kesit:726.80, uts:19410,    cap:35.10, g0:2.435,  E:7200,  beta:1.94e-5 },
+  { ad:'HAWK',      kod:'477 MCM',  kesit:281.14, uts:8798,     cap:21.77, g0:0.973,  E:7700,  beta:1.89e-5 },
+  { ad:'DRAKE',     kod:'795 MCM',  kesit:468.00, uts:14165,    cap:28.11, g0:1.62,   E:7700,  beta:1.89e-5 },
+  { ad:'RAIL',      kod:'954 MCM',  kesit:517.00, uts:11864,    cap:29.61, g0:1.6002, E:6700,  beta:1.95e-5 },
+  { ad:'CARDINAL',  kod:'954 MCM',  kesit:547.34, uts:15589,    cap:30.42, g0:1.829,  E:7000,  beta:1.93e-5 },
+  { ad:'PHEASANT',  kod:'1272 MCM', kesit:726.80, uts:20357,    cap:35.10, g0:2.4235, E:6800,  beta:1.94e-5 },
   { ad:'PLOVER',    kod:'1431',     kesit:818.70, uts:21848,    cap:37.24, g0:2.738,  E:7200,  beta:1.94e-5 },
-  { ad:'70mm² (Kor.Teli)',  kod:'—', kesit:72.88,  uts:9251.961, cap:11.05, g0:0.58,  E:17500, beta:1.15e-5 },
+  { ad:'70mm² (Kor.Teli)',  kod:'—', kesit:72.88,  uts:9435,     cap:11.05, g0:0.58,  E:19000, beta:1.15e-5 },
   { ad:'96mm² (Kor.Teli)',  kod:'—', kesit:96.27,  uts:12112,   cap:12.70, g0:0.751,  E:17500, beta:1.15e-5 },
   { ad:'OPGW 88-24 (Kor.Teli)',  kod:'—', kesit:88.4,  uts:8780,  cap:12.6, g0:0.560,  E:12440, beta:13.0e-6 },
   { ad:'OPGW 96-24 (Kor.Teli)',  kod:'—', kesit:95.6,  uts:11788, cap:13.1, g0:0.670,  E:10100, beta:15.1e-6 },
@@ -28436,15 +28979,24 @@ var EXCEL_ILETKEN_TABLOSU = [
 // kuralla (yeni UTS×0,33) yeniden hesaplandı. Excel'de OPGW'ler için ayrıca "Müsaade Edilen
 // Maks. Gerilme Kuvveti" (N/mm²) sütunu vardı (Tmax'a çevrilebilir) — UTS'nin ~%74'üne denk
 // geliyor, EKATY madde1 (%45 tavan) ile çelişeceğinden Tmax'a UYGULANMADI.
+// 2026-09-21 GÜNCELLEME #3 (kullanıcı isteği — kullanıcının paylaştığı yeni kaynak verisi,
+// daN cinsinden: Birim Ağırlık 2,3861 daN/m, Nihai Gerilme 19394,2 daN, Çap 35,1028mm,
+// Kesit 726,45mm²): daN→kgf çevrimi (×10/9,80665) uygulanıp UTS'ye %33 kuralı yeniden
+// uygulandı. g0=2,4331 kg/m eski değere (2,4335) neredeyse özdeş çıktı — kaynak tutarlılığı
+// doğrulandı. Tmax = 19776,58 × 0,33 = 6526,27 kg (eski 6650'den farklı). PLS-CADD
+// "Construction Offset Clipping Report" (40°C, Section 3, direk 155-161, IV.Bölge) hedefine
+// karşı test edildi: sapma önceki denemelerdeki ~%3,2-3,5'ten %1,15'e düştü — şimdiye kadarki
+// EN İYİ eşleşme. Kalan ~%1'lik fark muhtemelen referans-koşul seçiminin (Ek Yüklü/−5°C,
+// a_krt/a_ort kararı) ince ayrıntılarından kaynaklanıyor, henüz araştırılmadı.
 var ILETKEN_TABLOSU = {
   '154': [
-    { ad: '1272 MCM (Pheasant)', g0: 2.4335, d: 35.10, E: 6800, S: 726.79, beta: 1.94e-5, Tmax: 6650, uts: 20152, tip: 'iletken' },
+    { ad: '1272 MCM (Pheasant)', g0: 2.4331448557866344, d: 35.1028, E: 6934.07, S: 726.45, beta: 1.94e-5, Tmax: 6526.271458653057, uts: 19776.580177736538, tip: 'iletken' },
     { ad: '954 MCM (Cardinal)',  g0: 1.8298, d: 30.42, E: 7000, S: 547.34, beta: 1.93e-5, Tmax: 4920, uts: 15589, tip: 'iletken' },
     { ad: '795 MCM (Drake)',     g0: 1.6219, d: 28.11, E: 7700, S: 468.00, beta: 1.89e-5, Tmax: 4950, uts: 14165, tip: 'iletken' },
     { ad: '477 MCM (Hawk)',      g0: 0.9728, d: 21.77, E: 7700, S: 280.84, beta: 1.89e-5, Tmax: 3100, uts: 8798,  tip: 'iletken' }
   ],
   '380': [
-    { ad: '1272 MCM (Pheasant)', g0: 2.4335, d: 35.10, E: 6800, S: 726.79, beta: 1.94e-5, Tmax: 6650, uts: 20152, tip: 'iletken' },
+    { ad: '1272 MCM (Pheasant)', g0: 2.4331448557866344, d: 35.1028, E: 6934.07, S: 726.45, beta: 1.94e-5, Tmax: 6526.271458653057, uts: 19776.580177736538, tip: 'iletken' },
     { ad: '954 MCM (Cardinal)',  g0: 1.8298, d: 30.42, E: 7000, S: 547.34, beta: 1.93e-5, Tmax: 5300, uts: 15589, tip: 'iletken' }
   ]
 };
@@ -28494,8 +29046,8 @@ var ILETKEN_TABLOSU = {
 // FARKLI sehim turu uretiyor ama bunun sebebi iki farkli E DEGIL, iki farkli YONTEM: "Install.
 // Chart Sag" (ruling-span'e tek/uniform gerilme, offset YOK) vs "Sag in Sheaves" (her acikligin
 // kendi gercek a/h'siyle + izolator kaymasi/offset dahil rigorous cozum) — TEK bir E ile ikisi de
-// hesaplaniyor. Bizim Cizelge/Makara sutunlarimiz artik BUNU birebir taklit ediyor (bkz.
-// sehimCetveliHesapla): Cizelge=ruling-span (Install Chart Sag karsiligi), Makara=rigorous/offset
+// hesaplaniyor. Bizim Klemp/Makara sutunlarimiz artik BUNU birebir taklit ediyor (bkz.
+// sehimCetveliHesapla): Klemp=ruling-span (Install Chart Sag karsiligi), Makara=rigorous/offset
 // (Sag in Sheaves karsiligi) — ikisi de TEK E/beta (asagidaki E/beta alanlari) kullaniyor.
 var EXCEL_EK_ILETKENLER = [
   { ad: '266 MCM (Patridge)',        g0: 0.5454, d: 16.28, E: 7600,  S: 156.86, beta: 1.89e-5, Tmax: 1683, uts: 5100,     tip: 'iletken' },
@@ -28515,14 +29067,15 @@ var EXCEL_EK_ILETKENLER = [
   // gerilmesi, şartnamenin SABİT tavanı) ve koruma teli için referans sıcaklığın HER ZAMAN
   // −5°C olması (bkz. tRefOtomatikHesapla'daki "tip==='koruma'" istisnası — faz iletkenlerindeki
   // a_krt/a_ort dalı koruma teli için uygulanmıyor, şartname bunu şartsız −5°C istiyor).
-  { ad: '72mm² Galvanizli Çelik EHS (Koruma Teli)',  g0: 0.58,   d: 11.05, E: 19000, S: 72.88,  beta: 1.15e-5, Tmax: 3500,  uts: 9450,  tip: 'koruma' },
-  { ad: '96mm² Galvanizli Çelik EHS (Koruma Teli)',  g0: 0.751,  d: 12.70, E: 17500, S: 96.27,  beta: 1.15e-5, Tmax: 3800,  uts: 12112, tip: 'koruma' },
-  { ad: '245mm² Alüminyum Kaplı Çelik EHSS (Koruma Teli)', g0: 1.628, d: 20.30, E: 15800, S: 244.4, beta: 1.26e-5, Tmax: 5200, uts: 33384, tip: 'koruma' },
+  // Tmax = UTS × 0,33 (koruma telleri).
+  { ad: '72mm² Galvanizli Çelik EHS (Koruma Teli)',  g0: 0.58,   d: 11.05, E: 19000, S: 72.88,  beta: 1.15e-5, Tmax: 3118.5, uts: 9450,  tip: 'koruma' },
+  { ad: '96mm² Galvanizli Çelik EHS (Koruma Teli)',  g0: 0.751,  d: 12.70, E: 17500, S: 96.27,  beta: 1.15e-5, Tmax: 3996.96, uts: 12112, tip: 'koruma' },
+  { ad: '245mm² Alüminyum Kaplı Çelik EHSS (Koruma Teli)', g0: 1.628, d: 20.30, E: 15800, S: 244.4, beta: 1.26e-5, Tmax: 11016.72, uts: 33384, tip: 'koruma' },
   // NOT: bu tel SADECE Özel Bölge (I/V ötesi, 7cm buz+30kg/m² rüzgar) için verilmiştir — mevcut
   // Bölge seçicisi (1-5/I-V) "Özel Bölge"yi içermiyor; II/III/IV seçilirse buzYukuExcel() bu telin
   // GERÇEK özel-bölge yükünü ÜRETMEZ (2026-09-14, bilinen sınırlama — kullanıcıya bildirildi).
-  { ad: '300mm² Galvanizli Çelik EHS — SADECE ÖZEL BÖLGE (Koruma Teli)', g0: 2.5, d: 22.50, E: 17000, S: 299.4, beta: 1.15e-5, Tmax: 21628, uts: 45509, tip: 'koruma' },
-  { ad: 'AACSR (Koruma Teli)',     g0: 0.645,  d: 15.25, E: 6932,  S: 138.98, beta: 1.53e-5, Tmax: 3174, uts: 9617,    tip: 'koruma' },
+  { ad: '300mm² Galvanizli Çelik EHS — SADECE ÖZEL BÖLGE (Koruma Teli)', g0: 2.5, d: 22.50, E: 17000, S: 299.4, beta: 1.15e-5, Tmax: 15017.97, uts: 45509, tip: 'koruma' },
+  { ad: 'AACSR (Koruma Teli)',     g0: 0.645,  d: 15.25, E: 6932,  S: 138.98, beta: 1.53e-5, Tmax: 3173.61, uts: 9617,    tip: 'koruma' },
   // 2026-09-06 EKLEME (kullanici istegi: "OPGW icin tek tip girmisiz ama sen tum tipleri ekle" -
   // eski tek "OPGW (Koruma Teli)" satiri SILINDI, yerine xlsx'te E/alpha verisi olan 3 spesifik
   // OPGW tipi eklendi. g0(birimAgirlik/1000)/d(disCap) uygulamadaki "Iletkenler" modulunden
@@ -28535,9 +29088,9 @@ var EXCEL_EK_ILETKENLER = [
   // "OPGW 272-48" (48 fiber) kullanılmasını istiyor — ama şartname bu İKİ modelin kendi g0/E/S/UTS
   // değerlerini VERMİYOR (sadece model adı geçiyor). Bu yüzden burada sayısal karşılıkları
   // eklenemedi — gerçek datasheet paylaşılırsa eklenir.
-  { ad: 'OPGW 88-24 (Koruma Teli)',  g0: 0.548, d: 12.5, E: 14276, S: 88.4,  beta: 13.4e-6, Tmax: 2897, uts: 8780,  tip: 'koruma' },
-  { ad: 'OPGW 96-24 (Koruma Teli)',  g0: 0.658, d: 13.0, E: 16519, S: 95.6,  beta: 13.0e-6, Tmax: 3890, uts: 11788, tip: 'koruma' },
-  { ad: 'OPGW 118-24 (Koruma Teli)', g0: 0.753, d: 14.5, E: 14929, S: 118.3, beta: 13.3e-6, Tmax: 4139, uts: 12543, tip: 'koruma' }
+  { ad: 'OPGW 88-24 (Koruma Teli)',  g0: 0.548, d: 12.5, E: 14276, S: 88.4,  beta: 13.4e-6, Tmax: 2897.4, uts: 8780,  tip: 'koruma' },
+  { ad: 'OPGW 96-24 (Koruma Teli)',  g0: 0.658, d: 13.0, E: 16519, S: 95.6,  beta: 13.0e-6, Tmax: 3890.04, uts: 11788, tip: 'koruma' },
+  { ad: 'OPGW 118-24 (Koruma Teli)', g0: 0.753, d: 14.5, E: 14929, S: 118.3, beta: 13.3e-6, Tmax: 4139.19, uts: 12543, tip: 'koruma' }
 ];
 // 2026-09-06 GUNCELLEME (kullanici istegi): "ACSR Koruma Teli (TT)" adi "AACSR (Koruma Teli)"
 // olarak duzeltildi (uygulamadaki "Iletkenler" modulunde de bu tel zaten "TT_AACSR"/"AACSR Koruma
@@ -29550,7 +30103,108 @@ function weilT2Coz(T1, g1, t1, g2, t2, a, E, S, beta){
   return (lo + hi) / 2;
 }
 
-// ══════════════════ T_n OTOMATİK TÜRETME — 2026-08-31 SADELEŞTİRİLDİ ══════════════════
+// ══════════════════ PHEASANT CREEP KONTROLÜ (2026-09-19, kullanıcı isteği) ══════════════════
+// Kullanıcının paylaştığı gerçek PLS-CADD "Cable Data" ekranlarından alınan Outer(Al)/Core(Çelik)
+// Creep polinom katsayıları. Bu, uygulamanın GENEL gerilme modelinden (tek E, creep'siz —
+// kullanıcının önceki "PLS-CADD ne yapıyorsa biz de aynısını yapalım" kararıyla BİLİNÇLİ OLARAK
+// creep'siz bırakılmış) TAMAMEN AYRI, sadece BURADA kayıtlı iletkenler için, sadece bu kontrol
+// için var — ana T1/g1/E modeline HİÇBİR ŞEKİLDE karışmıyor. Anahtar, iletkenin `ad` alanında
+// aranan bir alt-dizedir (ör. 'Pheasant') — eşleşirse creep verisi bulunmuş sayılır.
+// Not: σ (daN/mm²) = c0+c1·ε+c2·ε²+c3·ε³+c4·ε⁴ (ε: %). Katsayılar zaten "toplam kesit alanına
+// göre ölçeklenmiş sanal gerilme katkısı" (PLS-CADD notu) — yani Outer+Core creep toplamı,
+// doğrudan TOPLAM iletken kesitine (S) bölünerek kullanılabiliyor.
+var CREEP_KATSAYILARI = {
+  'Pheasant': {
+    outer: [0.083564, 15.1918, -23.5552, 15.7469, -1.74989],   // c0..c4 (Alüminyum)
+    core:  [0.260966, 16.6803, 17.5216, -39.9764, 19.0633]     // d0..d4 (Çelik)
+  },
+  // 2026-09-19 EKLEME (kullanıcının paylaştığı gerçek PLS-CADD Cable Data ekranları):
+  'Drake': {
+    outer: [-0.375626, 14.7732, -12.9912, 3.78866, 0],         // c0..c4 — c4 ekranda boş, 0 alındı
+    core:  [0.032474, 24.9668, 8.41255, -49.9124, 31.9489]     // d0..d4
+  },
+  'Cardinal': {
+    outer: [0, 14.8306, 2.46487, -36.5897, 29.5288],           // c0..c4 — c0 ekranda boş, 0 alındı
+    core:  [0, 16.062, 9.06176, -22.5044, 9.22379]              // d0..d4 — d0 ekranda boş, 0 alındı
+  }
+  // Diğer iletkenler (Hawk, Rail, vb.) veri paylaşıldıkça buraya eklenir.
+};
+function creepIletkeniBul(it){
+  if(!it || !it.ad) return null;
+  var anahtar = Object.keys(CREEP_KATSAYILARI).filter(function(k){ return it.ad.indexOf(k) !== -1; })[0];
+  return anahtar ? CREEP_KATSAYILARI[anahtar] : null;
+}
+function creepGerilmeHesapla(katsayilar, epsilonYuzde){
+  var e = epsilonYuzde;
+  function pol(k){
+    var s = 0;
+    for(var i = 0; i < k.length; i++) s += k[i] * Math.pow(e, i);
+    return s;
+  }
+  return pol(katsayilar.outer) + pol(katsayilar.core); // daN/mm², toplam kesite göre
+}
+// Verilen hedef gerilmeye (daN/mm²) karşılık gelen creep gerinimini (%) bulur — creep eğrisi
+// fizik olarak ε≥0 için monoton artan, bisection ile güvenle çözülür.
+function creepGerinimCoz(katsayilar, hedefGerilmeDaN){
+  if(!(hedefGerilmeDaN > 0)) return 0;
+  var lo = 0, hi = 1; // % gerinim aralığı — gerçekçi creep gerinimleri çok küçüktür (<<%1)
+  var fLo = creepGerilmeHesapla(katsayilar, lo) - hedefGerilmeDaN;
+  var fHi = creepGerilmeHesapla(katsayilar, hi) - hedefGerilmeDaN;
+  var deneme = 0;
+  while(fHi < 0 && deneme < 20){ hi *= 2; fHi = creepGerilmeHesapla(katsayilar, hi) - hedefGerilmeDaN; deneme++; }
+  if(fLo > 0 || fHi < 0) return null;
+  for(var i = 0; i < 60; i++){
+    var mid = (lo + hi) / 2;
+    var fMid = creepGerilmeHesapla(katsayilar, mid) - hedefGerilmeDaN;
+    if(Math.abs(fMid) < 1e-6) return mid;
+    if(fLo < 0 === fMid < 0){ lo = mid; fLo = fMid; } else { hi = mid; }
+  }
+  return (lo + hi) / 2;
+}
+// Kalıcı creep uzamasını, weilT2Coz'un hedefine EK bir çarpan olarak uygulayan versiyon —
+// (1+β·t) ve (1+T/ES) ile aynı mantıkta, kalıcı gerinimi de (1+εc/100) olarak ekliyor.
+function weilT2CozCreepli(T1, g1, t1, g2, t2, a, E, S, beta, ekstraGerinimYuzde){
+  if(!T1 || !g1 || !a || !E || !S || !beta) return null;
+  var hedef = weilIfade(T1, g1, a, E, S, beta, t1) * (1 + (ekstraGerinimYuzde || 0) / 100);
+  function fark(T2){ return weilIfade(T2, g2, a, E, S, beta, t2) - hedef; }
+  var lo = 1, hi = 100000;
+  var fLo = fark(lo), fHi = fark(hi);
+  if(isNaN(fLo) || isNaN(fHi)) return null;
+  if(fLo * fHi > 0) return null;
+  for(var i = 0; i < 100; i++){
+    var mid = (lo + hi) / 2;
+    var fMid = fark(mid);
+    if(Math.abs(fMid) < 1e-8) return mid;
+    if((fLo > 0 && fMid > 0) || (fLo < 0 && fMid < 0)){ lo = mid; fLo = fMid; } else { hi = mid; }
+  }
+  return (lo + hi) / 2;
+}
+// Referans gerilmede (EDS: +15°C çıplak, rüzgarsız — iletkenin ÇOĞU ZAMAN maruz kaldığı, ekstrem
+// olmayan koşul; creep bu seviyede birikir, T1'in kendisinde DEĞİL) biriken creep gerinimini (%)
+// bulur — CREEP_KATSAYILARI'nda verisi olmayan iletkenlerde null döner. Bu, hem EKATY madde-4
+// nihai gerilme kontrolünde hem "10 Yıl Sonra Sehim" hesabında ORTAK kullanılan tek kaynak —
+// ikisi de AYNI gerinim değerini (aynı referans koşuldan) kullanmalı, ayrı ayrı hesaplanmamalı.
+function creepGeriniminiBul(it, T1, g1, t1, aRuling){
+  var katsayilar = creepIletkeniBul(it);
+  if(!katsayilar) return null;
+  if(!T1 || !g1 || !it.S) return null;
+  var tEDS = weilT2Coz(T1, g1, t1, it.g0, 15, aRuling, it.E, it.S, it.beta); // +15°C çıplak
+  if(tEDS === null) return null;
+  var sigmaRef = (tEDS * 0.980665) / it.S; // kg -> daN, sonra daN/mm²
+  return creepGerinimCoz(katsayilar, sigmaRef);
+}
+// en düşük sıcaklık/çıplak koşulda GERÇEK nihai (creep sonrası) gerilmeyi (kg) döndürür —
+// CREEP_KATSAYILARI'nda verisi olmayan iletkenlerde null döner (bu durumda satır hiç gösterilmez).
+function nihaiGerilmeCreepHesapla(it, T1, g1, t1, aRuling, minSicaklik){
+  var epsilonC = creepGeriniminiBul(it, T1, g1, t1, aRuling);
+  if(epsilonC === null) return null;
+  var tNihaiDaN = weilT2CozCreepli(T1, g1, t1, it.g0, minSicaklik, aRuling, it.E, it.S, it.beta, epsilonC);
+  if(tNihaiDaN === null) return null;
+  return { tNihai: tNihaiDaN, epsilonC: epsilonC };
+}
+
+
+
 // Kullanıcının paylaştığı gerçek proje Excel'i incelendi: referans (T1,g1,t1) için hiçbir ara
 // adım (+15°C EDS'ye geri çözme vb.) YOK — T_max'ın KENDİSİ doğrudan −5°C/en-kötü-koşul
 // referansı olarak kullanılıyor (Excel'in "İlk Durum" satırı: I8=T_max sabit sayı, G8=-5,
@@ -29755,15 +30409,14 @@ function ekatyUyariUret(it, T1, g1, t1, aRuling, T2, bolgeNo){
     satirlar.push({ ad: 'İlk gerilme (en düşük sıcaklık, çıplak)', pct: 100*tIlk/uts, limit: 33 });
   }
 
-  // 2026-09-14 EKLEME (kullanıcı isteği, EKATY-Madde 46/a madde 4): "Nihai gerilmenin yatay
-  // bileşeni, en düşük sıcaklıkta ve çıplak halde, kopma dayanım gerilmesinin %25'ini
-  // geçmeyecektir." Bu modülde ayrı bir "nihai" (creep sonrası) elastisite modülü YOK — tek E
-  // kullanılıyor (2026-09-07'de kullanıcı isteğiyle Ilkel/Nihai ayrımı kaldırıldı). Kullanıcı bu
-  // farkın "ilk gün" için şart olmadığını belirtti — o yüzden madde 3'te zaten hesaplanan AYNI
-  // tIlk (en düşük sıcaklık, çıplak) değeri burada sadece %25 sınırıyla TEKRAR kontrol ediliyor.
-  // Bu GERÇEK bir "nihai" gerilme değildir, "ilk" gerilmenin %25 sınırına göre yaklaşık kontrolüdür.
-  if(tIlk !== null){
-    satirlar.push({ ad: 'Nihai gerilme (yaklaşık — aynı tIlk, %25 sınırı)', pct: 100*tIlk/uts, limit: 25 });
+  // 2026-09-19 GÜNCELLEME (kullanıcı isteği): eski yaklaşık "aynı tIlk, %25 sınırı" satırı
+  // KALDIRILDI — artık gerçek creep verisi olan iletkenler için gerçek creep modeliyle
+  // hesaplanan tek bir "Nihai gerilme" satırı var (genel — hangi iletkenin CREEP_KATSAYILARI'nda
+  // verisi varsa onun için otomatik gösterilir, iletken adı satır başlığına yazılmaz). Creep
+  // verisi olmayan iletkenlerde bu satır hiç gösterilmez (yanıltıcı bir yaklaşıklık sunmaktansa).
+  var creepNihai = nihaiGerilmeCreepHesapla(it, T1, g1, t1, aRuling, minSicaklikIlkGerilme);
+  if(creepNihai !== null){
+    satirlar.push({ ad: 'Nihai gerilme (gerçek creep modeli)', pct: 100*creepNihai.tNihai/uts, limit: 25 });
   }
 
   // 2026-09-14 EKLEME (TEİAŞ-MYD 2011-028/5 şartnamesi, madde: "Alüminyum alaşımlı koruma
@@ -29813,10 +30466,10 @@ function ekatyUyariUret(it, T1, g1, t1, aRuling, T2, bolgeNo){
   return '<div class="stcard" style="margin-top:12px;">' +
     '<h2 style="font-size:13.5px;">' + (it.tip === 'koruma' ? 'Koruma Teli/OPGW Sınır Gerilme Kontrolü (TEİAŞ-MYD 2011-028/5)' : 'EKATY-Madde 46/a Sınır Gerilme Kontrolü') + '</h2>' +
     '<div>' + satirHtml + '</div>' +
-    '<div style="font-size:11px;color:var(--muted);margin-top:8px;">Nihai (kalıcı uzama sonrası) gerilme sınırları, ayrı bir creep modeli olmadığı için İlk gerilme değeriyle yaklaşık kontrol ediliyor.</div>' +
+    (creepNihai === null ? '<div style="font-size:11px;color:var(--muted);margin-top:8px;">Bu iletken için creep verisi girilmediğinden Nihai (kalıcı uzama sonrası) gerilme sınırı gösterilmiyor.</div>' : '') +
   '</div>';
 }
-// Tek bir (g2,t2) durumu için T2 ve her açıklığın f(Makara)/fCizelge(Çizelge)/offset değerlerini
+// Tek bir (g2,t2) durumu için T2 ve her açıklığın f(Makara)/fKlemp(Klemp)/offset değerlerini
 // hesaplayan ORTAK çekirdek — hem tekil Sehim Cetveli hesabı hem "Tüm Sıcaklıklar" toplu hesabı
 // (2026-09-05, kullanıcı isteği) bunu kullanıyor, mantık iki yerde ayrı ayrı yazılıp
 // birbirinden sapmasın diye.
@@ -29825,6 +30478,14 @@ function stTekDurumSatirlariHesapla(g2, t2, T1, g1, t1, aRuling, segmentAciklikl
   if(T2Ruling === null) return null;
   var offsetSonuc = offsetSistemCoz(segmentAcikliklar, T1, g1, t1, T2Ruling, g2, t2, it.E, it.S, it.beta);
   var makaraGerilmeleri = (offsetSonuc && offsetSonuc.tensions) ? offsetSonuc.tensions : segmentAcikliklar.map(function(){ return T2Ruling; });
+
+  // 2026-09-19 EKLEME (kullanıcı isteği: "10 yıl sonrası için ayrı bir Sehim değeri, ayrı bir
+  // sütunda"): creep verisi olan iletkenlerde (bkz. CREEP_KATSAYILARI), AYNI referans koşuldan
+  // (T1,g1,t1) türetilen creep gerinimi bu (g2,t2) durumuna da uygulanıp "10 Yıl Sonra" Klemp
+  // tipi (uniform gerilme) bir T2Ruling10Yil hesaplanıyor — creep verisi olmayan iletkenlerde
+  // null kalır, çağıran taraf bu sütunu hiç göstermemeli.
+  var epsilonC10Yil = creepGeriniminiBul(it, T1, g1, t1, aRuling);
+  var T2Ruling10Yil = (epsilonC10Yil !== null) ? weilT2CozCreepli(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, epsilonC10Yil) : null;
 
   // Offset (cm) — ana Sehim Cetveli'ndeki AYNI zincir mantığıyla, görüntüleme amaçlı türetiliyor
   // (bkz. sehimCetveliHesapla'daki deltaZinciriCoz notu).
@@ -29869,27 +30530,33 @@ function stTekDurumSatirlariHesapla(g2, t2, T1, g1, t1, aRuling, segmentAciklikl
   var rows = segmentAcikliklar.map(function(s, idx){
     var kotVar = (s.h !== null && s.h !== undefined && s.h !== 0);
     var taşiyiciMi = (idx < offsetDeltalar.length);
-    // Offset işareti: deltaZinciriCoz'un kendi (zincir-tabanlı) işareti PLS-CADD'in yönüyle
-    // TERS çıkıyordu (2026-09-14, kullanıcı karşılaştırması) — PLS-CADD zincir çözümü
-    // kullanmıyor. Bunun yerine fiziksel olarak daha sağlam bir kural: izolatör, iki komşu
-    // açıklığın GERÇEK (Makara) yatay gerilmesi FARKLI olduğu için sallanır — teğetsel gerilme
-    // sürekliliği zaten sağlanmışken, net yatay bileşen daha YÜKSEK gerilmeli açıklığa doğru
-    // çeker (klasik sarkaç dengesi). Yani: sonraki açıklığın gerilmesi önceki açıklıktan
-    // büyükse offset İLERİ (+), küçükse GERİ (−) yöndedir. Büyüklük hâlâ deltaZinciriCoz'dan
-    // (mutlak değer), işaret bu kuraldan.
-    var offsetM = taşiyiciMi ? (Math.abs(offsetDeltalar[idx]) * ((makaraGerilmeleri[idx+1] >= makaraGerilmeleri[idx]) ? 1 : -1)) : null;
+    // Offset işareti: 2026-09-14'teki "Makara gerilmesi büyük olan tarafa" kuralı YANLIŞTI —
+    // gerçek çok-sıcaklıklı PLS-CADD verisiyle (goynuk_kiyik_155_163, 11 sıcaklık × 2 kesim,
+    // 66 nokta) test edilince, dik açıklıkların (büyük kot farklı) İKİ YANındaki direklerde
+    // işareti TERS veriyordu (2026-09-21, kullanıcı karşılaştırması). Doğru kural çok daha
+    // basit: deltaZinciriCoz'un ürettiği HAM (işaretli) zDSonra değerinin kendisi zaten PLS'in
+    // yönüyle SABİT ORANDA ters (tüm poller, tüm sıcaklıklarda işaret hep aynı yönde ters) —
+    // yani ekstra bir "hangi taraf daha gergin" mantığına gerek yok, sadece işareti çevirmek
+    // yeterli ve doğru: offset = −zDSonra. 66 noktanın TAMAMINDA işaret tutarlı çıktı, büyüklük
+    // hatası da eskisinden (kimi yerde 10cm'e varan yanlış-işaret farkı) çok daha küçük
+    // (maks ~0,3-0,4cm, kalan küçük fark muhtemelen hâlâ E/Tmax hassasiyetinden).
+    var offsetM = taşiyiciMi ? (-offsetDeltalar[idx]) : null;
     var TMakara = makaraGerilmeleri[idx];
-    var f, hata = false;
+    var f, fKlemp, f10Yil, hata = false;
     if(!kotVar){
       f = sehimHesapla(TMakara, g2, s.a);
+      fKlemp = sehimHesapla(T2Ruling, g2, s.a);
+      f10Yil = (T2Ruling10Yil !== null) ? sehimHesapla(T2Ruling10Yil, g2, s.a) : null;
     } else {
       var aU = teğetliNoktaCoz(TMakara, g2, s.a, Math.abs(s.h));
       if(aU === null){ f = null; hata = true; }
       else { f = memeSehim(TMakara, g2, s.a, s.h); }
+      fKlemp = memeSehim(T2Ruling, g2, s.a, s.h);
+      f10Yil = (T2Ruling10Yil !== null) ? memeSehim(T2Ruling10Yil, g2, s.a, s.h) : null;
     }
-    return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: f, fCizelge: fCizelge, hata: hata, taşiyiciMi: taşiyiciMi, offsetM: offsetM };
+    return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: f, fKlemp: fKlemp, f10Yil: f10Yil, hata: hata, taşiyiciMi: taşiyiciMi, offsetM: offsetM };
   });
-  return { T2: T2Ruling, T2Ruling: T2Ruling, rows: rows };
+  return { T2: T2Ruling, T2Ruling: T2Ruling, T2Ruling10Yil: T2Ruling10Yil, rows: rows };
 }
 // Sehim Cetveli için Etap Başı/Sonu, referans gerilme, iletken ve açıklık verilerini toplayıp
 // doğrulayan ortak hazırlık — "Tüm Sıcaklıklar" toplu hesabı için (2026-09-05) ayrı bir yol
@@ -29966,7 +30633,7 @@ function stEtapHazirla(baslangicIdxParam, bitisIdxParam){
 var ST_SICAKLIK_ARALIGI = [-5,0,5,10,15,20,25,30,35,40];
 
 // "Tüm Sıcaklıklar İçin Hesapla/Kaydet" (2026-09-05, kullanıcı isteği): seçili Son Durum/Sıcaklık'a
-// BAKMAKSIZIN, ÇIPLAK RÜZGARSIZ (g0) durumda -10..+40°C arası her 5°C için Çizelge/Makara/Offset
+// BAKMAKSIZIN, ÇIPLAK RÜZGARSIZ (g0) durumda -10..+40°C arası her 5°C için Klemp/Makara/Offset
 // hesaplayıp TEK bir listede kaydediyor — sonuç hem ekranda (yan yana üçlü sütun grupları
 // halinde) gösteriliyor hem otomatik kaydediliyor (buton adı "Hesapla/Kaydet" tek eylemi ima
 // ediyor, ayrı bir "Kaydet" tıklaması istenmiyor).
@@ -29993,7 +30660,7 @@ function stTekEtapVerisiHesapla(baslangicIdx, bitisIdx){
     sicakliklar: ST_SICAKLIK_ARALIGI,
     veriler: veriler.map(function(v){
       return { sicaklik: v.sicaklik, T2: v.sonuc.T2, rows: v.sonuc.rows.map(function(r){
-        return { f: r.f, fCizelge: r.fCizelge, offsetM: r.offsetM, taşiyiciMi: r.taşiyiciMi, hata: r.hata };
+        return { f: r.f, fKlemp: r.fKlemp, fNihai: r.f10Yil, offsetM: r.offsetM, taşiyiciMi: r.taşiyiciMi, hata: r.hata };
       }) };
     })
   };
@@ -30071,7 +30738,7 @@ function sehimCetveliHesapla(manuelUygula){
   }
   var durum = { key: durumSecili.key, label: durumSecili.label + ', ' + girilenSicaklik + '°C', g2: durumSecili.g2, t2: girilenSicaklik };
   if(!T1 || !g1){
-    sonucDiv.innerHTML = '<div class="warn red">⚠ Referans gerilme otomatik hesaplanamadı — ya direk listesine açıklık girilmemiş, ya da seçili iletken için T_max verisi yok (sadece 1272/954/795/477 MCM iletkenleri için mevcut; sonradan eklenen diğer iletkenlerde Sehim Cetveli şu an çalışmıyor).</div>';
+    sonucDiv.innerHTML = '<div class="warn red">⚠ Referans gerilme otomatik hesaplanamadı — ya direk listesine açıklık girilmemiş, ya da seçili iletken için T_max verisi eksik.</div>';
     return;
   }
   if(!it.E || !it.S || !it.beta){
@@ -30105,7 +30772,7 @@ function sehimCetveliHesapla(manuelUygula){
   // YÖNTEM olduğu gerçek bir PLS-CADD çıktısıyla (CIKTI_NAKİL.pdf) doğrulandı — bkz. yukarıdaki
   // EXCEL_EK_ILETKENLER'in üstündeki not.
   // T2Ruling: ruling-span (a_r) ile TEK/uniform gerilme — offset UYGULANMADAN — PLS-CADD'in
-  // "Install. Chart Sag" yönteminin karşılığı. Bu, "Çizelge" sütununda kullanılıyor.
+  // "Install. Chart Sag" yönteminin karşılığı. Bu, "Klemp" sütununda kullanılıyor.
   var T2Ruling = weilT2Coz(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta);
   if(T2Ruling === null){
     sonucDiv.innerHTML = '<div class="warn red">⚠ Değişik Haller Denklemi bu girdilerle çözülemedi (kök aralık dışı) — referans değerleri/durumu kontrol edin.</div>';
@@ -30140,11 +30807,16 @@ function sehimCetveliHesapla(manuelUygula){
   var refT1 = c2ManuelKullanildi ? T2 : T1;
   var refG1 = c2ManuelKullanildi ? g2 : g1;
   var refT1sic = c2ManuelKullanildi ? t2 : t1;
+  // 2026-09-19 EKLEME (kullanıcı isteği: "Nihai" sütunu ana Sehim Cetveli'ne de eklensin):
+  // creep gerinimi AYNI referans koşuldan (T1,g1,t1 — manuel c₂'den BAĞIMSIZ, çünkü gerçek
+  // fiziksel referans budur) türetilip, bu ekranın kendi (g2,t2) durumuna uygulanıyor.
+  var epsilonCAna = creepGeriniminiBul(it, T1, g1, t1, aRuling);
+  var T2Nihai = (epsilonCAna !== null) ? weilT2CozCreepli(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, epsilonCAna) : null;
   var offsetSonuc = offsetSistemCoz(segmentAcikliklar, refT1, refG1, refT1sic, T2, g2, t2, it.E, it.S, it.beta);
   var makaraGerilmeleri = (offsetSonuc && offsetSonuc.tensions) ? offsetSonuc.tensions : segmentAcikliklar.map(function(){ return T2Ruling; });
   // "Offset (cm)" gösterimi: artık doğrudan bir bilinmeyen değil (yeni sistem doğrudan T üretiyor),
   // bu yüzden GÖRÜNTÜLEME amaçlı geriye doğru bir zincir hesabıyla türetiliyor — "bu açıklığın
-  // GERÇEK (Makara) gerilmesi, Çizelge'nin (T2Ruling) tekdüze referansına göre ne kadarlık bir
+  // GERÇEK (Makara) gerilmesi, Klemp'nin (T2Ruling) tekdüze referansına göre ne kadarlık bir
   // geometrik kaymaya karşılık gelir" sorusunu, önceki (durdurucudan gelen) kaymayı da hesaba
   // katarak zincirleme çözüyor — aynı "gerilimsiz boy korunumu" mantığı, sadece T artık girdi.
   // 2026-09-12 DÜZELTME (kullanıcı fark etti: "Offset bende 0 çıkıyor"): eski aralık genişletme
@@ -30201,32 +30873,35 @@ function sehimCetveliHesapla(manuelUygula){
     var L = telBoyuHesapla(T2, g2, s.a, s.h);
     var poleIdxGlobal = baslangicIdx + idx + 1; // bu satırın VARIŞ direği (direkler[] içindeki indeksi)
     var taşiyiciMi = (idx < offsetDeltalar.length); // son satırın varışı her zaman durdurucu
-    // Offset işareti: bkz. stTekDurumSatirlariHesapla'daki AYNI not — deltaZinciriCoz'un kendi
-    // işareti PLS-CADD'in yönüyle ters çıkıyordu, burada da aynı fiziksel kuralla düzeltildi
-    // (sonraki açıklığın Makara gerilmesi önceki açıklıktan büyükse İLERİ(+), küçükse GERİ(−)).
-    var offsetM = taşiyiciMi ? (Math.abs(offsetDeltalar[idx]) * ((makaraGerilmeleri[idx+1] >= makaraGerilmeleri[idx]) ? 1 : -1)) : null;
+    // Offset işareti: bkz. stTekDurumSatirlariHesapla'daki AYNI not (2026-09-21 düzeltmesi) —
+    // "hangi taraf daha gergin" kuralı yanlıştı, doğrusu offset = −zDSonra (deltaZinciriCoz'un
+    // ham işaretli çıktısının basitçe ters çevrilmesi).
+    var offsetM = taşiyiciMi ? (-offsetDeltalar[idx]) : null;
     var TMakara = makaraGerilmeleri[idx];
     var fFinal = stSehimGenel(TMakara, g2, s.a, s.h);
+    var fNihai = (T2Nihai !== null) ? stSehimGenel(T2Nihai, g2, s.a, s.h) : null;
     if(!kotVar){
       var f = sehimHesapla(T2, g2, s.a);
-      return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: f, fFinal: fFinal, L: L, a: s.a, aa: s.a/2, au: s.a/2, hata: false, disariTasti: false, taşiyiciMi: taşiyiciMi, poleIdxGlobal: poleIdxGlobal, offsetM: offsetM };
+      return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: f, fFinal: fFinal, fNihai: fNihai, L: L, a: s.a, aa: s.a/2, au: s.a/2, hata: false, disariTasti: false, taşiyiciMi: taşiyiciMi, poleIdxGlobal: poleIdxGlobal, offsetM: offsetM };
     }
     var mutlakH = Math.abs(s.h);
     var aU = teğetliNoktaCoz(T2, g2, s.a, mutlakH);
     if(aU === null){
-      return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: null, fFinal: fFinal, L: L, a: s.a, aa: null, au: null, hata: true, disariTasti: false, taşiyiciMi: taşiyiciMi, poleIdxGlobal: poleIdxGlobal, offsetM: offsetM };
+      return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: null, fFinal: fFinal, fNihai: fNihai, L: L, a: s.a, aa: null, au: null, hata: true, disariTasti: false, taşiyiciMi: taşiyiciMi, poleIdxGlobal: poleIdxGlobal, offsetM: offsetM };
     }
     var aA = s.a - aU;
     var disariTasti = (aU < 0 || aU > s.a);
     if(disariTasti) disindaVarMiCetvel = true;
     var fO = memeSehim(T2, g2, s.a, s.h);
-    return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: fO, fFinal: fFinal, L: L, a: s.a, aa: aA, au: aU, hata: false, disariTasti: disariTasti, taşiyiciMi: taşiyiciMi, poleIdxGlobal: poleIdxGlobal, offsetM: offsetM };
+    return { direkAdi: s.direkAdi, sonrakiDirekAdi: s.sonrakiDirekAdi, f: fO, fFinal: fFinal, fNihai: fNihai, L: L, a: s.a, aa: aA, au: aU, hata: false, disariTasti: disariTasti, taşiyiciMi: taşiyiciMi, poleIdxGlobal: poleIdxGlobal, offsetM: offsetM };
   });
+  var nihaiVarMi = (T2Nihai !== null);
   var satirHtml = satirVeri.map(function(r){
     var fHucre = r.hata
       ? '<td class="num-cell" style="color:var(--red);">—</td>'
       : '<td class="num-cell" style="font-weight:700;">' + (r.f !== null ? stFormatTR(r.f,3) : '—') + '</td>';
     var fFinalHucre = '<td class="num-cell">' + (r.fFinal !== null ? stFormatTR(r.fFinal,3) : '—') + '</td>';
+    var fNihaiHucre = nihaiVarMi ? ('<td class="num-cell">' + (r.fNihai !== null ? stFormatTR(r.fNihai,3) : '—') + '</td>') : '';
     var farkVal = (r.f !== null && r.fFinal !== null) ? (r.fFinal - r.f) : null;
     var farkHucre = '<td class="num-cell">' + (farkVal !== null ? ((farkVal>=0?'+':'') + stFormatTR(farkVal,3)) : '—') + '</td>';
     var telBoyuHucre = '<td class="num-cell">' + stFormatTR(r.L,3) + '</td>';
@@ -30241,9 +30916,9 @@ function sehimCetveliHesapla(manuelUygula){
       offsetHucre = '<td class="num-cell">—</td>';
     }
     if(r.hata){
-      return '<tr><td>' + r.direkAdi + ' → ' + r.sonrakiDirekAdi + etiket + '</td>' + fHucre + fFinalHucre + offsetHucre + farkHucre + telBoyuHucre + '<td class="num-cell">' + stFormatTR(r.a,1) + '</td><td class="num-cell" colspan="2" style="text-align:center;color:var(--red);">Hesaplanamadı</td></tr>';
+      return '<tr><td>' + r.direkAdi + ' → ' + r.sonrakiDirekAdi + etiket + '</td>' + fFinalHucre + fHucre + fNihaiHucre + offsetHucre + farkHucre + telBoyuHucre + '<td class="num-cell">' + stFormatTR(r.a,1) + '</td><td class="num-cell" colspan="2" style="text-align:center;color:var(--red);">Hesaplanamadı</td></tr>';
     }
-    return '<tr><td>' + r.direkAdi + ' → ' + r.sonrakiDirekAdi + etiket + '</td>' + fHucre + fFinalHucre + offsetHucre + farkHucre + telBoyuHucre + '<td class="num-cell">' + stFormatTR(r.a,1) + '</td><td class="num-cell">' + stFormatTR(r.aa,1) + '</td><td class="num-cell">' + stFormatTR(r.au,1) + '</td></tr>';
+    return '<tr><td>' + r.direkAdi + ' → ' + r.sonrakiDirekAdi + etiket + '</td>' + fFinalHucre + fHucre + fNihaiHucre + offsetHucre + farkHucre + telBoyuHucre + '<td class="num-cell">' + stFormatTR(r.a,1) + '</td><td class="num-cell">' + stFormatTR(r.aa,1) + '</td><td class="num-cell">' + stFormatTR(r.au,1) + '</td></tr>';
   }).join('');
 
   // Kaydetme özelliği için son hesaplanan sonucu sakla (2026-09-03 EKLENDİ) — dış sayfadaki
@@ -30265,9 +30940,10 @@ function sehimCetveliHesapla(manuelUygula){
   }
 
   sonucDiv.innerHTML =
-    '<div style="overflow-x:auto;"><table class="sehim-tablo"><thead><tr><th>Açıklık</th><th>f<sub>o</sub><br>(Çizelge)</th><th>f<sub>o</sub><br>(Makara)</th><th>Offset</th><th>Fark</th><th>Tel Boyu L (m)</th><th>a (m)</th><th>a<sub>a</sub> (m)</th><th>a<sub>ü</sub> (m)</th></tr></thead><tbody>' + satirHtml + '</tbody></table></div>' +
-    '<div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:6px;"><span>Hedef Gerilme T₂ (Çizelge): ' + stFormatTR(T2,1) + ' kg (' + stFormatTR(T2*9.80665,1) + ' N)</span><span>G₂: ' + stFormatTR(g2,3) + ' kg/m</span></div>' +
+    '<div style="overflow-x:auto;"><table class="sehim-tablo"><thead><tr><th>Açıklık</th><th>F1<br>(Makara)</th><th>F2<br>(Klemp)</th>' + (nihaiVarMi ? '<th>F3<br>(Nihai)</th>' : '') + '<th>Offset</th><th>Fark</th><th>Tel Boyu L (m)</th><th>a (m)</th><th>a<sub>a</sub> (m)</th><th>a<sub>ü</sub> (m)</th></tr></thead><tbody>' + satirHtml + '</tbody></table></div>' +
+    '<div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:6px;"><span>Hedef Gerilme T₂ (Klemp): ' + stFormatTR(T2,1) + ' kg (' + stFormatTR(T2*9.80665,1) + ' N)</span><span>G₂: ' + stFormatTR(g2,3) + ' kg/m</span></div>' +
     '<div style="margin-top:10px;font-size:11px;color:var(--muted);line-height:1.6;background:var(--bg);border-radius:8px;padding:10px 12px;">📍 <b style="color:var(--text);">Saha uygulaması:</b> Klemp, o taşıyıcı direkte askı noktasından Offset kadar kaydırılarak sabitlenir — yön, direk numaralandırmasına göredir (İleri = direk numarası artan yön). <b style="color:var(--accent);">Pozitif (+)</b>: klemp İLERİ yönde kaydırılır. <b style="color:#B00020;">Negatif (−)</b>: klemp GERİ yönde kaydırılır.</div>' +
+    (nihaiVarMi ? '<div style="margin-top:6px;font-size:11px;color:var(--muted);line-height:1.6;background:var(--bg);border-radius:8px;padding:10px 12px;">🕐 <b style="color:var(--text);">Nihai sütunu:</b> bu iletken için girilmiş gerçek creep (kalıcı uzama) verisiyle, +15°C çıplak/rüzgarsız (EDS) referans gerilmesinde biriken kalıcı gerinim esas alınarak hesaplanan uzun-vadeli sehim değeridir. Klemp/Makara sütunları creep etkisi olmadan, mevcut (ilk gün) gerilmeyle hesaplanır.</div>' : '') +
     (disindaVarMiCetvel ? '<div class="warn">ℹ ↗ işaretli açıklıklarda 0-noktası (yatay teğetli nokta) açıklığın dışına düşüyor (geçerli bir durum, dik/kısa açıklıklarda yaygın) — bu satırlarda f<sub>o</sub> "meme noktası" yöntemiyle hesaplandı (kirişe paralel teğetin değdiği nokta, her zaman açıklık içinde bulunur), 0-noktası bazlı formülden FARKLI bir yöntem.</div>' : '') +
     ekatyUyariUret(it, T1, g1, t1, aRuling, T2, document.getElementById('buzBolgesi').value);
 }
@@ -30416,7 +31092,7 @@ function stHesapla(){
     uyariHtml += '<div class="warn">ℹ Bazı açıklıklarda kot farkı girilmiş ama "Gelişmiş Hesap" kapalı (veya T/g eksik) — bu açıklıklara komşu direklerin ağırlık açıklığı geçici olarak <b>seviyeli varsayımla (a_g≈a_w)</b> hesaplandı. Tam sonuç otomatik hesaplanıyor.</div>';
   }
   if(disindaVarMi){
-    uyariHtml += '<div class="warn">ℹ Bazı açıklıklarda kot farkı büyük olduğu için yatay teğetli nokta (tel eğrisinin en alçak/en yüksek noktası) açıklığın dışına, bir direğin ötesine düşüyor — bu geçerli bir durumdur (kitabın "Aşağı/Yukarı Ağırlık Açıklığı" kavramıyla aynı), ilgili direklerin ağırlık açıklığı katkısı NEGATİF çıkabilir. Değerler doğru hesaplanıyor, sadece işaretlerine dikkat edin.</div>';
+    uyariHtml += '<div class="warn">ℹ Bazı açıklıklarda kot farkı büyük olduğu için yatay teğetli nokta (tel eğrisinin en alçak/en yüksek noktası) açıklığın dışına, bir direğin ötesine düşüyor — bu geçerli bir durumdur, ilgili direklerin ağırlık açıklığı katkısı NEGATİF çıkabilir. Değerler doğru hesaplanıyor, sadece işaretlerine dikkat edin.</div>';
   }
   document.getElementById('rulingUyari').innerHTML = uyariHtml;
 
@@ -30446,7 +31122,7 @@ function aKrtHesapla(){
   var gerilim = document.getElementById('gerilim').value;
   var tbody = document.getElementById('aKrtTbody');
   if(!it.Tmax){
-    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted);">Bu iletken için T_max verisi yok — sadece 1272/954/795/477 MCM iletkenleri için doğrulanmış T_max mevcut. Sonradan eklenen diğer iletkenlerde bu hesap yapılamıyor.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--muted);">Bu iletken için henüz doğrulanmış T_max verisi girilmemiş.</td></tr>';
     return;
   }
   var durdurucuIdx = [];
@@ -30495,7 +31171,7 @@ function tKrtHesapla(){
   var gerilim = document.getElementById('gerilim').value;
   var tbody = document.getElementById('tKrtTbody');
   if(!it.Tmax){
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted);">Bu iletken için T_max verisi yok — sadece 1272/954/795/477 MCM iletkenleri için doğrulanmış T_max mevcut. Sonradan eklenen diğer iletkenlerde bu hesap yapılamıyor.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--muted);">Bu iletken için henüz doğrulanmış T_max verisi girilmemiş.</td></tr>';
     return;
   }
   var t2 = -5;
@@ -30793,7 +31469,7 @@ function stAmaxHesapla(){
 
   sonucDiv.innerHTML =
     '<div style="overflow-x:auto;"><table class="sonuc-tablo"><thead><tr><th>Etap</th><th>Direk (Tip Gövde)</th><th>αi</th><th>Tn (kg)</th><th>gn (kg/m)</th><th>a_max</th></tr></thead><tbody>' + satirHtml + '</tbody></table></div>' +
-    '<div class="warn" style="margin-top:8px;">ℹ αi, her direğin kendi rüzgar/ağırlık açıklığından (tan α=H/V) türetilen bir REFERANS açıdır — kitaptaki gerçek yöntem (salınım diyagramları) grafik/analitik bir yöntemdir, burada yaklaşıklıkla temsil edildi. Tn/gn her ETAP için o etabın ruling açıklığından, Lk ise HER DİREĞİN kendi Tip/Gövde\'sinden ayrı ayrı hesaplanıyor.</div>';
+    '<div class="warn" style="margin-top:8px;">ℹ αi, her direğin kendi rüzgar/ağırlık açıklığından (tan α=H/V) türetilen bir REFERANS açıdır — gerçek yöntem (salınım diyagramları) grafik/analitik bir yöntemdir, burada yaklaşıklıkla temsil edildi. Tn/gn her ETAP için o etabın ruling açıklığından, Lk ise HER DİREĞİN kendi Tip/Gövde\'sinden ayrı ayrı hesaplanıyor.</div>';
 }
 
 // ══════════════════ KAMÇILANMA (GALLOPING) KONTROLÜ — 2026-09-06 EKLENDİ ══════════════════
@@ -31064,7 +31740,7 @@ window.tumunuTemizle = tumunuTemizle;
       if(isNaN(n)) return String(v).replace('.', ',');
       return n.toFixed(dec === undefined ? 3 : dec).replace('.', ',');
     }
-    // Bir satırın tüm sütunlarını (modüldeki EKRAN sırasıyla: Açıklık, fo Çizelge, fo Makara,
+    // Bir satırın tüm sütunlarını (modüldeki EKRAN sırasıyla: Açıklık, fo Klemp, fo Makara,
     // Offset, Fark, Tel Boyu, a, aa, aü) tek yerden üretiyor — hem CSV hem PDF bunu kullanıyor,
     // ikisi arasında sütun sırası/eksikliği farkı olmasın diye.
     function stSatirDegerleri(r){
@@ -31082,7 +31758,7 @@ window.tumunuTemizle = tumunuTemizle;
         r.hata ? '-' : stCsvSayi(r.au, 1)
       ];
     }
-    var ST_TABLO_BASLIKLARI = [['Aciklik',''], ['fo Cizelge','(m)'], ['fo Makara','(m)'], ['Offset','(cm)'], ['Fark','(m)'], ['Tel Boyu L','(m)'], ['a','(m)'], ['aa','(m)'], ['au','(m)']];
+    var ST_TABLO_BASLIKLARI = [['Aciklik',''], ['fo Klemp','(m)'], ['fo Makara','(m)'], ['Offset','(cm)'], ['Fark','(m)'], ['Tel Boyu L','(m)'], ['a','(m)'], ['aa','(m)'], ['au','(m)']];
     var ST_TABLO_BASLIKLARI_DUZ = ST_TABLO_BASLIKLARI.map(function(b){ return (b[1] ? b[0] + ' ' + b[1] : b[0]); });
     function stCsvUret(kayit){
       var lines = [];
@@ -31239,17 +31915,22 @@ window.tumunuTemizle = tumunuTemizle;
     }
 
     // ══════════════════ TÜM SICAKLIKLAR — CSV/PDF üretimi ══════════════════
-    // Tablo yapısı: Açıklık + her sıcaklık için (Çizelge, Makara, Offset) 3'lü sütun grubu, YAN
+    // Tablo yapısı: Açıklık + her sıcaklık için (Klemp, Makara, Offset) 3'lü sütun grubu, YAN
     // YANA (kullanıcı isteği: "alt alta değil yan yana üçlü sütun grubu").
     // NOT: stTekDurumSatirlariHesapla'da (yukarıda) r.f AYNI İSİMLE ama TERS anlamda kullanılıyor
     // (burada rigorous/offset-düzeltilmiş = Makara; ana Sehim Cetveli'ndeki r.f ise ruling-span'di)
     // — bu yüzden isimlendirme burada AYRI ele alınıyor, karıştırılmamalı.
-    function stTsHucreDegerleri(sicaklikVerisi, satirIdx){
+    function stTsHucreDegerleri(sicaklikVerisi, satirIdx, nihaiVarMi){
       var r = sicaklikVerisi.rows[satirIdx];
       var makara = r.hata ? '-' : stCsvSayi(r.f, 2);
-      var cizelge = (r.fCizelge !== null && r.fCizelge !== undefined) ? stCsvSayi(r.fCizelge, 2) : '-';
+      var klemp = (r.fKlemp !== null && r.fKlemp !== undefined) ? stCsvSayi(r.fKlemp, 2) : '-';
       var offset = (r.taşiyiciMi && r.offsetM !== null && r.offsetM !== undefined) ? stCsvSayi(r.offsetM*100, 2) : '-';
-      return [cizelge, makara, offset];
+      var sonuc = [makara, klemp, offset];
+      if(nihaiVarMi){
+        var nihai = (r.fNihai !== null && r.fNihai !== undefined) ? stCsvSayi(r.fNihai, 2) : '-';
+        sonuc.push(nihai);
+      }
+      return sonuc;
     }
     function stTsCsvUret(kayit){
       var lines = [];
@@ -31263,13 +31944,23 @@ window.tumunuTemizle = tumunuTemizle;
         lines.push('Ruling Aciklik (m);' + stCsvSayi(etap.aRuling, 2));
         lines.push('');
         // Üç satırlı başlık: sıcaklık, altında (aynı 3 sütuna yayılı, tek satır) o sıcaklığın
-        // T2 (kg ve N) ile g2 bilgisi, en altta Çizelge/Makara/Offset.
+        // T2 (kg ve N) ile g2 bilgisi, en altta Klemp/Makara/Offset.
+        // Üç (veya, creep verisi olan iletkenlerde, dört) sütunlu başlık: sıcaklık, altında
+        // (aynı sütunlara yayılı, tek satır) o sıcaklığın T2 (kg ve N) ile g2 bilgisi, en altta
+        // Klemp/Makara/Offset(/Nihai).
+        // 2026-09-19 EKLEME (kullanıcı isteği: "10 yıl sonrası için ayrı bir Sehim, ayrı bir
+        // sütunda, ismi Nihai olsun"): creep verisi olan iletkenlerde (bkz. CREEP_KATSAYILARI)
+        // her sıcaklık grubuna 4. bir "Nihai (m)" sütunu ekleniyor — creep verisi olmayan
+        // iletkenlerde bu sütun hiç eklenmiyor (yanıltıcı boş sütun göstermemek için).
+        var nihaiVarMi = etap.veriler.some(function(v){ return v.rows.some(function(r){ return r.fNihai !== null && r.fNihai !== undefined; }); });
+        var sutunSayisi = nihaiVarMi ? 4 : 3;
         var ustBaslik = ['', 'Aciklik Bilgisi', '', '']; var t2Baslik = ['', '', '', '']; var altBaslik = ['Aciklik', 'a (m)', 'L (m)', 'Kot Farki (m)'];
         etap.veriler.forEach(function(v){
-          ustBaslik.push(v.sicaklik + ' C', '', '');
+          for(var bi=0; bi<sutunSayisi; bi++){ ustBaslik.push(bi===0 ? (v.sicaklik + ' C') : ''); t2Baslik.push(''); }
           var t2Bilgi = 'T2=' + stCsvSayi(v.T2,1) + 'kg (' + stCsvSayi(v.T2*9.80665,1) + 'N), g2=' + stCsvSayi(etap.g2,3) + 'kg/m';
-          t2Baslik.push(t2Bilgi, '', '');
-          altBaslik.push('Cizelge (m)', 'Makara (m)', 'Offset (cm)');
+          t2Baslik[t2Baslik.length - sutunSayisi] = t2Bilgi;
+          altBaslik.push('F1-Makara (m)', 'F2-Klemp (m)', 'Offset (cm)');
+          if(nihaiVarMi) altBaslik.push('F3-Nihai (m)');
         });
         lines.push(ustBaslik.join(';'));
         lines.push(t2Baslik.join(';'));
@@ -31277,10 +31968,14 @@ window.tumunuTemizle = tumunuTemizle;
         etap.segmentler.forEach(function(s, idx){
           var satir = [stAsciiyeSev(s.direkAdi) + ' -> ' + stAsciiyeSev(s.sonrakiDirekAdi), stCsvSayi(s.a,1), stCsvSayi(s.L,3), stCsvSayi(s.h,2)];
           etap.veriler.forEach(function(v){
-            satir = satir.concat(stTsHucreDegerleri(v, idx));
+            satir = satir.concat(stTsHucreDegerleri(v, idx, nihaiVarMi));
           });
           lines.push(satir.join(';'));
         });
+        if(nihaiVarMi){
+          lines.push('');
+          lines.push('Not: "F3-Nihai (m)" sutunu, gercek creep (kalici uzama) verisi girilmis iletkenler icin, +15C ciplak/ruzgarsiz (EDS) referans gerilmesinde biriken kalici gerinim esas alinarak hesaplanan uzun-vadeli sehim degeridir. F1-Makara/F2-Klemp sutunlari ise creep etkisi olmadan, mevcut (ilk gun) gerilme ile hesaplanir.');
+        }
         lines.push('');
       });
       return lines.join('\r\n');
@@ -31344,7 +32039,7 @@ window.tumunuTemizle = tumunuTemizle;
           }
 
           // "Açıklık Bilgisi" (a, L, Kot Farkı — 3 sütun, sıcaklıktan bağımsız) + her sıcaklık
-          // için 3 sütun (Çizelge/Makara/Offset) — hepsi TEK SAYFA GENİŞLİĞİNE, dar sütunlarla.
+          // için 3 sütun (Klemp/Makara/Offset) — hepsi TEK SAYFA GENİŞLİĞİNE, dar sütunlarla.
           var acikGenislik = 13;
           var hucreGenislik = 8.2;
 
@@ -31397,7 +32092,7 @@ window.tumunuTemizle = tumunuTemizle;
           kayit.etaplar.forEach(function(etap, etapIdx){
             var gruplar = [{ baslik: 'Aciklik Bilgisi', altBasliklar: ['a (m)', 'L (m)', 'dKot (m)'] }].concat(
               etap.veriler.map(function(v){
-                return { baslik: v.sicaklik + ' C', altBasliklar: ['Cizelge','Makara','Offset'],
+                return { baslik: v.sicaklik + ' C', altBasliklar: ['F1-Mak','F2-Klm','Offset'],
                   t2Bilgi: 'T2=' + stCsvSayi(v.T2,1) + 'kg (' + stCsvSayi(v.T2*9.80665,1) + 'N), g2=' + stCsvSayi(etap.g2,3) };
               })
             );
@@ -33566,7 +34261,7 @@ function ts3Senaryo7(p){
   // Direk Tipi: hem Direk Ayak Ayar Ölçüleri'nin V_BLOK_DATA'sında (Ayak Açıklığı için)
   // hem Direk Temel Hesabı'nın TEMEL_DATA'sında (Temel Derinliği/Ayak Genişliği için)
   // birlikte bulunan tipler — ikisi de gerekli olduğundan sadece ortak olanlar listelenir.
-  var TS_TIPI_LISTESI = ['PA1','PB1','PD1','PE1','PF1','2FA1','2FB1','2FD1','2FE1','2FN1','2PA1','2PB1','2PD1','2PE1','2PF1','3PA1','3PB1','3PD1','3PE1','3PF1'].filter(function(t){
+  var TS_TIPI_LISTESI = (window.MASTER_DIREK_TIPLERI || []).filter(function(t){
     return window.V_BLOK_DATA && window.V_BLOK_DATA.hasOwnProperty(t) && window.TEMEL_DATA && window.TEMEL_DATA.hasOwnProperty(t);
   });
   var TS_ZEMIN_LISTESI = [
@@ -34299,7 +34994,7 @@ function toHesaplaAyak(s){
   if(hb3){hb3.disabled=false;hb3.style.opacity='';hb3.style.cursor='';}
 }
 var toSteps=[
-  {key:'tipi',label:'Direk Tipi',options:function(s){return(window.ayarTipleri||[]).map(function(t){return{value:t,label:t};});},onSelect:function(s){s.govde=null;s.zemin=null;toRefreshButtons();}},
+  {key:'tipi',label:'Direk Tipi',options:function(s){return(window.MASTER_DIREK_TIPLERI||window.ayarTipleri||[]).filter(function(t){return window.V_BLOK_DATA&&V_BLOK_DATA[t];}).map(function(t){return{value:t,label:t};});},onSelect:function(s){s.govde=null;s.zemin=null;toRefreshButtons();}},
   {key:'govde',label:'G\u00f6vde (m)',numeric:true,options:function(s){if(!s.tipi||!window.V_BLOK_DATA||!V_BLOK_DATA[s.tipi])return[];return Object.keys(V_BLOK_DATA[s.tipi].table).map(Number).sort(function(a,b){return a-b;}).map(function(g){return{value:g,label:(g>=0?'+':'')+g+' m'};});},onSelect:function(s){s.zemin=null;toRefreshButtons();}},
   {key:'zemin',label:'Zemin Tipi',options:function(){return[{value:'toprak',label:'\u{1F331} Toprak (\u00d71)'},{value:'taslik',label:'\u{1FAA8} Ta\u015Fl\u0131k (\u00d71.5)'},{value:'kaya',label:'\u{1F3D4} Kaya (\u00d72)'}];},onSelect:function(s){toHesaplaAyak(s);}}
 ];
@@ -39057,7 +39752,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     --surface:#F4F8FB; --text:#122E43; --text-muted:#5B7488; --danger:#D9524A; --ok:#2E8B57;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;height:100%;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--surface);color:var(--text);}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--surface);color:var(--text);-webkit-text-size-adjust:100%;text-size-adjust:100%;}
   #app{position:fixed;inset:0;display:flex;flex-direction:column;}
 
   /* ── Üst başlık ───────────────────────────────────────────────── */
