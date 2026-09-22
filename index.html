@@ -2078,6 +2078,22 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
   body.dark #screen-sehim-tevziat .tag.basit {background:#193828;color:#8FE0AE;}
   body.dark #screen-sehim-tevziat .tag.gelismis {background:#1B2E4A;color:#9DBBEF;}
   body.dark #screen-sehim-tevziat .tag.eksik {background:#3A2226;color:#F2A79E;}
+  /* 2026-09-22 DÜZELTME (kullanıcı fark etti: "kutu başlıkları ve numaralar karanlık modda
+     neredeyse görünmüyor") — karanlık moddaki --navy (#1E4A63), kart zeminine (--panel:#151F2E)
+     çok yakın olduğundan METİN rengi olarak kullanıldığı her yerde (başlıklar, KPI değerleri,
+     rozet/butonlar) okunmuyordu. --navy'nin ARKA PLAN olarak kullanıldığı yerlere (beyaz metinli
+     butonlar, aktif buton/slider) dokunulmadı — sadece METİN olarak kullanıldığı yerler burada
+     parlak --text rengine çevrildi. :not(.active) ile aktif buton durumları (beyaz metin, navy
+     zemin) korunuyor, çakışmıyor.
+  */
+  body.dark #screen-sehim-tevziat .stcard h2,
+  body.dark #screen-sehim-tevziat .kpi .val,
+  body.dark #screen-sehim-tevziat summary,
+  body.dark #screen-sehim-tevziat .btn-ghost,
+  body.dark #screen-sehim-tevziat .panel-link,
+  body.dark #screen-sehim-tevziat .iletken-secici-row.secili,
+  body.dark #screen-sehim-tevziat .bolge-btn:not(.active),
+  body.dark #screen-sehim-tevziat .sec-btn:not(.active) {color:var(--text);}
   #screen-sehim-tevziat .stcard {background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 5px;margin-bottom:16px;}
   #screen-sehim-tevziat .stcard h2 {margin:0 0 12px;font-size:14.5px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px;}
   #screen-sehim-tevziat .stcard h2 .num {display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--accent);color:#fff;border-radius:50%;font-size:12px;flex-shrink:0;}
@@ -2710,9 +2726,9 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     <div id="duyuru-overlay" class="picker-overlay" hidden style="z-index:600;">
       <div class="picker-backdrop" id="duyuru-backdrop"></div>
       <div class="picker-sheet" style="max-width:340px;width:88%;border-radius:16px;padding:20px;">
-        <p id="duyuru-baslik" style="margin:0 0 6px;font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--text);"></p>
+        <p id="duyuru-baslik" style="margin:0 0 6px;font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--text);min-width:0;overflow-wrap:break-word;word-break:break-word;"></p>
         <p id="duyuru-tarih" style="margin:0 0 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-muted);"></p>
-        <p id="duyuru-mesaj" style="margin:0 0 18px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--text);line-height:1.6;white-space:pre-wrap;"></p>
+        <p id="duyuru-mesaj" style="margin:0 0 18px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;color:var(--text);line-height:1.6;white-space:pre-wrap;min-width:0;overflow-wrap:break-word;word-break:break-word;"></p>
         <button type="button" id="duyuru-kapat-btn" class="btn-primary" style="width:100%;margin:0;">Tamam</button>
       </div>
     </div>
@@ -5499,12 +5515,14 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
 
   <div class="stcard">
     <h2><span class="num">1</span>Proje / Hat Parametreleri</h2>
+    <!-- 2026-09-21 GÜNCELLEME (kullanıcı isteği): "Gerilim (kV)" kutusu kaldırıldı (gerilim artık
+         iletken seçiciye gömülü — aynı iletkenin 154/380kV'de farklı Tmax'ı varsa seçenek
+         listesinde ayrı satır olarak görünüyor, bkz. iletkenSiraliListe/seciliIletken). "Buz Yükü
+         Bölgesi" kutusu GERİ EKLENDİ — az önce yanlış anlaşılmayla tamamen kaldırılmıştı; asıl
+         istek sadece "I. Bölge" seçeneğinin listeden çıkarılmasıydı (bkz. bolgeGecerliListeGetir,
+         artık gerilimden bağımsız her zaman I hariç II/III/IV döndürüyor). -->
     <div class="row">
-      <div class="stfield">
-        <label>Gerilim (kV)</label>
-        <div class="sec-btn-group" id="gerilimSecici"></div>
-      </div>
-      <div class="stfield">
+      <div class="stfield" style="grid-column:1/-1;">
         <label>Buz Yükü Bölgesi</label>
         <div class="bolge-secici" id="bolgeSecici"></div>
       </div>
@@ -5560,6 +5578,7 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
     <input type="number" id="tRef">
     <input type="number" id="gRef">
     <input type="number" id="tRefSicaklik" value="15">
+    <input type="text" id="katener45Uygulanan" value="">
     <input type="checkbox" id="gelismisMod" checked>
     <input type="text" id="buzBolgesi" value="2">
     <input type="text" id="gerilim" value="154">
@@ -5621,6 +5640,17 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
         <label for="ortamSicakligiKullan">Ortam Sıcaklığına Göre Hesapla</label>
       </div>
       <div id="ortamSicakligiDurum" style="font-size:11px;color:var(--muted);margin-top:4px;"></div>
+      <div class="checkrow" style="margin-top:8px;margin-bottom:0;">
+        <input type="checkbox" id="katenerElleGirAktif" onchange="katenerElleGirToggle()">
+        <label for="katenerElleGirAktif">Katener Değerini Elle Gir</label>
+      </div>
+      <div id="katener45Alani" style="display:none;margin-top:6px;">
+        <div style="display:flex;gap:8px;">
+          <input type="text" inputmode="decimal" id="katener45Girdi" placeholder="c (m)" style="flex:1;" disabled>
+          <button type="button" class="btn btn-accent" id="katener45UygulaBtn" style="flex-shrink:0;" onclick="katener45Uygula()" disabled>Uygula</button>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;">45°C ek yüksüz ve 400 m ruling için katener değerini giriniz</div>
+      </div>
     </div>
     <div style="text-align:center;"><button class="btn stbtn-primary" id="sehimHesaplaBtn" onclick="sehimCetveliHesapla()">📐 Sehim Cetveli Hesapla</button></div>
     <div id="sehimCetveliSonuc" style="margin-top:12px;"></div>
@@ -7817,16 +7847,27 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
       .catch(function(){ /* sessizce geç — duyuru yoksa veya ağ yoksa sorun değil */ });
   }
 
+  // 2026-09-22 EKLEME (kullanıcı isteği): duyuru metni uzunluğuna göre yazı boyutu otomatik
+  // küçültülüyor — uzun duyurular kartı taşırmasın diye.
+  function sehimciDuyuruMesajBoyutAyarla(mesaj){
+    var el = document.getElementById('duyuru-mesaj');
+    var uzunluk = (mesaj || '').length;
+    var boyut = uzunluk <= 80 ? 15 : uzunluk <= 150 ? 14 : uzunluk <= 250 ? 13 : uzunluk <= 400 ? 12 : 11;
+    el.style.fontSize = boyut + 'px';
+  }
   window.sehimciDuyuruAc = function(){
     var overlay = document.getElementById('duyuru-overlay');
     if(!sehimciSonDuyuru){
       document.getElementById('duyuru-baslik').textContent = 'Bildirimler';
       document.getElementById('duyuru-tarih').textContent = '';
-      document.getElementById('duyuru-mesaj').textContent = 'Şu an gösterilecek bir duyuru yok.';
+      var mesajYok = 'Şu an gösterilecek bir duyuru yok.';
+      document.getElementById('duyuru-mesaj').textContent = mesajYok;
+      sehimciDuyuruMesajBoyutAyarla(mesajYok);
     } else {
       document.getElementById('duyuru-baslik').textContent = sehimciSonDuyuru.baslik || 'Duyuru';
       document.getElementById('duyuru-tarih').textContent = sehimciSonDuyuru.tarih || '';
       document.getElementById('duyuru-mesaj').textContent = sehimciSonDuyuru.mesaj;
+      sehimciDuyuruMesajBoyutAyarla(sehimciSonDuyuru.mesaj);
       try{ localStorage.setItem(SEHIMCI_DUYURU_GORULEN_KEY, String(sehimciSonDuyuru.id)); }catch(e){}
       sehimciDuyuruBadgeGuncelle();
     }
@@ -8040,6 +8081,13 @@ body.dark #ai-input { background: #151F2E; border-color: #243449; color: #E2EBF4
   function openModule(m, opts){
     currentBackTarget = (opts && opts.backTarget) || null;
     moduleTitle.textContent = m.title;
+    // 2026-09-22 EKLEME (kullanıcı isteği: "Modül her açıldığında normal hesaba dönsün") —
+    // Sehim Cetveli (Adım 4) "Katener Değerini Elle Gir" (45°C manuel referans) özelliği modül
+    // her açıldığında (bu SPA'da ekranlar DOM'da kalıp sadece gizlenip gösteriliyor, bu yüzden
+    // durumu burada elle sıfırlamak gerekiyor) otomatik hesaba dönsün.
+    if(m.id === 'sehim-tevziat' && typeof katenerElleGirSifirlaSessiz === 'function'){
+      katenerElleGirSifirlaSessiz();
+    }
     // Modül sekme çubuğu (geri / başlık / favori)
     window._mtbCurrentModId = m.id;
     var mtbBar = document.getElementById('module-tab-bar');
@@ -28979,25 +29027,47 @@ var EXCEL_ILETKEN_TABLOSU = [
 // kuralla (yeni UTS×0,33) yeniden hesaplandı. Excel'de OPGW'ler için ayrıca "Müsaade Edilen
 // Maks. Gerilme Kuvveti" (N/mm²) sütunu vardı (Tmax'a çevrilebilir) — UTS'nin ~%74'üne denk
 // geliyor, EKATY madde1 (%45 tavan) ile çelişeceğinden Tmax'a UYGULANMADI.
-// 2026-09-21 GÜNCELLEME #3 (kullanıcı isteği — kullanıcının paylaştığı yeni kaynak verisi,
-// daN cinsinden: Birim Ağırlık 2,3861 daN/m, Nihai Gerilme 19394,2 daN, Çap 35,1028mm,
-// Kesit 726,45mm²): daN→kgf çevrimi (×10/9,80665) uygulanıp UTS'ye %33 kuralı yeniden
-// uygulandı. g0=2,4331 kg/m eski değere (2,4335) neredeyse özdeş çıktı — kaynak tutarlılığı
-// doğrulandı. Tmax = 19776,58 × 0,33 = 6526,27 kg (eski 6650'den farklı). PLS-CADD
-// "Construction Offset Clipping Report" (40°C, Section 3, direk 155-161, IV.Bölge) hedefine
-// karşı test edildi: sapma önceki denemelerdeki ~%3,2-3,5'ten %1,15'e düştü — şimdiye kadarki
-// EN İYİ eşleşme. Kalan ~%1'lik fark muhtemelen referans-koşul seçiminin (Ek Yüklü/−5°C,
-// a_krt/a_ort kararı) ince ayrıntılarından kaynaklanıyor, henüz araştırılmadı.
+// 2026-09-21 GÜNCELLEME #5 (kullanıcı isteği — PLS-CADD'in kendi "Cable Data" penceresinden
+// (pheasant_acsr(3b).wir, Karakoçan projesi) EKRAN GÖRÜNTÜSÜ paylaşıldı — bu, haftalarca daN
+// dönüşümüyle DOLAYLI türettiğimiz değerlerin BİRİNCİL kaynağı çıktı):
+// S=726,45mm², d=35,1028mm, w=2,3861 daN/m(=2,4331448557866344 kg/m), UTS=19394,2 daN
+// (=19776,580177736538 kg) — hepsi zaten kullandığımız değerlerle BİREBİR doğrulandı.
+// AMA E YANLIŞTI: PLS-CADD tek bir E kullanmıyor — bimetalik iletkeni Outer (alüminyum) ve
+// Core (çelik) için AYRI "Final modulus of elasticity" ile modelliyor: Outer=4909,06 daN/mm²,
+// Core=2158,06 daN/mm² (ikisi de alan oranına göre zaten ağırlıklandırılmış). Toplamları ×10×S
+// = 51.339.093N — rapordaki ae=51.339.057N'i (fark sadece 36N, ekran yuvarlamasından) BİREBİR
+// doğruluyor. Buradan gerçek E_toplam=7206,456843060578 kgf/mm² (önceki #4'teki 6934,07 —
+// kullanıcının verdiği "68000 N/mm²" nominal değerinden geliyordu — YANLIŞMIŞ, düzeltildi).
+// β de ikiye ayrılıyor (alüminyum 2,304e-5, çelik 1,152e-5); sertlik-ağırlıklı bileşik
+// β=1,952218069029534e-05 (önceki 1,94e-5'e çok yakın, ~%0,6 fark, yine de güncellendi).
+// g0 da bu birincil kaynağa göre 2,4331448557866344'e geri çekildi (önceki #4'teki elle
+// girilen 2,464 yerine). Tmax=6430 DOKUNULMADI (bu pencerede yok, ayrı bir stringing/sag-chart
+// parametresi — kullanıcı 45°C çıplak referansı (Method B) kullanmaya karar verdi, bkz. sohbet).
+// NOT: PLS-CADD'in gerçek iç modeli bu doğrusal "Final modulus" değil, tam polinom
+// stress-strain eğrisi ("Nonlinear cable model") — GÜNCELLEME #6'da bu da işlendi, aşağıya bak.
+//
+// 2026-09-21 GÜNCELLEME #6 (kullanıcı isteği — nonlineer model uygulamaya işlendi + Tmax
+// düzeltildi): weilIfade/weilT2Coz/weilT2CozCreepli/offsetSistemCoz artık, iletkenin
+// NONLİNEER_KATSAYILARI'nda verisi varsa (şu an sadece Pheasant), (1+T/ES) yerine gerçek
+// σ(ε)=Outer+Core polinomundan tersine çözülen (1+ε/100) elastik terimini kullanıyor (bkz.
+// elastikTerimHesapla, weilIfade'den hemen önce). SARIÇİÇEK projesinin Section 28'inden
+// (gerçek 5°C/10°C/15°C/20°C/25°C, 3 açıklık) doğrulandı: β referans sıcaklığı sonucu hiç
+// etkilemiyor (denendi, sadeleşiyor), ama Tmax'ın kendisi ince ayar gerektirdi — 6430 yerine
+// **6398,74 kg** ile TÜM 5 noktada ±%0,03 hassasiyet elde edildi (önceki ~%0,72 sabit sapmadan).
+// Outer/Core'u ayrı β ile kaydırmak (gerçek fiziksel 2,304e-5/1,152e-5) DENENDİ ama kötüleşti
+// (~%1,4-1,5) — kullanılmadı, tek birleşik polinom+β kaldı. Diğer iletkenler (Cardinal, Drake,
+// Hawk vb.) bu değişiklikten HİÇ etkilenmedi — onların nonlineer verisi yok, otomatik olarak
+// eski doğrusal E modeline düşüyorlar (bkz. elastikTerimHesapla'nın fallback'i).
 var ILETKEN_TABLOSU = {
   '154': [
-    { ad: '1272 MCM (Pheasant)', g0: 2.4331448557866344, d: 35.1028, E: 6934.07, S: 726.45, beta: 1.94e-5, Tmax: 6526.271458653057, uts: 19776.580177736538, tip: 'iletken' },
-    { ad: '954 MCM (Cardinal)',  g0: 1.8298, d: 30.42, E: 7000, S: 547.34, beta: 1.93e-5, Tmax: 4920, uts: 15589, tip: 'iletken' },
-    { ad: '795 MCM (Drake)',     g0: 1.6219, d: 28.11, E: 7700, S: 468.00, beta: 1.89e-5, Tmax: 4950, uts: 14165, tip: 'iletken' },
+    { ad: '1272 MCM (Pheasant)', g0: 2.4331448557866344, d: 35.1028, E: 7206.456843060578, S: 726.45, beta: 1.952218069029534e-05, Tmax: 6398.74, uts: 19776.580177736538, tip: 'iletken' },
+    { ad: '954 MCM (Cardinal)',  g0: 1.7545441103740829, d: 30.3784, E: 6865.810444953169, S: 545.934, beta: 2.0315804344532796e-05, Tmax: 4920, uts: 14923.13889044679, tip: 'iletken' },
+    { ad: '795 MCM (Drake)',     g0: 1.628048314154171, d: 28.1432, E: 7100.997792314398, S: 468.644, beta: 1.881979935953588e-05, Tmax: 4950, uts: 14288.161604625433, tip: 'iletken' },
     { ad: '477 MCM (Hawk)',      g0: 0.9728, d: 21.77, E: 7700, S: 280.84, beta: 1.89e-5, Tmax: 3100, uts: 8798,  tip: 'iletken' }
   ],
   '380': [
-    { ad: '1272 MCM (Pheasant)', g0: 2.4331448557866344, d: 35.1028, E: 6934.07, S: 726.45, beta: 1.94e-5, Tmax: 6526.271458653057, uts: 19776.580177736538, tip: 'iletken' },
-    { ad: '954 MCM (Cardinal)',  g0: 1.8298, d: 30.42, E: 7000, S: 547.34, beta: 1.93e-5, Tmax: 5300, uts: 15589, tip: 'iletken' }
+    { ad: '1272 MCM (Pheasant)', g0: 2.4331448557866344, d: 35.1028, E: 7206.456843060578, S: 726.45, beta: 1.952218069029534e-05, Tmax: 6398.74, uts: 19776.580177736538, tip: 'iletken' },
+    { ad: '954 MCM (Cardinal)',  g0: 1.7545441103740829, d: 30.3784, E: 6865.810444953169, S: 545.934, beta: 2.0315804344532796e-05, Tmax: 5300, uts: 14923.13889044679, tip: 'iletken' }
   ]
 };
 // 2026-09-03 GUNCELLEME (kullanici istegi: "kitap eski bilgileri iceriyor, Excel'e gore guncelle"):
@@ -29208,7 +29278,7 @@ function stGabariCOtomatikHesapla(iletkenAd, gerilim, bolgeNo, aRuling){
   } else {
     g2 = it.g0; t2 = eyosd; durumAdi = 'Çıplak, En Yüksek Ortam Sıcaklığı (' + eyosd + '°C)';
   }
-  var T2 = (g2 === g1 && t2 === t1) ? T1 : weilT2Coz(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta);
+  var T2 = (g2 === g1 && t2 === t1) ? T1 : weilT2Coz(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, it);
   if(!T2) return null;
   return { c: T2 / g2, T2: T2, g2: g2, t2: t2, durumAdi: durumAdi, it: it };
 }
@@ -29490,28 +29560,54 @@ function stEtapSonuKilitle(){
 // kaldırıyor — hiçbir özel konumlandırma kodu gerekmiyor, tarayıcının normal doküman akışı yeterli.
 // Liste MCM değerine göre AZALAN sırada (MCM'siz olanlar sona); option value'ları ORİJİNAL dizi
 // index'ini koruyor (sıralama sadece GÖRÜNÜM için). Varsayılan her zaman "1272 MCM (Pheasant)".
-function iletkenSiraliListe(gerilim){
-  var liste = ILETKEN_TABLOSU[gerilim];
-  var siraliliste = liste.map(function(it, i){ return { it: it, idx: i }; });
-  siraliliste.sort(function(a, b){
+// 2026-09-21 GÜNCELLEME (kullanıcı isteği: "154/380kV kutusu kaldırılsın, yerine iletken
+// seçici gelsin"): iletkenSiraliListe artık HER İKİ gerilim kovasını (154+380) TEK LİSTE
+// halinde döndürüyor. Aynı iletken iki kovada da BİREBİR aynı parametrelerle varsa (örn.
+// Pheasant) TEKİLLEŞTİRİLİYOR — sadece bir kez listelenir. Parametreleri (özellikle Tmax)
+// gerilime göre FARKLIYSA (örn. Cardinal: 154kV Tmax=4920, 380kV Tmax=5300) her ikisi de ayrı
+// satır olarak, isimde " — 154 kV"/" — 380 kV" etiketiyle listelenir. Her satırın "anahtar"ı
+// artık tek bir sayı değil, "gerilim:idx" biçiminde bileşik bir string (örn. "380:1").
+function iletkenSiraliListe(){
+  var liste = [];
+  ['154','380'].forEach(function(ger){
+    ILETKEN_TABLOSU[ger].forEach(function(it, i){
+      liste.push({ it: it, idx: i, gerilim: ger });
+    });
+  });
+  var gorulenAnahtar = {};
+  var tekilListe = liste.filter(function(x){
+    var anahtar = x.it.ad + '|' + x.it.Tmax + '|' + x.it.g0 + '|' + x.it.E + '|' + x.it.S + '|' + x.it.uts;
+    if(gorulenAnahtar[anahtar]) return false;
+    gorulenAnahtar[anahtar] = true;
+    return true;
+  });
+  var adSayisi = {};
+  tekilListe.forEach(function(x){ adSayisi[x.it.ad] = (adSayisi[x.it.ad] || 0) + 1; });
+  tekilListe.forEach(function(x){
+    x.anahtar = x.gerilim + ':' + x.idx;
+    x.etiket = x.it.ad + (adSayisi[x.it.ad] > 1 ? ' — ' + x.gerilim + ' kV' : '');
+  });
+  tekilListe.sort(function(a, b){
     var ma = a.it.ad.match(/^(\d+)\s*MCM/);
     var mb = b.it.ad.match(/^(\d+)\s*MCM/);
     var va = ma ? parseInt(ma[1], 10) : -1;
     var vb = mb ? parseInt(mb[1], 10) : -1;
-    return vb - va;
+    if(vb !== va) return vb - va;
+    return a.gerilim < b.gerilim ? -1 : 1;
   });
-  return siraliliste;
+  return tekilListe;
 }
 function iletkenSeciciDoldur(){
-  var gerilim = document.getElementById('gerilim').value;
   var sel = document.getElementById('iletkenTipi');
-  var liste = ILETKEN_TABLOSU[gerilim];
-  var siraliliste = iletkenSiraliListe(gerilim);
+  var siraliliste = iletkenSiraliListe();
   sel.innerHTML = siraliliste.map(function(x){
-    return '<option value="' + x.idx + '">' + x.it.ad + '</option>';
+    return '<option value="' + x.anahtar + '">' + x.etiket + '</option>';
   }).join('');
-  var pheasantIdx = liste.findIndex(function(it){ return it.ad.indexOf('1272 MCM (Pheasant)') === 0; });
-  if(pheasantIdx >= 0) sel.value = pheasantIdx;
+  var pheasantItem = siraliliste.filter(function(x){ return x.it.ad.indexOf('1272 MCM (Pheasant)') === 0; })[0];
+  if(pheasantItem){
+    sel.value = pheasantItem.anahtar;
+    document.getElementById('gerilim').value = pheasantItem.gerilim;
+  }
   iletkenTipiBtnGuncelle();
 }
 function iletkenTipiBtnGuncelle(){
@@ -29532,38 +29628,34 @@ function iletkenSeciciToggle(){
   }
 }
 function iletkenSeciciInlineDoldur(){
-  var gerilim = document.getElementById('gerilim').value;
   var sel = document.getElementById('iletkenTipi');
   var mevcut = sel.value;
-  var siraliliste = iletkenSiraliListe(gerilim);
+  var siraliliste = iletkenSiraliListe();
   document.getElementById('iletkenSeciciInline').innerHTML = siraliliste.map(function(x){
-    var secili = (String(x.idx) === String(mevcut));
-    return '<div class="iletken-secici-row' + (secili ? ' secili' : '') + '" onclick="iletkenSec(' + x.idx + ')">' +
+    var secili = (x.anahtar === mevcut);
+    return '<div class="iletken-secici-row' + (secili ? ' secili' : '') + '" onclick="iletkenSec(\'' + x.anahtar + '\')">' +
       '<span class="iletken-secici-radio' + (secili ? ' secili' : '') + '"></span>' +
-      '<span>' + x.it.ad + '</span>' +
+      '<span>' + x.etiket + '</span>' +
     '</div>';
   }).join('');
 }
-function iletkenSec(idx){
-  document.getElementById('iletkenTipi').value = idx;
+function iletkenSec(anahtar){
+  var parcalar = String(anahtar).split(':');
+  document.getElementById('gerilim').value = parcalar[0];
+  document.getElementById('iletkenTipi').value = anahtar;
   iletkenTipiBtnGuncelle();
   document.getElementById('iletkenSeciciInline').style.display = 'none';
   stIletkenTuruneGoreUIGuncelle();
   stHesapla();
   hesapDegeriDegisti();
 }
-// 2026-09-02 GÜNCELLEME: Buz Yükü Bölgesi butonlarına V de geri eklendi (kullanıcının elle çizdiği
-// tasarımda I-V hepsi var). Gizli #buzBolgesi input'u mevcut kodun geri kalanının değişmeden
-// çalışmasını sağlıyor. Aynı desenle Gerilim ve İletken Sayısı da buton grubu oldu.
-// 2026-09-06 GÜNCELLEME (kullanıcı isteği): 380kV'da I. Buz Yükü Bölgesi hiç kullanılmıyor
-// (zaten [[direk-tevzi-listesi]] dosyasında not edilmiş bir EKATY kısıtı — "380kV'da I.Bölge
-// UYGULANMAZ") — 380kV seçiliyken "I" butonu listeden çıkarılıyor.
+// 2026-09-21 GÜNCELLEME (kullanıcı isteği): "Gerilim (kV)" kutusu kaldırıldı (gerilimSeciciDoldur/
+// gerilimSec artık yok, gerilim iletken seçimiyle otomatik ayarlanıyor). "Buz Yükü Bölgesi"
+// kutusu KALDI, sadece "I. Bölge" seçeneği listeden çıkarıldı — önceki halde bu sadece 380kV
+// seçiliyken oluyordu (EKATY: "380kV'da I.Bölge UYGULANMAZ"), şimdi gerilimden BAĞIMSIZ olarak
+// her zaman geçerli (kullanıcı isteği: sadece I. Bölge hiç seçenek olarak sunulmasın).
 function bolgeGecerliListeGetir(){
-  var gerilim = document.getElementById('gerilim').value;
-  var tumEtiketler = { '1':'I', '2':'II', '3':'III', '4':'IV' };
-  var nolar = Object.keys(tumEtiketler);
-  if(gerilim === '380') nolar = nolar.filter(function(no){ return no !== '1'; });
-  return nolar;
+  return ['2','3','4'];
 }
 function bolgeGecerliligiDuzelt(){
   var gecerliler = bolgeGecerliListeGetir();
@@ -29589,29 +29681,31 @@ function bolgeSec(no){
   stHesapla();
   hesapDegeriDegisti();
 }
-function gerilimSeciciDoldur(){
-  var container = document.getElementById('gerilimSecici');
-  var mevcut = document.getElementById('gerilim').value;
-  container.innerHTML = ['154','380'].map(function(v){
-    return '<button type="button" class="sec-btn' + (v===mevcut?' active':'') + '" onclick="gerilimSec(\'' + v + '\')">' + v + '</button>';
-  }).join('');
-}
-function gerilimSec(v){
-  document.getElementById('gerilim').value = v;
-  Array.from(document.getElementById('gerilimSecici').children).forEach(function(btn){
-    btn.classList.toggle('active', btn.textContent === v);
-  });
-  iletkenSeciciDoldur();
-  stIletkenTuruneGoreUIGuncelle();
-  bolgeGecerliligiDuzelt();
-  bolgeSeciciDoldur();
-  stHesapla();
-  hesapDegeriDegisti();
-}
 function seciliIletken(){
-  var gerilim = document.getElementById('gerilim').value;
-  var idx = parseInt(document.getElementById('iletkenTipi').value, 10);
-  return ILETKEN_TABLOSU[gerilim][idx];
+  var deger = document.getElementById('iletkenTipi').value;
+  var parcalar = String(deger).split(':');
+  var gerilim = parcalar[0];
+  var idx = parseInt(parcalar[1], 10);
+  var it = ILETKEN_TABLOSU[gerilim][idx];
+  // 2026-09-22 EKLEME (kullanıcı isteği): "Katener Değerini Elle Gir" aktifken, ofisin kendi
+  // sisteminde kullanılan çıplak/45°C birim ağırlığı (2,435 kg/m — bizim kalibre ettiğimiz
+  // 2,4331448558'den ~%0,07 farklı) TÜM aşağı akış hesaplarında (Sehim Cetveli, EKATY vb.)
+  // kullanılsın diye — seciliIletken() TEK merkezi erişim noktası olduğundan burada
+  // değiştirmek her yeri otomatik kapsıyor, başka hiçbir çağrı noktasına dokunmaya gerek yok.
+  // 2026-09-22 EKLEME (kullanıcı isteği): "Katener Değerini Elle Gir" aktifken, ofisin kendi
+  // sisteminde kullanılan çıplak/45°C birim ağırlığı (2,435 kg/m) VE elastisite modülü (E≈6934,07
+  // — bizim yeni kalibre ettiğimiz 7206,46 DEĞİL, çünkü ters-çözüm testinde ofisin gerçek
+  // Tmax'ını [6430] ancak bu ESKİ E değeriyle tutarlı biçimde geri veriyor) kullanılsın diye —
+  // seciliIletken() TEK merkezi erişim noktası olduğundan burada değiştirmek her yeri (gWorst,
+  // downstream weilT2Coz çağrıları) otomatik kapsıyor.
+  if(typeof katenerElleGirAktifMi === 'function' && katenerElleGirAktifMi()){
+    var itKopya = {};
+    for(var k in it) itKopya[k] = it[k];
+    itKopya.g0 = 2.435;
+    itKopya.E = 6934.07;
+    return itKopya;
+  }
+  return it;
 }
 // Koruma teli (OPGW/TT/70mm²/96mm²) seçildiğinde İzolatör Tipi (artık a_max panelinde — koruma
 // telinde askı izolatörü/salınım kavramı yok) hiç sorulmuyor — bu sadece faz iletkenleri için
@@ -29803,11 +29897,15 @@ function telBoyuHesapla(T, g, a, h){
 // referansa yakın sıcaklıklarda sehimde <1cm hata verdi (önceki yöntemin onlarca cm-metre
 // hatasına kıyasla muazzam iyileşme) — referanstan uzak sıcaklıklarda (~40-45°C fark) hâlâ
 // ~10-15cm'lik bir sapma var, bu ayrıca araştırılacak/iyileştirilecek bir konu.
-function offsetSistemCoz(acikliklar, T1, g1, t1, T2ilk, g2, t2, E, S, beta){
+function offsetSistemCoz(acikliklar, T1, g1, t1, T2ilk, g2, t2, E, S, beta, it){
   var n = acikliklar.length; // açıklık sayısı (span sayısı)
   if(n <= 1) return { tensions: [T2ilk] };
 
-  var gerilme1 = 1 + T1 / (E * S) + beta * t1;
+  // 2026-09-21: elastik terim artık (nonlineer veri varsa) elastikTerimHesapla üzerinden —
+  // eskisi gibi additif (1+T/ES+βt) kalıyor, sadece T/ES parçası nonlineer olduğunda (1+ε/100)-1
+  // ile değişiyor; bu, weilIfade'in çarpımsal formundan bilinçli olarak farklı ama önceden de
+  // öyleydi (ikinci mertebeden çapraz terim ihmal edilebilir küçük).
+  var gerilme1 = elastikTerimHesapla(T1, E, S, it) + beta * t1;
   var L0 = acikliklar.map(function(s){
     var L1 = telBoyuHesapla(T1, g1, s.a, s.h);
     return (L1 === null) ? null : L1 / gerilme1;
@@ -29830,7 +29928,7 @@ function offsetSistemCoz(acikliklar, T1, g1, t1, T2ilk, g2, t2, E, S, beta){
     for(var k = 0; k < n; k++){
       var Lk = telBoyuHesapla(x[k], g2, acikliklar[k].a, acikliklar[k].h);
       if(Lk === null) return null;
-      var gerilme2 = 1 + x[k] / (E * S) + beta * t2;
+      var gerilme2 = elastikTerimHesapla(x[k], E, S, it) + beta * t2;
       toplamGuncel += Lk / gerilme2;
     }
     F[n-1] = toplamGuncel - toplamL0;
@@ -30074,20 +30172,105 @@ function ortamSicakligiToggle(){
   });
 }
 
+// ══════════════════ NONLİNEER GERİLME-GERİNİM MODELİ — 2026-09-21 EKLENDİ ══════════════════
+// Kullanıcının paylaştığı gerçek PLS-CADD "Cable Data" ekranından (pheasant_acsr(3b).wir,
+// Karakoçan projesi): Outer(Alüminyum)+Core(Çelik) "Stress-strain" (Initial, creep DEĞİL)
+// polinomları, alan oranına göre zaten ağırlıklandırılmış. Doğrusal (1+T/ES) yerine gerçek
+// σ(ε)=Σaᵢεⁱ+Σbᵢεⁱ (daN/mm², ε:%) eğrisini tersine çözüp kullanıyoruz. Section 28 (SARIÇİÇEK,
+// gerçek 5 sıcaklık noktası) ile doğrulandı: Tmax=6398,74 ile ±%0,03 hassasiyet (önceki
+// doğrusal E modelinde ~%3-8 sapan projelerde bile) — bkz. sohbet. tref'in (β referans
+// sıcaklığı) sonucu ETKİLEMEDİĞİ ayrıca doğrulandı (0'dan 30'a tarandı, fark yok) çünkü
+// weilT2Coz zaten bir ORAN denklemi çözüyor — β'nın mutlak referansı ORTAK çarpanda sadeleşiyor.
+// Outer/Core'u AYRI β ile (gerçek fiziksel 2,304e-5 alüminyum / 1,152e-5 çelik) kaydırmak
+// DENENDİ ama sonucu KÖTÜLEŞTİRDİ (~%1,4-1,5 hata) — bu yüzden TEK birleşik polinom + TEK
+// birleşik β (mevcut ILETKEN_TABLOSU'ndaki beta alanı) kullanılıyor, iki malzeme ayrı ayrı
+// kaydırılmıyor.
+var NONLINEER_KATSAYILARI = {
+  'Pheasant': {
+    outer: [-0.697817, 46.0195, -73.1866, 64.8713, -23.4042],  // a0..a4 (Alüminyum, Stress-strain/Initial)
+    core:  [0.260966, 16.6803, 17.5216, -39.9764, 19.0633]     // b0..b4 (Çelik, Stress-strain/Initial)
+  },
+  // 2026-09-21 EKLEME (kullanıcının paylaştığı gerçek PLS-CADD Cable Data ekranları — bu
+  // sefer Stress-strain/Initial satırı, daha önce 2026-09-19'da sadece Creep satırı alınmıştı):
+  'Cardinal': {
+    outer: [0, 41.2299, -35.3528, -0.237179, 7.92827],   // a0..a4 — a0 ekranda boş, 0 alındı
+    core:  [0, 17.0059, 10.8185, -28.4484, 12.3678]      // b0..b4 — b0 ekranda boş, 0 alındı
+  },
+  'Drake': {
+    outer: [-0.836333, 30.5493, -9.65568, -25.9367, 21.1503],  // a0..a4
+    core:  [-0.047780, 26.6337, 2.75659, -31.5179, 19.2308]    // b0..b4
+  }
+  // Diğer iletkenler (Hawk, Rail vb.) için Stress-strain verisi paylaşıldıkça eklenir — o
+  // zamana kadar bu iletkenler eski doğrusal (E tabanlı) modelle hesaplanmaya devam eder.
+};
+function nonlineerIletkeniBul(it){
+  if(!it || !it.ad) return null;
+  var anahtar = Object.keys(NONLINEER_KATSAYILARI).filter(function(k){ return it.ad.indexOf(k) !== -1; })[0];
+  return anahtar ? NONLINEER_KATSAYILARI[anahtar] : null;
+}
+function nonlineerGerilmeHesapla(katsayilar, epsilonYuzde){
+  var e = epsilonYuzde;
+  function pol(k){ var s = 0; for(var i = 0; i < k.length; i++) s += k[i] * Math.pow(e, i); return s; }
+  return pol(katsayilar.outer) + pol(katsayilar.core); // daN/mm², toplam kesite göre (zaten ağırlıklı)
+}
+// Verilen T (kg) için karşılık gelen mekanik gerinimi (%) bulur. T -> daN -> hedef gerilme (daN/mm²).
+// σ(ε), ε arttıkça monoton artan (yerel eğim azalsa da işaret değişmiyor) — bisection güvenli.
+function nonlineerGerinimCoz(katsayilar, S, T_kg){
+  if(!(T_kg > 0) || !(S > 0)) return null;
+  var T_daN = T_kg * 9.80665 / 10;
+  var hedefGerilme = T_daN / S;
+  // 2026-09-21 DÜZELTME (kullanıcı testinde yakalandı — T1=6398,74 gibi büyük gerilmelerde
+  // fonksiyon SESSİZCE null dönüp doğrusal E'ye düşüyordu, sonuçlar %7'ye varan hataya
+  // sıçradı): bu 4.dereceden polinom SADECE ~%0-1,8 gerinim aralığında monoton artan —
+  // ötesinde (ör. ε=3%'te gerilme aniden 7'ye düşüyor, ε=5'te negatife gidiyor) fiziksel
+  // olarak geçersiz bir bölgeye giriyor. Eski kod hi'yi sınırsızca büyütüp bu geçersiz
+  // bölgeye kaçıyor, kök hiç bulunamıyordu (kök zaten dar ve GEÇERLİ [-0.5,1.8] aralığında
+  // duruyordu). Artık bu aralık sabit tutuluyor, hiç genişletilmiyor — UTS'nin gerçekleştiği
+  // yaklaşık ε=0,95%'in bolca üzerinde, ama polinomun çöktüğü ε≈2%'nin altında güvenli bir
+  // pencere.
+  var lo = -0.5, hi = 1.8;
+  var fLo = nonlineerGerilmeHesapla(katsayilar, lo) - hedefGerilme;
+  var fHi = nonlineerGerilmeHesapla(katsayilar, hi) - hedefGerilme;
+  if(isNaN(fLo) || isNaN(fHi) || fLo > 0 || fHi < 0) return null;
+  for(var i = 0; i < 80; i++){
+    var mid = (lo + hi) / 2;
+    var fMid = nonlineerGerilmeHesapla(katsayilar, mid) - hedefGerilme;
+    if(Math.abs(fMid) < 1e-7) return mid;
+    if((fLo > 0) === (fMid > 0)){ lo = mid; fLo = fMid; } else { hi = mid; }
+  }
+  return (lo + hi) / 2;
+}
+// Nonlineer veri varsa (1+T/ES) yerine gerçek (1+ε/100) elastik terimini döndürür; yoksa (veya
+// çözülemezse) eskisi gibi doğrusal E tabanlı terime düşer — diğer iletkenler HİÇ etkilenmez.
+// 2026-09-22 EKLEME (kullanıcı isteği): "Katener Değerini Elle Gir" aktifken, ofisin kendi
+// yöntemiyle (lineer E, nonlineer PLS-CADD polinomu OLMADAN) tam eşleşme için nonlineer dal
+// tamamen atlanıyor — TÜM weilT2Coz çağrıları (Sehim Cetveli, EKATY, Tüm Sıcaklıklar dahil)
+// bu tek merkezi noktadan otomatik olarak lineer modele geçiyor.
+function elastikTerimHesapla(T_kg, E, S, it){
+  var nl = (it && !(typeof katenerElleGirAktifMi === 'function' && katenerElleGirAktifMi())) ? nonlineerIletkeniBul(it) : null;
+  if(nl){
+    var epsYuzde = nonlineerGerinimCoz(nl, S, T_kg);
+    if(epsYuzde !== null) return 1 + epsYuzde / 100;
+  }
+  return 1 + T_kg / (E * S);
+}
+
 // ══════════════════ DEĞİŞİK HALLER (WEIL) DENKLEMİ — 2026-08-23 EKLENDİ ══════════════════
 // [2T/g·sinh(g·a/2T)] / [(1+T/ES)(1+βt)] — referans (T1,g1,t1) koşulunda hesaplanır (sabit "hedef"),
 // sonra aynı ifade hedef koşulda (g2,t2 bilinen, T2 bilinmeyen) bu hedefe eşitlenip T2 için bisection
 // ile çözülür. Fiziksel olarak: soğukta T büyür, sıcakta T küçülür (termal büzülme/genleşme dengesi).
-function weilIfade(T, g, a, E, S, beta, t){
+// 2026-09-21: opsiyonel son parametre `it` — verilirse ve NONLİNEER_KATSAYILARI'nda varsa,
+// (1+T/ES) yerine gerçek nonlineer elastik terim kullanılır (bkz. elastikTerimHesapla).
+function weilIfade(T, g, a, E, S, beta, t, it){
   var Tg = T / g;
   var num = 2 * Tg * Math.sinh(g * a / (2 * T));
-  var den = (1 + T / (E * S)) * (1 + beta * t);
+  var den = elastikTerimHesapla(T, E, S, it) * (1 + beta * t);
   return num / den;
 }
-function weilT2Coz(T1, g1, t1, g2, t2, a, E, S, beta){
+function weilT2Coz(T1, g1, t1, g2, t2, a, E, S, beta, it){
   if(!T1 || !g1 || !a || !E || !S || !beta) return null;
-  var hedef = weilIfade(T1, g1, a, E, S, beta, t1);
-  function fark(T2){ return weilIfade(T2, g2, a, E, S, beta, t2) - hedef; }
+  var hedef = weilIfade(T1, g1, a, E, S, beta, t1, it);
+  function fark(T2){ return weilIfade(T2, g2, a, E, S, beta, t2, it) - hedef; }
   var lo = 1, hi = 100000;
   var fLo = fark(lo), fHi = fark(hi);
   if(isNaN(fLo) || isNaN(fHi)) return null;
@@ -30163,10 +30346,10 @@ function creepGerinimCoz(katsayilar, hedefGerilmeDaN){
 }
 // Kalıcı creep uzamasını, weilT2Coz'un hedefine EK bir çarpan olarak uygulayan versiyon —
 // (1+β·t) ve (1+T/ES) ile aynı mantıkta, kalıcı gerinimi de (1+εc/100) olarak ekliyor.
-function weilT2CozCreepli(T1, g1, t1, g2, t2, a, E, S, beta, ekstraGerinimYuzde){
+function weilT2CozCreepli(T1, g1, t1, g2, t2, a, E, S, beta, ekstraGerinimYuzde, it){
   if(!T1 || !g1 || !a || !E || !S || !beta) return null;
-  var hedef = weilIfade(T1, g1, a, E, S, beta, t1) * (1 + (ekstraGerinimYuzde || 0) / 100);
-  function fark(T2){ return weilIfade(T2, g2, a, E, S, beta, t2) - hedef; }
+  var hedef = weilIfade(T1, g1, a, E, S, beta, t1, it) * (1 + (ekstraGerinimYuzde || 0) / 100);
+  function fark(T2){ return weilIfade(T2, g2, a, E, S, beta, t2, it) - hedef; }
   var lo = 1, hi = 100000;
   var fLo = fark(lo), fHi = fark(hi);
   if(isNaN(fLo) || isNaN(fHi)) return null;
@@ -30188,7 +30371,7 @@ function creepGeriniminiBul(it, T1, g1, t1, aRuling){
   var katsayilar = creepIletkeniBul(it);
   if(!katsayilar) return null;
   if(!T1 || !g1 || !it.S) return null;
-  var tEDS = weilT2Coz(T1, g1, t1, it.g0, 15, aRuling, it.E, it.S, it.beta); // +15°C çıplak
+  var tEDS = weilT2Coz(T1, g1, t1, it.g0, 15, aRuling, it.E, it.S, it.beta, it); // +15°C çıplak
   if(tEDS === null) return null;
   var sigmaRef = (tEDS * 0.980665) / it.S; // kg -> daN, sonra daN/mm²
   return creepGerinimCoz(katsayilar, sigmaRef);
@@ -30198,7 +30381,7 @@ function creepGeriniminiBul(it, T1, g1, t1, aRuling){
 function nihaiGerilmeCreepHesapla(it, T1, g1, t1, aRuling, minSicaklik){
   var epsilonC = creepGeriniminiBul(it, T1, g1, t1, aRuling);
   if(epsilonC === null) return null;
-  var tNihaiDaN = weilT2CozCreepli(T1, g1, t1, it.g0, minSicaklik, aRuling, it.E, it.S, it.beta, epsilonC);
+  var tNihaiDaN = weilT2CozCreepli(T1, g1, t1, it.g0, minSicaklik, aRuling, it.E, it.S, it.beta, epsilonC, it);
   if(tNihaiDaN === null) return null;
   return { tNihai: tNihaiDaN, epsilonC: epsilonC };
 }
@@ -30236,24 +30419,25 @@ function ortalamaAciklikHesaplaBasit(){
   if(!sayi) return null;
   return sumA / sayi;
 }
+// 2026-09-22 EKLEME: gWorst (−5°C Buz+Rüzgar bileşke ağırlığı) hesabı, tRefOtomatikHesapla'nın
+// içinden ORTAK bir fonksiyona çıkarıldı — "Katener Değerini Elle Gir" (400m/lineer ters-çözüm)
+// özelliği de AYNI, tutarlı gWorst formülünü kullanabilsin diye (bkz. aşağıda katener400TersCoz).
+function gWorstHesapla(it, bolgeNo){
+  var bolge = BUZ_BOLGE_TABLOSU[bolgeNo];
+  var q100 = buzYukuHesapla(it, it.d, bolgeNo);
+  if(q100 === null) q100 = bolge.k * Math.sqrt(it.d); // I/V bölge fallback
+  var c = parseFloat(document.getElementById('cKatsayi').value) || 1;
+  var dBuzluRef = buzluTelCapiHesapla(it.d, bolgeNo);
+  var wBw100 = c * 20 * dBuzluRef / 1000;
+  return Math.sqrt(Math.pow(it.g0+q100,2) + wBw100*wBw100);
+}
 function tRefOtomatikHesapla(){
   var it = seciliIletken();
   var gerilim = document.getElementById('gerilim').value;
   var bolgeNo = document.getElementById('buzBolgesi').value;
   if(!it.Tmax) return null;
   var bolge = BUZ_BOLGE_TABLOSU[bolgeNo];
-  var q100 = buzYukuHesapla(it, it.d, bolgeNo);
-  if(q100 === null) q100 = bolge.k * Math.sqrt(it.d); // I/V bölge fallback
-  // 2026-09-18 KURAL KALDIRILDI (kullanıcı isteği): "154kV'de buzlu telde rüzgar yok" istisnası
-  // tamamen iptal edildi — artık TÜM gerilim seviyelerinde (+koruma teli) buz-üzerine-rüzgar
-  // dahil ediliyor. p=20 kg/m² sabit, buzlu çap 2122-formülünden.
-  var c = parseFloat(document.getElementById('cKatsayi').value) || 1;
-  var dBuzluRef = buzluTelCapiHesapla(it.d, bolgeNo);
-  var wBw100 = c * 20 * dBuzluRef / 1000;
-  var gWorst = Math.sqrt(Math.pow(it.g0+q100,2) + wBw100*wBw100);
-  // 2026-09-14 GÜNCELLEME (TEİAŞ-MYD 2011-028/5 şartnamesi): koruma teli/OPGW için referans HER
-  // ZAMAN −5°C Buz+Rüzgar'dır (şartname bunu şartsız/sabit veriyor, kitabın a_krt/a_ort kararına
-  // TABİ DEĞİL) — bu yüzden bu dal koruma teli için tamamen ATLANIYOR.
+  var gWorst = gWorstHesapla(it, bolgeNo);
   if(it.tip === 'koruma'){
     return { T: it.Tmax, g: gWorst, t: -5 };
   }
@@ -30273,9 +30457,107 @@ function tRefOtomatikHesapla(){
   }
   return { T: it.Tmax, g: gWorst, t: -5 };
 }
+// 2026-09-22 GÜNCELLEME (kullanıcı düzeltmesi: "katener değeri sonucu değiştirmeli" — bir
+// önceki sürüm Tmax'ı 6430'da SABİTLEYİP girilen değeri sadece bir aktivasyon anahtarına
+// indirgemişti, bu YANLIŞTI): girilen katener değeri artık GERÇEKTEN Tmax'ı belirliyor — ofisin
+// kendi 400m/45°C/lineer yöntemiyle TERSTEN çözülüyor. Kaçırılan nokta: ters-çözümde bizim YENİ
+// kalibre ettiğimiz E=7206,46 kullanılınca sonuç ~6459 gibi 6430'dan belirgin sapıyordu; ofisin
+// KENDİ (eski, E≈6934,07) E değeriyle çözülünce iki bağımsız örnek (1225,03→6443,6 ve
+// 912,6→6438,9) birbirine de, bilinen 6430'a da çok daha yakın çıktı (~%0,1-0,2 fark) — yani
+// ofis muhtemelen hâlâ bu eski E'yi kullanıyor. Birim ağırlık (2,435) ve E (6934,07) artık
+// seciliIletken() içinde override ediliyor (bkz. yukarısı) — bu fonksiyon onları oradan (it.g0,
+// it.E) okuyor, ayrıca hardcode etmiyor.
+function katener400TersCoz(T45Hedef, gWorst, it){
+  function fark(T1aday){
+    var t2sonuc = weilT2Coz(T1aday, gWorst, -5, it.g0, 45, 400, it.E, it.S, it.beta, null); // null=LİNEER
+    if(t2sonuc === null) return null;
+    return t2sonuc - T45Hedef;
+  }
+  var lo = 100, hi = 30000;
+  var fLo = fark(lo), fHi = fark(hi);
+  if(fLo === null || fHi === null || isNaN(fLo) || isNaN(fHi) || fLo * fHi > 0) return null;
+  for(var i = 0; i < 100; i++){
+    var mid = (lo + hi) / 2;
+    var fMid = fark(mid);
+    if(fMid === null) return null;
+    if(Math.abs(fMid) < 1e-6) return mid;
+    if((fLo > 0) === (fMid > 0)){ lo = mid; fLo = fMid; } else { hi = mid; }
+  }
+  return (lo + hi) / 2;
+}
+function katenerElleGirAktifMi(){
+  var chk = document.getElementById('katenerElleGirAktif');
+  var uygulananEl = document.getElementById('katener45Uygulanan');
+  var deger = uygulananEl ? stParseNum(uygulananEl.value) : null;
+  return !!(chk && chk.checked && deger !== null && deger > 0);
+}
+function katenerElleGirToggle(){
+  var chk = document.getElementById('katenerElleGirAktif');
+  var alan = document.getElementById('katener45Alani');
+  var girdi = document.getElementById('katener45Girdi');
+  var btn = document.getElementById('katener45UygulaBtn');
+  // 2026-09-22 EKLEME (kullanıcı isteği): işaretlenince alttaki "C₂ — Katener Parametresi"
+  // kutusu (önceki bir hesaptan görünür kalmış olabilir) hemen gizlensin — sonraki
+  // sehimCetveliHesapla() çağrısını beklemeye gerek yok.
+  var c2Kart = document.getElementById('c2AlaniKart');
+  if(chk.checked){
+    alan.style.display = 'block';
+    girdi.disabled = false;
+    btn.disabled = false;
+    girdi.focus();
+    if(c2Kart) c2Kart.style.display = 'none';
+  } else {
+    alan.style.display = 'none';
+    girdi.value = '';
+    girdi.disabled = true;
+    btn.disabled = true;
+    document.getElementById('katener45Uygulanan').value = '';
+    stHesapla();
+    hesapDegeriDegisti();
+  }
+}
+function katener45Uygula(){
+  var girdi = document.getElementById('katener45Girdi');
+  var deger = stParseNum(girdi.value);
+  if(deger === null || deger <= 0){
+    girdi.focus();
+    return;
+  }
+  document.getElementById('katener45Uygulanan').value = deger;
+  stHesapla();
+  hesapDegeriDegisti();
+}
+// Modül her açıldığında (openModule → m.id==='sehim-tevziat') normal/otomatik hesaba dönsün
+// diye (kullanıcı isteği) — checkbox'ı kaldırır, girilen değeri temizler, YENİDEN HESAPLAMAZ
+// (openModule zaten kendi akışında ilgili ekranı gösteriyor, gereksiz bir stHesapla() çağrısı
+// eklemeye gerek yok, bir sonraki doğal tetiklemede otomatik referans zaten kullanılacak).
+function katenerElleGirSifirlaSessiz(){
+  var chk = document.getElementById('katenerElleGirAktif');
+  if(!chk) return;
+  chk.checked = false;
+  var alan = document.getElementById('katener45Alani');
+  var girdi = document.getElementById('katener45Girdi');
+  var btn = document.getElementById('katener45UygulaBtn');
+  if(alan) alan.style.display = 'none';
+  if(girdi){ girdi.value = ''; girdi.disabled = true; }
+  if(btn) btn.disabled = true;
+  document.getElementById('katener45Uygulanan').value = '';
+}
 function tRefOtomatikUygula(){
   var tInput = document.getElementById('tRef'), gInput = document.getElementById('gRef'), tSicInput = document.getElementById('tRefSicaklik');
-  var sonuc = tRefOtomatikHesapla();
+  var sonuc;
+  if(katenerElleGirAktifMi()){
+    var it = seciliIletken(); // g0=2,435 ve E=6934,07 zaten override edilmiş halde geliyor
+    var bolgeNo = document.getElementById('buzBolgesi').value;
+    var c45 = stParseNum(document.getElementById('katener45Uygulanan').value);
+    var T45Hedef = c45 * it.g0;
+    var gWorst = gWorstHesapla(it, bolgeNo);
+    var TmaxTersCozulen = katener400TersCoz(T45Hedef, gWorst, it);
+    // Ters-çözüm başarısız olursa (gerçekçi olmayan bir c girilmişse) otomatik referansa düş.
+    sonuc = (TmaxTersCozulen !== null) ? { T: TmaxTersCozulen, g: gWorst, t: -5 } : tRefOtomatikHesapla();
+  } else {
+    sonuc = tRefOtomatikHesapla();
+  }
   if(sonuc === null || sonuc.T === null){
     tInput.value = ''; gInput.value = '';
     return;
@@ -30345,6 +30627,10 @@ function c2Sifirla(){
   c2Kutu.readOnly = true;
   document.getElementById('c2DegistirBtn').textContent = 'Değiştir';
   document.getElementById('sehimHesaplaBtn').disabled = false;
+  // 2026-09-22 EKLEME (kullanıcı isteği): Sıfırla, "Katener Değerini Elle Gir" (45°C manuel
+  // referans) özelliğini de kaldırır — tik iner, girilen değer silinir, otomatik referansa dönülür.
+  var katenerChk = document.getElementById('katenerElleGirAktif');
+  if(katenerChk && katenerChk.checked) katenerElleGirSifirlaSessiz();
   sehimCetveliHesapla();
   // 2026-09-06 (kullanıcı isteği): sehimCetveliHesapla() kendi sonunda sonucu "güncel" kabul edip
   // butonu tekrar disabled=true yapıyor (bkz. fonksiyonun sonu) — Sıfırla'dan sonra kullanıcı
@@ -30404,7 +30690,7 @@ function ekatyUyariUret(it, T1, g1, t1, aRuling, T2, bolgeNo){
   // hepsinde aynı −30°C satırını kullanıyor) — faz iletkenindeki bölgeye-göre-değişen minC'den
   // FARKLI bir kural.
   var minSicaklikIlkGerilme = (it.tip === 'koruma') ? -30 : bolge.minC;
-  var tIlk = weilT2Coz(T1, g1, t1, it.g0, minSicaklikIlkGerilme, aRuling, it.E, it.S, it.beta);
+  var tIlk = weilT2Coz(T1, g1, t1, it.g0, minSicaklikIlkGerilme, aRuling, it.E, it.S, it.beta, it);
   if(tIlk !== null){
     satirlar.push({ ad: 'İlk gerilme (en düşük sıcaklık, çıplak)', pct: 100*tIlk/uts, limit: 33 });
   }
@@ -30426,7 +30712,7 @@ function ekatyUyariUret(it, T1, g1, t1, aRuling, T2, bolgeNo){
   // sınırlaması nedeniyle burada İLK (creep öncesi) gerilmeyle kontrol ediliyor — aşağıdaki
   // dürüst sınırlama notuyla birlikte.
   if(it.tip === 'koruma' && it.ad && it.ad.indexOf('Alüminyum') !== -1){
-    var t15Al = weilT2Coz(T1, g1, t1, it.g0, 15, aRuling, it.E, it.S, it.beta);
+    var t15Al = weilT2Coz(T1, g1, t1, it.g0, 15, aRuling, it.E, it.S, it.beta, it);
     if(t15Al !== null){
       satirlar.push({ ad: '+15°C EDS (Al. koruma iletkeni)', pct: 100*t15Al/uts, limit: 20 });
     }
@@ -30435,14 +30721,14 @@ function ekatyUyariUret(it, T1, g1, t1, aRuling, T2, bolgeNo){
   if(it.tip !== 'koruma'){
     // 2026-09-05: kullanıcı isteğiyle +15°C rüzgarsız sınırı doğrudan %22 (titreşim söndürücü
     // önlem her zaman kullanıldığı için %15'lik temel sınır değil, arttırılmış sınır esas alınıyor).
-    var t15 = weilT2Coz(T1, g1, t1, it.g0, 15, aRuling, it.E, it.S, it.beta);
+    var t15 = weilT2Coz(T1, g1, t1, it.g0, 15, aRuling, it.E, it.S, it.beta, it);
     if(t15 !== null){
       satirlar.push({ ad: '+15°C rüzgarsız gerilme', pct: 100*t15/uts, limit: 22 });
     }
     var q100 = buzYukuHesapla(it, it.d, bolgeNo);
     if(q100 === null) q100 = bolge.k * Math.sqrt(it.d);
     var gCiftBuz = it.g0 + 2*q100;
-    var t5 = weilT2Coz(T1, g1, t1, gCiftBuz, -5, aRuling, it.E, it.S, it.beta);
+    var t5 = weilT2Coz(T1, g1, t1, gCiftBuz, -5, aRuling, it.E, it.S, it.beta, it);
     if(t5 !== null){
       satirlar.push({ ad: '−5°C, 2 kat buz yükü', pct: 100*t5/uts, limit: 70 });
     }
@@ -30474,9 +30760,9 @@ function ekatyUyariUret(it, T1, g1, t1, aRuling, T2, bolgeNo){
 // (2026-09-05, kullanıcı isteği) bunu kullanıyor, mantık iki yerde ayrı ayrı yazılıp
 // birbirinden sapmasın diye.
 function stTekDurumSatirlariHesapla(g2, t2, T1, g1, t1, aRuling, segmentAcikliklar, it){
-  var T2Ruling = weilT2Coz(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta);
+  var T2Ruling = weilT2Coz(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, it);
   if(T2Ruling === null) return null;
-  var offsetSonuc = offsetSistemCoz(segmentAcikliklar, T1, g1, t1, T2Ruling, g2, t2, it.E, it.S, it.beta);
+  var offsetSonuc = offsetSistemCoz(segmentAcikliklar, T1, g1, t1, T2Ruling, g2, t2, it.E, it.S, it.beta, it);
   var makaraGerilmeleri = (offsetSonuc && offsetSonuc.tensions) ? offsetSonuc.tensions : segmentAcikliklar.map(function(){ return T2Ruling; });
 
   // 2026-09-19 EKLEME (kullanıcı isteği: "10 yıl sonrası için ayrı bir Sehim değeri, ayrı bir
@@ -30485,7 +30771,7 @@ function stTekDurumSatirlariHesapla(g2, t2, T1, g1, t1, aRuling, segmentAciklikl
   // tipi (uniform gerilme) bir T2Ruling10Yil hesaplanıyor — creep verisi olmayan iletkenlerde
   // null kalır, çağıran taraf bu sütunu hiç göstermemeli.
   var epsilonC10Yil = creepGeriniminiBul(it, T1, g1, t1, aRuling);
-  var T2Ruling10Yil = (epsilonC10Yil !== null) ? weilT2CozCreepli(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, epsilonC10Yil) : null;
+  var T2Ruling10Yil = (epsilonC10Yil !== null) ? weilT2CozCreepli(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, epsilonC10Yil, it) : null;
 
   // Offset (cm) — ana Sehim Cetveli'ndeki AYNI zincir mantığıyla, görüntüleme amaçlı türetiliyor
   // (bkz. sehimCetveliHesapla'daki deltaZinciriCoz notu).
@@ -30773,7 +31059,7 @@ function sehimCetveliHesapla(manuelUygula){
   // EXCEL_EK_ILETKENLER'in üstündeki not.
   // T2Ruling: ruling-span (a_r) ile TEK/uniform gerilme — offset UYGULANMADAN — PLS-CADD'in
   // "Install. Chart Sag" yönteminin karşılığı. Bu, "Klemp" sütununda kullanılıyor.
-  var T2Ruling = weilT2Coz(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta);
+  var T2Ruling = weilT2Coz(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, it);
   if(T2Ruling === null){
     sonucDiv.innerHTML = '<div class="warn red">⚠ Değişik Haller Denklemi bu girdilerle çözülemedi (kök aralık dışı) — referans değerleri/durumu kontrol edin.</div>';
     return;
@@ -30811,8 +31097,8 @@ function sehimCetveliHesapla(manuelUygula){
   // creep gerinimi AYNI referans koşuldan (T1,g1,t1 — manuel c₂'den BAĞIMSIZ, çünkü gerçek
   // fiziksel referans budur) türetilip, bu ekranın kendi (g2,t2) durumuna uygulanıyor.
   var epsilonCAna = creepGeriniminiBul(it, T1, g1, t1, aRuling);
-  var T2Nihai = (epsilonCAna !== null) ? weilT2CozCreepli(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, epsilonCAna) : null;
-  var offsetSonuc = offsetSistemCoz(segmentAcikliklar, refT1, refG1, refT1sic, T2, g2, t2, it.E, it.S, it.beta);
+  var T2Nihai = (epsilonCAna !== null) ? weilT2CozCreepli(T1, g1, t1, g2, t2, aRuling, it.E, it.S, it.beta, epsilonCAna, it) : null;
+  var offsetSonuc = offsetSistemCoz(segmentAcikliklar, refT1, refG1, refT1sic, T2, g2, t2, it.E, it.S, it.beta, it);
   var makaraGerilmeleri = (offsetSonuc && offsetSonuc.tensions) ? offsetSonuc.tensions : segmentAcikliklar.map(function(){ return T2Ruling; });
   // "Offset (cm)" gösterimi: artık doğrudan bir bilinmeyen değil (yeni sistem doğrudan T üretiyor),
   // bu yüzden GÖRÜNTÜLEME amaçlı geriye doğru bir zincir hesabıyla türetiliyor — "bu açıklığın
@@ -30932,7 +31218,10 @@ function sehimCetveliHesapla(manuelUygula){
   };
   stSonucuUstDokumanaBildir();
   var c2Kart = document.getElementById('c2AlaniKart');
-  if(c2Kart) c2Kart.style.display = 'block';
+  // 2026-09-22 EKLEME (kullanıcı isteği): üstteki "Katener Değerini Elle Gir" aktifken bu kutu
+  // (C2 — Katener Parametresi) anlamsız/kafa karıştırıcı olur (referans zaten −5°C'de elle
+  // sabitlenmişken, o anki tek noktayı AYRICA elle sabitlemek çakışır) — o yüzden gizli tutuluyor.
+  if(c2Kart) c2Kart.style.display = katenerElleGirAktifMi() ? 'none' : 'block';
   var hesaplaBtnSon = document.getElementById('sehimHesaplaBtn');
   if(hesaplaBtnSon){
     hesaplaBtnSon.disabled = true;
@@ -31414,7 +31703,7 @@ function stAmaxHesapla(){
     var pEfektif = ruzgarPDegeriGetir(document.getElementById('amaxYukseklik'), hazirlik.aOrtalama);
     var w70 = 0.7 * ruzgarYukuBirimHesapla(c, pEfektif, d, hazirlik.aOrtalama); // kg/m
     var gn = Math.sqrt(g0*g0 + w70*w70); // kg/m — +5°C/%70 rüzgarlı birim ağırlık
-    var Tn = weilT2Coz(hazirlik.T1, hazirlik.g1, hazirlik.t1, gn, 5, hazirlik.aRuling, it.E, it.S, it.beta);
+    var Tn = weilT2Coz(hazirlik.T1, hazirlik.g1, hazirlik.t1, gn, 5, hazirlik.aRuling, it.E, it.S, it.beta, it);
     if(Tn === null){
       satirHtml += '<tr><td>' + etapAdi + '</td><td colspan="6" style="color:var(--muted);">⚠ Tn çözülemedi.</td></tr>';
       continue;
@@ -31526,8 +31815,8 @@ function stKamcilanmaHesapla(){
     var q = buzYukuHesapla(it, d, bolgeNo);
     if(q === null) q = bolge.k * Math.sqrt(d);
     var gBuzlu = g0 + q;
-    var Tm5 = weilT2Coz(hazirlik.T1, hazirlik.g1, hazirlik.t1, g0, -5, hazirlik.aRuling, it.E, it.S, it.beta);
-    var TBuzlu = weilT2Coz(hazirlik.T1, hazirlik.g1, hazirlik.t1, gBuzlu, -5, hazirlik.aRuling, it.E, it.S, it.beta);
+    var Tm5 = weilT2Coz(hazirlik.T1, hazirlik.g1, hazirlik.t1, g0, -5, hazirlik.aRuling, it.E, it.S, it.beta, it);
+    var TBuzlu = weilT2Coz(hazirlik.T1, hazirlik.g1, hazirlik.t1, gBuzlu, -5, hazirlik.aRuling, it.E, it.S, it.beta, it);
     if(Tm5 === null || TBuzlu === null){
       satirHtml += '<tr><td>' + etapAdi + '</td><td colspan="4" style="color:var(--muted);">⚠ −5°C çıplak/buzlu gerilme çözülemedi.</td></tr>';
       continue;
@@ -31644,7 +31933,6 @@ function ruzgarHesapla(satirlar){
 document.getElementById('iletkenTipi').addEventListener('change', function(){ stIletkenTuruneGoreUIGuncelle(); stHesapla(); hesapDegeriDegisti(); });
 document.getElementById('direkSecici').addEventListener('change', function(){ ruzgarHesapla(sonSatirlarCache); });
 
-gerilimSeciciDoldur();
 izolatorTipiSeciciDoldur();
 izolatorTipSeciciDoldur();
 izolatorTurSeciciDoldur();
@@ -31668,9 +31956,10 @@ window.c2Sifirla = c2Sifirla;
 window.direkEkle = direkEkle;
 window.direkSeciciListeDoldur = direkSeciciListeDoldur;
 window.direkSil = direkSil;
-window.gerilimSec = gerilimSec;
 window.gevsekIrtibatHesapla = gevsekIrtibatHesapla;
 window.iletkenSec = iletkenSec;
+window.katenerElleGirToggle = katenerElleGirToggle;
+window.katener45Uygula = katener45Uygula;
 window.iletkenSeciciToggle = iletkenSeciciToggle;
 window.izolatorTipSec = izolatorTipSec;
 window.izolatorTipiSec = izolatorTipiSec;
