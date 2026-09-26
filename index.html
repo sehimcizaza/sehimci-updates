@@ -790,8 +790,11 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 #harita-not-detay-overlay,
 #harita-paylas-overlay,
 #harita-nasil-overlay,
-#nd-indir-overlay{
+#nd-detay-overlay{
   z-index:2000;
+}
+#nd-indir-overlay{
+  z-index:2010; /* not detay sheet'inin (2000) her zaman üstünde açılsın */
 }
 /* Adım adım seçim sihirbazı (startPicker) tüm modüllerden çağrılabildiği için
    diğer tam ekran panellerin (ör. dk-coklu-overlay z-index:2100) her zaman
@@ -823,6 +826,9 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 }
 .picker-overlay.is-open .picker-sheet{ transform:translateY(0); }
 .picker-sheet.is-dragging{ transition:none; }
+.nd-detay-sheet{ height:calc(100vh - 70px - var(--nav-extra, 0px) - var(--kb-offset, 0px) - 44px - env(safe-area-inset-top, 0px)); max-height:calc(100vh - 70px - var(--nav-extra, 0px) - var(--kb-offset, 0px) - 44px - env(safe-area-inset-top, 0px)); padding-left:0; padding-right:0; }
+.nd-detay-sheet .sheet-handle-wrap{ margin-left:0; margin-right:0; padding-left:18px; padding-right:18px; }
+.nd-detay-scroll{ overflow-y:auto; -webkit-overflow-scrolling:touch; padding:0 20px calc(20px + env(safe-area-inset-bottom,0px)); }
 .sheet-handle-wrap{
   display:flex; justify-content:center;
   padding:6px 0 12px;
@@ -1477,6 +1483,11 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
   justify-content: space-around;
   z-index: 200;
   box-sizing: border-box;
+  transform: translateX(-50%) translateZ(0);
+  -webkit-transform: translateX(-50%) translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 
@@ -3639,6 +3650,32 @@ html.sx-light .agt-gorsel-kapat{ background:rgba(0,0,0,.62) !important; }
 .sx-art:active{ transform:scale(.97); transition:transform .1s; }
 @media (prefers-reduced-motion: reduce){ .sx-play *{ animation:none !important; } }
 
+/* Animasyonlu sehim sahnesi */
+svg[data-sss] .sss-arazi{ transform-box:view-box; }
+svg[data-sss].sss-oynuyor .sss-arazi{ animation:sssArazi 1s cubic-bezier(.22,1,.36,1) backwards; }
+svg[data-sss].sss-oynuyor .sss-kule{ animation:sssKule .9s cubic-bezier(.34,1.3,.64,1) backwards; }
+svg[data-sss].sss-oynuyor #sss-kuleA{ animation-delay:.7s; }
+svg[data-sss].sss-oynuyor #sss-kuleB{ animation-delay:.95s; }
+svg[data-sss].sss-oynuyor .sss-etiket{ animation:sssFade .5s ease-out 1.5s backwards; }
+svg[data-sss].sss-oynuyor #sss-neco{ animation:sssFade .6s ease-out .4s backwards; }
+@keyframes sssArazi{ from{ transform:translateY(60px); opacity:0; } to{ transform:none; opacity:1; } }
+@keyframes sssKule{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
+@keyframes sssFade{ from{ opacity:0; } to{ opacity:1; } }
+/* Neco sürekli: yudum + bakış + buhar + bulut */
+svg[data-sss] .sss-kol{ transform-box:view-box; animation:sssYudum 5s ease-in-out infinite; }
+svg[data-sss] .sss-bas{ transform-box:view-box; animation:sssBas 5s ease-in-out infinite; }
+@keyframes sssYudum{ 0%,55%,100%{ transform:rotate(0deg); } 65%,78%{ transform:rotate(-38deg) translate(-3px,-4px); } }
+@keyframes sssBas{ 0%,55%,100%{ transform:rotate(-12deg); } 65%,78%{ transform:rotate(4deg); } }
+svg[data-sss] .sss-buhar path{ transform-box:fill-box; transform-origin:50% 100%; animation:sssBuhar 2.4s ease-out infinite; opacity:0; }
+svg[data-sss] .sss-buhar .b2{ animation-delay:.8s; } svg[data-sss] .sss-buhar .b3{ animation-delay:1.6s; }
+svg[data-sss] .sss-buhar-bardak path{ transform-box:fill-box; transform-origin:50% 100%; animation:sssBuhar 2.8s ease-out infinite .5s; opacity:0; }
+@keyframes sssBuhar{ 0%{ opacity:0; transform:translateY(4px) scaleY(.6); } 25%{ opacity:.9; } 100%{ opacity:0; transform:translateY(-10px) scaleY(1.2); } }
+svg[data-sss] .sss-bulut{ animation:sssBulut 40s linear infinite alternate; }
+@keyframes sssBulut{ from{ transform:translateX(-20px); } to{ transform:translateX(30px); } }
+.sim-tekrar-btn{ display:inline-flex; align-items:center; gap:6px; margin:10px auto 0; padding:8px 16px; border-radius:10px; border:1px solid var(--border-strong); background:var(--surface-2); color:var(--text); font-weight:700; font-size:12px; cursor:pointer; }
+.sim-tekrar-btn:disabled{ opacity:.45; }
+@media (prefers-reduced-motion: reduce){ svg[data-sss] *{ animation:none !important; } }
+
 /* ══════════════════ HAREKET SİSTEMİ ══════════════════
    Tek eğri ailesi: hızlı başlayıp yumuşak oturan "ölçü aleti ibresi" hareketi. */
 :root{ --ease-out:cubic-bezier(.22,1,.36,1); --ease-snap:cubic-bezier(.34,1.4,.64,1); }
@@ -3985,7 +4022,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 </div>
 
 <!-- Modül Sekme Çubuğu: geri / modül adı / favori — sadece bir modül açıkken görünür -->
-<nav id="module-tab-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%);width:calc(100% - 20px);max-width:460px;height:46px;background:rgba(22,22,22,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid var(--border);border-radius:24px;box-shadow:0 10px 28px -8px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.25);align-items:center;justify-content:space-between;z-index:199;box-sizing:border-box;padding:0 14px;bottom:calc(8px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));">
+<nav id="module-tab-bar" style="display:none;position:fixed;left:50%;transform:translateX(-50%) translateZ(0);-webkit-transform:translateX(-50%) translateZ(0);will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;width:calc(100% - 20px);max-width:460px;height:46px;background:rgba(22,22,22,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1.5px solid var(--border);border-radius:24px;box-shadow:0 10px 28px -8px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.25);align-items:center;justify-content:space-between;z-index:199;box-sizing:border-box;padding:0 14px;bottom:calc(8px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));">
   <button type="button" id="mtb-back-btn" aria-label="Geri" onclick="document.getElementById('back-btn').click()" style="width:34px;height:34px;border-radius:50%;background:rgba(46,107,176,0.1);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;">
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#2FA866" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
@@ -4434,7 +4471,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 </svg></div>
           <div class="tool-row-icon" id="tr-icon-1"></div>
           <div class="tool-row-body">
-            <p class="tool-row-title">Sehim</p>
+            <p class="tool-row-title">Sehim Hesapları</p>
             <p class="tool-row-desc">Sehim Kontrolleri, Sehim Tevziat, Gabari Kontrol</p>
           </div>
           <span class="tool-row-chev-wrap">
@@ -4487,7 +4524,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 </svg></div>
           <div class="tool-row-icon" id="tr-icon-2"></div>
           <div class="tool-row-body">
-            <p class="tool-row-title">Direk</p>
+            <p class="tool-row-title">Direk Hesapları</p>
             <p class="tool-row-desc">Direk Ayak Ayar Ölçüleri, Direk Ağırlıkları, Direk Temel Hesabı, Direk Uzunlukları, İstimlak Alanları</p>
           </div>
           <span class="tool-row-chev-wrap">
@@ -4540,7 +4577,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 </svg></div>
           <div class="tool-row-icon" id="tr-icon-3"></div>
           <div class="tool-row-body">
-            <p class="tool-row-title">Topraklama</p>
+            <p class="tool-row-title">Topraklama Hesapları</p>
             <p class="tool-row-desc">Topraklama Ölçümü, Topraklama Senaryoları</p>
           </div>
           <span class="tool-row-chev-wrap">
@@ -4593,7 +4630,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 </svg></div>
           <div class="tool-row-icon" id="tr-icon-4"></div>
           <div class="tool-row-body">
-            <p class="tool-row-title">Hırdavat</p>
+            <p class="tool-row-title">Hırdavat Hesapları</p>
             <p class="tool-row-desc">İkaz Küresi Hesaplama, Askı/Gergi Takımları, Spacer Damper Hesaplama, Stockbridge Damper Hesaplama, Pendulum Damper Hesaplama</p>
           </div>
           <span class="tool-row-chev-wrap">
@@ -4646,7 +4683,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 </svg></div>
           <div class="tool-row-icon" id="tr-icon-5"></div>
           <div class="tool-row-body">
-            <p class="tool-row-title">Malzeme</p>
+            <p class="tool-row-title">Malzeme Bilgileri</p>
             <p class="tool-row-desc">İletkenler, Kabul Testleri, Porselen/Cam İzolatör Sembolleri, Silikon İzolatörler</p>
           </div>
           <span class="tool-row-chev-wrap">
@@ -5287,6 +5324,11 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
           <span style="font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;color:var(--text);">3</span>
         </div>
         <span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:var(--text);letter-spacing:0.06em;">AYAK KOTLARI</span>
+        <div style="flex:1;"></div>
+        <div id="ayar-kot-birim-toggle" style="display:flex;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2px;gap:2px;flex-shrink:0;">
+          <button type="button" class="ayar-kot-birim-btn" data-birim="m" style="padding:3px 10px;border-radius:6px;border:none;cursor:pointer;font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;background:var(--accent);color:#fff;">m</button>
+          <button type="button" class="ayar-kot-birim-btn" data-birim="mm" style="padding:3px 10px;border-radius:6px;border:none;cursor:pointer;font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;background:transparent;color:var(--text-muted);">mm</button>
+        </div>
       </div>
       <span id="ayar-kot-aciklama" style="font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:var(--text-muted);line-height:1.5;">Ayak farkı hesaba dahildir. Stub kotlarını metre olarak giriniz. Metre mertebesinden sonrasını yazarken virgül veya nokta koymayı unutmayın.</span>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;">
@@ -5370,7 +5412,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 
     <!-- 3B Simülasyon butonu -->
     <button type="button" id="ayar-3d-ac-btn" style="margin-top:10px;width:100%;padding:11px 6px;font-size:12px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--surface-2);border:1px solid var(--accent);cursor:pointer;font-family:'Oswald',sans-serif;font-weight:700;letter-spacing:0.04em;color:var(--text);">
-      <svg viewBox="0 0 20 20" width="14" height="14" fill="none"><path d="M10 2l7 4v8l-7 4-7-4V6l7-4z" stroke="#2A2A2A" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 6l7 4 7-4M10 10v8" stroke="#2A2A2A" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2.2l9.2 5.2-9.2 5.2-9.2-5.2L12 2.2z" fill="var(--accent)"/><path d="M2.8 7.6v9.4l9.2 5.2v-9.4L2.8 7.6z" fill="var(--accent)" opacity=".55"/><path d="M21.2 7.6v9.4L12 22.2v-9.4l9.2-5.2z" fill="var(--accent)" opacity=".78"/></svg>
       3B GÖRÜNTÜLE
     </button>
 
@@ -5406,12 +5448,12 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   <!-- ═══ 3B STUB SİMÜLASYONU (Direk Ayak Ayar Ölçüleri) ═══ -->
   <div id="ayar-3d-overlay" style="display:none;position:fixed;inset:0;z-index:4000;background:var(--surface);flex-direction:column;">
     <div style="display:flex;align-items:center;gap:10px;padding:calc(10px + max(env(safe-area-inset-top,0px), 28px)) 14px 10px;background:var(--surface-2);flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.3);">
-      <button type="button" id="ayar-3d-kapat" aria-label="Kapat" style="width:34px;height:34px;border-radius:8px;background:var(--surface-2);border:none;color:var(--text);font-size:18px;cursor:pointer;flex-shrink:0;">←</button>
+      <button type="button" id="ayar-3d-kapat" aria-label="Kapat" style="width:36px;height:36px;border-radius:11px;background:var(--danger-bg);border:1px solid var(--danger);color:var(--danger-ink);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div style="flex:1;min-width:0;">
         <p style="margin:0;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:var(--text);letter-spacing:0.04em;">3B STUB SİMÜLASYONU</p>
-        <p id="ayar-3d-alt-baslik" style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#2A2A2A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</p>
+        <p id="ayar-3d-alt-baslik" style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</p>
       </div>
-      <button type="button" id="ayar-3d-sifirla" title="Görünümü sıfırla" style="width:34px;height:34px;border-radius:8px;background:var(--surface-2);border:none;color:var(--text);font-size:15px;cursor:pointer;flex-shrink:0;">⟳</button>
+      <button type="button" id="ayar-3d-sifirla" title="Görünümü sıfırla" aria-label="Görünümü sıfırla" style="width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--border-strong);color:var(--text);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 18.5 16"/><path d="M20 4.5V11h-6.5"/></svg></button>
     </div>
 
     <div id="ayar-3d-canvas-wrap" style="flex:1;position:relative;overflow:hidden;background:var(--surface);min-height:0;">
@@ -5422,7 +5464,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
       <div style="position:absolute;top:10px;left:10px;z-index:6;pointer-events:none;opacity:0.88;">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" style="width:60px;height:auto;filter:brightness(0) invert(1);" viewBox="0 0 1414.877550 512.433301" preserveAspectRatio="xMidYMid meet"><g transform="translate(-103.000000,612.942871) scale(0.100000,-0.100000)" fill="#FFFFFF" stroke="none"><path d="M13593 6119 c-6 -6 -37 -98 -69 -205 -32 -107 -61 -194 -65 -194 -13 0 -607 -266 -623 -279 -23 -19 -20 -52 5 -58 32 -9 22 -57 -13 -61 -31 -4 -46 -30 -20 -38 58 -19 59 -21 20 -37 -21 -9 -38 -19 -38 -22 0 -3 14 -11 30 -16 37 -13 38 -26 5 -35 -27 -7 -34 -32 -10 -39 51 -16 51 -16 15 -33 -41 -20 -41 -34 0 -45 45 -11 39 -40 -31 -143 -124 -182 -271 -340 -452 -486 -150 -120 -288 -207 -502 -313 -277 -137 -520 -219 -845 -285 -243 -49 -373 -62 -700 -69 l-305 -6 -3 -27 c-3 -22 2 -29 23 -34 15 -4 156 -4 313 -1 367 7 569 33 883 112 705 178 1308 566 1633 1049 32 47 64 86 71 86 7 0 19 -8 26 -17 38 -45 214 -138 312 -164 26 -7 47 -19 47 -26 0 -13 -18 -94 -189 -848 -62 -271 -86 -394 -79 -402 6 -7 21 -13 33 -13 18 0 25 8 34 43 11 37 39 66 263 269 l251 226 111 -101 c61 -56 175 -160 253 -230 116 -105 143 -134 150 -165 9 -39 34 -51 62 -33 16 10 25 -33 -150 736 -44 193 -89 388 -100 434 -11 47 -16 87 -12 91 5 3 35 14 68 24 89 27 199 84 267 139 l60 49 15 -24 c37 -57 214 -216 291 -262 136 -81 299 -133 468 -150 63 -6 96 12 78 41 -8 13 -34 21 -100 31 -276 39 -472 143 -652 346 -57 64 -67 107 -27 114 11 2 24 8 29 13 13 11 -12 39 -35 39 -29 0 -22 17 12 29 36 13 34 35 -4 39 -35 4 -35 30 1 34 34 4 36 30 3 38 -30 7 -40 30 -13 30 11 0 25 7 32 15 11 13 8 17 -19 28 -37 14 -42 46 -11 77 15 15 18 25 11 38 -5 10 -72 45 -148 79 -274 122 -488 217 -491 219 -2 1 -29 88 -61 194 -61 199 -77 230 -108 199z m83 -361 l6 -28 -70 0 -70 0 30 103 c16 56 32 109 35 117 5 13 52 -119 69 -192z m28 -125 c3 -16 8 -63 12 -105 l6 -78 -112 0 c-111 0 -112 0 -107 23 3 12 9 56 13 97 3 41 9 78 11 83 2 4 42 7 88 7 83 0 83 0 89 -27z m-258 -65 c-13 -132 13 -118 -225 -118 l-206 0 210 94 c116 52 214 95 219 95 5 1 6 -31 2 -71z m510 -4 c93 -42 187 -84 209 -94 l40 -19 -206 0 -206 -1 -7 73 c-4 39 -10 82 -13 95 -3 12 -1 22 4 22 6 0 86 -34 179 -76z m-536 -206 c0 -42 -40 -272 -73 -423 l-32 -150 -30 3 c-43 5 -171 58 -230 95 -128 81 -171 154 -104 173 41 12 41 25 1 44 -33 16 -34 30 -2 30 10 0 23 7 30 15 10 13 6 18 -26 31 l-39 17 32 11 c48 17 50 24 7 42 l-39 17 33 14 c37 15 38 35 1 43 -17 4 -25 14 -27 33 l-3 27 250 0 251 0 0 -22z m321 -28 c4 -25 9 -70 13 -100 l7 -56 -72 -21 -71 -21 -74 20 c-85 23 -81 14 -62 146 l11 83 121 -3 121 -3 6 -45z m559 20 c0 -26 -5 -31 -30 -36 -16 -4 -30 -10 -30 -13 0 -14 24 -31 43 -31 26 0 16 -23 -13 -30 -35 -8 -35 -26 0 -38 38 -14 38 -28 0 -35 -16 -4 -30 -11 -30 -17 0 -6 14 -16 30 -21 17 -6 30 -14 30 -18 0 -4 -13 -12 -30 -18 -39 -14 -38 -32 1 -40 28 -5 30 -9 27 -42 -3 -29 -12 -43 -60 -81 -31 -25 -89 -62 -130 -82 -79 -38 -184 -75 -193 -66 -9 8 -74 324 -90 433 -8 55 -17 115 -20 133 l-6 32 251 0 250 0 0 -30z m-687 -280 c17 0 57 7 89 16 35 10 62 13 67 8 5 -5 16 -47 25 -94 l16 -85 -27 -20 c-15 -11 -60 -48 -100 -82 l-71 -63 -96 82 c-53 45 -96 87 -96 94 0 14 28 153 35 171 3 8 21 6 65 -8 34 -10 76 -19 93 -19z m-122 -306 c12 -15 9 -16 -41 -9 -30 4 -58 10 -61 14 -3 3 -2 21 3 39 l9 33 38 -30 c21 -17 44 -38 52 -47z m345 41 c3 -20 5 -38 2 -40 -2 -2 -31 -7 -64 -11 l-59 -6 50 45 c28 26 53 46 57 47 4 0 10 -16 14 -35z m-348 -90 c34 -4 62 -10 62 -13 -1 -11 -212 -183 -217 -178 -3 2 5 50 18 106 22 99 23 101 48 96 14 -3 54 -8 89 -11z m371 -22 c22 -83 39 -168 35 -172 -2 -2 -12 2 -21 11 -10 8 -61 50 -113 94 l-94 79 79 11 c44 6 85 12 92 13 7 0 17 -16 22 -36z m-183 -85 c34 -29 103 -88 153 -131 51 -43 91 -83 89 -88 -2 -4 -70 -71 -153 -147 l-150 -140 -35 29 c-19 15 -91 81 -159 146 l-124 119 140 116 c77 64 145 124 153 132 7 9 15 16 19 16 3 0 34 -24 67 -52z m-177 -495 l64 -59 -143 -129 c-239 -217 -274 -247 -277 -238 -3 8 118 555 133 606 6 18 6 18 223 -180z m519 -119 c40 -175 71 -318 70 -319 -3 -3 -146 125 -359 318 l-64 59 135 129 c74 70 137 129 140 129 3 0 38 -142 78 -316z"/><path d="M5230 2595 l0 -1555 120 0 120 0 0 613 c0 663 4 737 51 882 38 120 89 205 175 291 115 117 232 160 410 152 83 -4 109 -9 159 -33 122 -58 205 -176 257 -360 22 -79 23 -88 26 -812 l3 -733 125 0 125 0 -4 758 -3 757 -27 110 c-89 369 -339 569 -687 552 -58 -3 -132 -13 -165 -22 -145 -39 -305 -150 -395 -274 l-45 -62 -3 646 -2 645 -120 0 -120 0 0 -1555z"/><path d="M7250 4048 c-49 -17 -107 -79 -121 -130 -6 -24 -9 -65 -5 -92 18 -153 198 -225 325 -129 100 76 92 252 -15 326 -46 32 -128 43 -184 25z"/><path d="M1675 3210 c-91 -15 -162 -37 -255 -82 -105 -51 -222 -161 -263 -250 -72 -154 -74 -322 -5 -468 12 -25 53 -77 92 -115 107 -106 185 -140 671 -290 251 -78 375 -150 428 -250 18 -33 22 -57 22 -140 0 -89 -3 -106 -27 -150 -54 -104 -169 -180 -318 -211 -94 -20 -315 -14 -405 11 -136 38 -274 117 -388 224 l-48 45 -74 -74 c-41 -41 -75 -80 -75 -86 0 -19 148 -153 225 -204 85 -55 192 -102 303 -132 67 -19 104 -22 287 -22 186 0 219 2 290 22 134 37 239 95 325 182 120 120 170 238 170 405 0 166 -50 286 -162 390 -114 106 -189 137 -713 300 -179 56 -271 101 -330 160 -99 98 -96 271 6 374 87 88 197 130 364 138 217 11 402 -51 568 -189 27 -22 52 -37 56 -32 4 5 35 46 69 91 l61 81 -44 41 c-103 95 -255 174 -407 212 -95 24 -325 34 -423 19z"/><path d="M3733 3206 c-211 -40 -372 -130 -515 -285 -340 -372 -382 -1039 -91 -1478 90 -137 266 -289 407 -353 144 -66 346 -96 522 -79 205 19 355 77 499 193 75 60 185 181 185 204 0 5 -39 42 -87 81 l-87 70 -85 -88 c-97 -99 -183 -155 -306 -198 -73 -25 -93 -27 -225 -28 -133 0 -152 2 -233 29 -88 29 -178 80 -250 141 -132 113 -239 338 -263 553 l-7 62 812 0 811 0 2 38 c16 388 -123 759 -356 953 -86 71 -215 140 -316 169 -97 27 -313 36 -417 16z m312 -231 c232 -49 418 -241 485 -500 11 -44 23 -115 27 -157 l6 -76 -664 3 c-365 1 -672 3 -683 4 -16 1 -18 7 -11 58 18 145 101 345 184 445 92 112 224 195 351 222 86 19 218 19 305 1z"/><path d="M8695 3205 c-177 -39 -329 -139 -435 -284 l-45 -62 -7 53 c-3 29 -6 97 -7 151 l-1 97 -115 0 -115 0 0 -1060 0 -1060 125 0 124 0 3 693 3 692 28 88 c87 279 246 434 480 468 120 17 230 -6 325 -69 104 -68 175 -196 219 -397 13 -59 17 -183 20 -772 l4 -703 119 0 119 0 3 688 c4 665 4 689 25 763 53 188 152 338 275 415 137 86 324 103 486 42 114 -42 218 -177 262 -340 36 -135 40 -226 40 -906 l0 -663 123 3 122 3 3 635 c3 669 -4 849 -38 989 -91 373 -346 567 -720 548 -122 -6 -223 -35 -327 -92 -87 -49 -225 -186 -277 -277 -21 -38 -41 -68 -45 -68 -3 1 -26 42 -51 93 -85 176 -234 293 -422 331 -92 19 -220 19 -303 1z"/><path d="M12125 3211 c-467 -76 -784 -420 -856 -930 -16 -112 -6 -340 20 -451 90 -394 369 -701 719 -790 295 -74 595 -29 826 125 86 58 257 238 256 271 0 5 -41 39 -90 77 l-89 67 -108 -109 c-97 -98 -117 -113 -203 -154 -52 -25 -120 -51 -150 -58 -70 -18 -268 -17 -340 0 -79 19 -205 81 -276 134 -216 164 -337 492 -304 822 40 391 245 665 562 751 96 26 271 24 373 -5 145 -41 277 -127 375 -245 25 -30 48 -54 53 -53 16 4 177 151 177 162 0 21 -113 144 -185 200 -155 123 -339 184 -570 190 -77 2 -162 0 -190 -4z"/><path d="M7200 2100 l0 -1061 123 3 122 3 3 1058 2 1057 -125 0 -125 0 0 -1060z"/><path d="M13510 2100 l0 -1060 125 0 125 0 0 1060 0 1060 -125 0 -125 0 0 -1060z"/></g></svg>
       </div>
-      <div id="ayar-3d-yukleniyor" style="position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#2A2A2A;font-family:'IBM Plex Sans',sans-serif;font-size:12px;">
+      <div id="ayar-3d-yukleniyor" style="position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);font-family:'IBM Plex Sans',sans-serif;font-size:12px;">
         <div style="width:34px;height:34px;border-radius:50%;border:3px solid rgba(158,209,232,0.25);border-top-color:var(--border);animation:ayar3dSpin 0.8s linear infinite;"></div>
         <span>3B görünüm kütüphanesi yükleniyor…</span>
       </div>
@@ -6257,6 +6299,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 
     <div id="harita-map-wrap" style="width:100%; height:369px; border-radius:12px; overflow:hidden; border:1px solid var(--border); position:relative; z-index:0; background:var(--surface); margin:0 12px 10px; width:calc(100% - 24px);">
       <div id="harita-map" style="width:100%; height:100%;"></div>
+      <div style="position:absolute;bottom:8px;right:8px;z-index:400;pointer-events:none;background:rgba(15,17,20,0.72);color:#fff;font-size:9.5px;font-weight:600;padding:5px 9px;border-radius:8px;display:flex;align-items:center;gap:5px;max-width:62%;line-height:1.3;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 12V6a1.5 1.5 0 0 1 3 0v5"/><path d="M11 11V4.5a1.5 1.5 0 0 1 3 0V11"/><path d="M14 11.2V6.5a1.5 1.5 0 0 1 3 0V13"/><path d="M8 12l-1.8 1.6a2 2 0 0 0-.2 2.8L9 20a4 4 0 0 0 3 1.3h2a5 5 0 0 0 5-5v-3.3"/></svg>Kaydırmak ve büyütmek için 2 parmak kullanınız</div>
       <button type="button" id="harita-katman-btn" style="position:absolute;top:8px;left:46px;z-index:410;background:var(--surface-2);color:var(--text);border:none;border-radius:8px;padding:6px 11px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.25);">🗺️ Harita</button>
       <div style="position:absolute;bottom:18px;left:4px;z-index:400;pointer-events:none;opacity:1.0;"><svg version="1.0" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:auto;" viewBox="0 0 1414.877550 512.433301"  preserveAspectRatio="xMidYMid meet">  <g transform="translate(-103.000000,612.942871) scale(0.100000,-0.100000)" fill="#FFFFFF" stroke="none"> <path d="M13593 6119 c-6 -6 -37 -98 -69 -205 -32 -107 -61 -194 -65 -194 -13 0 -607 -266 -623 -279 -23 -19 -20 -52 5 -58 32 -9 22 -57 -13 -61 -31 -4 -46 -30 -20 -38 58 -19 59 -21 20 -37 -21 -9 -38 -19 -38 -22 0 -3 14 -11 30 -16 37 -13 38 -26 5 -35 -27 -7 -34 -32 -10 -39 51 -16 51 -16 15 -33 -41 -20 -41 -34 0 -45 45 -11 39 -40 -31 -143 -124 -182 -271 -340 -452 -486 -150 -120 -288 -207 -502 -313 -277 -137 -520 -219 -845 -285 -243 -49 -373 -62 -700 -69 l-305 -6 -3 -27 c-3 -22 2 -29 23 -34 15 -4 156 -4 313 -1 367 7 569 33 883 112 705 178 1308 566 1633 1049 32 47 64 86 71 86 7 0 19 -8 26 -17 38 -45 214 -138 312 -164 26 -7 47 -19 47 -26 0 -13 -18 -94 -189 -848 -62 -271 -86 -394 -79 -402 6 -7 21 -13 33 -13 18 0 25 8 34 43 11 37 39 66 263 269 l251 226 111 -101 c61 -56 175 -160 253 -230 116 -105 143 -134 150 -165 9 -39 34 -51 62 -33 16 10 25 -33 -150 736 -44 193 -89 388 -100 434 -11 47 -16 87 -12 91 5 3 35 14 68 24 89 27 199 84 267 139 l60 49 15 -24 c37 -57 214 -216 291 -262 136 -81 299 -133 468 -150 63 -6 96 12 78 41 -8 13 -34 21 -100 31 -276 39 -472 143 -652 346 -57 64 -67 107 -27 114 11 2 24 8 29 13 13 11 -12 39 -35 39 -29 0 -22 17 12 29 36 13 34 35 -4 39 -35 4 -35 30 1 34 34 4 36 30 3 38 -30 7 -40 30 -13 30 11 0 25 7 32 15 11 13 8 17 -19 28 -37 14 -42 46 -11 77 15 15 18 25 11 38 -5 10 -72 45 -148 79 -274 122 -488 217 -491 219 -2 1 -29 88 -61 194 -61 199 -77 230 -108 199z m83 -361 l6 -28 -70 0 -70 0 30 103 c16 56 32 109 35 117 5 13 52 -119 69 -192z m28 -125 c3 -16 8 -63 12 -105 l6 -78 -112 0 c-111 0 -112 0 -107 23 3 12 9 56 13 97 3 41 9 78 11 83 2 4 42 7 88 7 83 0 83 0 89 -27z m-258 -65 c-13 -132 13 -118 -225 -118 l-206 0 210 94 c116 52 214 95 219 95 5 1 6 -31 2 -71z m510 -4 c93 -42 187 -84 209 -94 l40 -19 -206 0 -206 -1 -7 73 c-4 39 -10 82 -13 95 -3 12 -1 22 4 22 6 0 86 -34 179 -76z m-536 -206 c0 -42 -40 -272 -73 -423 l-32 -150 -30 3 c-43 5 -171 58 -230 95 -128 81 -171 154 -104 173 41 12 41 25 1 44 -33 16 -34 30 -2 30 10 0 23 7 30 15 10 13 6 18 -26 31 l-39 17 32 11 c48 17 50 24 7 42 l-39 17 33 14 c37 15 38 35 1 43 -17 4 -25 14 -27 33 l-3 27 250 0 251 0 0 -22z m321 -28 c4 -25 9 -70 13 -100 l7 -56 -72 -21 -71 -21 -74 20 c-85 23 -81 14 -62 146 l11 83 121 -3 121 -3 6 -45z m559 20 c0 -26 -5 -31 -30 -36 -16 -4 -30 -10 -30 -13 0 -14 24 -31 43 -31 26 0 16 -23 -13 -30 -35 -8 -35 -26 0 -38 38 -14 38 -28 0 -35 -16 -4 -30 -11 -30 -17 0 -6 14 -16 30 -21 17 -6 30 -14 30 -18 0 -4 -13 -12 -30 -18 -39 -14 -38 -32 1 -40 28 -5 30 -9 27 -42 -3 -29 -12 -43 -60 -81 -31 -25 -89 -62 -130 -82 -79 -38 -184 -75 -193 -66 -9 8 -74 324 -90 433 -8 55 -17 115 -20 133 l-6 32 251 0 250 0 0 -30z m-687 -280 c17 0 57 7 89 16 35 10 62 13 67 8 5 -5 16 -47 25 -94 l16 -85 -27 -20 c-15 -11 -60 -48 -100 -82 l-71 -63 -96 82 c-53 45 -96 87 -96 94 0 14 28 153 35 171 3 8 21 6 65 -8 34 -10 76 -19 93 -19z m-122 -306 c12 -15 9 -16 -41 -9 -30 4 -58 10 -61 14 -3 3 -2 21 3 39 l9 33 38 -30 c21 -17 44 -38 52 -47z m345 41 c3 -20 5 -38 2 -40 -2 -2 -31 -7 -64 -11 l-59 -6 50 45 c28 26 53 46 57 47 4 0 10 -16 14 -35z m-348 -90 c34 -4 62 -10 62 -13 -1 -11 -212 -183 -217 -178 -3 2 5 50 18 106 22 99 23 101 48 96 14 -3 54 -8 89 -11z m371 -22 c22 -83 39 -168 35 -172 -2 -2 -12 2 -21 11 -10 8 -61 50 -113 94 l-94 79 79 11 c44 6 85 12 92 13 7 0 17 -16 22 -36z m-183 -85 c34 -29 103 -88 153 -131 51 -43 91 -83 89 -88 -2 -4 -70 -71 -153 -147 l-150 -140 -35 29 c-19 15 -91 81 -159 146 l-124 119 140 116 c77 64 145 124 153 132 7 9 15 16 19 16 3 0 34 -24 67 -52z m-177 -495 l64 -59 -143 -129 c-239 -217 -274 -247 -277 -238 -3 8 118 555 133 606 6 18 6 18 223 -180z m519 -119 c40 -175 71 -318 70 -319 -3 -3 -146 125 -359 318 l-64 59 135 129 c74 70 137 129 140 129 3 0 38 -142 78 -316z"/> <path d="M5230 2595 l0 -1555 120 0 120 0 0 613 c0 663 4 737 51 882 38 120 89 205 175 291 115 117 232 160 410 152 83 -4 109 -9 159 -33 122 -58 205 -176 257 -360 22 -79 23 -88 26 -812 l3 -733 125 0 125 0 -4 758 -3 757 -27 110 c-89 369 -339 569 -687 552 -58 -3 -132 -13 -165 -22 -145 -39 -305 -150 -395 -274 l-45 -62 -3 646 -2 645 -120 0 -120 0 0 -1555z"/> <path d="M7250 4048 c-49 -17 -107 -79 -121 -130 -6 -24 -9 -65 -5 -92 18 -153 198 -225 325 -129 100 76 92 252 -15 326 -46 32 -128 43 -184 25z"/> <path d="M1675 3210 c-91 -15 -162 -37 -255 -82 -105 -51 -222 -161 -263 -250 -72 -154 -74 -322 -5 -468 12 -25 53 -77 92 -115 107 -106 185 -140 671 -290 251 -78 375 -150 428 -250 18 -33 22 -57 22 -140 0 -89 -3 -106 -27 -150 -54 -104 -169 -180 -318 -211 -94 -20 -315 -14 -405 11 -136 38 -274 117 -388 224 l-48 45 -74 -74 c-41 -41 -75 -80 -75 -86 0 -19 148 -153 225 -204 85 -55 192 -102 303 -132 67 -19 104 -22 287 -22 186 0 219 2 290 22 134 37 239 95 325 182 120 120 170 238 170 405 0 166 -50 286 -162 390 -114 106 -189 137 -713 300 -179 56 -271 101 -330 160 -99 98 -96 271 6 374 87 88 197 130 364 138 217 11 402 -51 568 -189 27 -22 52 -37 56 -32 4 5 35 46 69 91 l61 81 -44 41 c-103 95 -255 174 -407 212 -95 24 -325 34 -423 19z"/> <path d="M3733 3206 c-211 -40 -372 -130 -515 -285 -340 -372 -382 -1039 -91 -1478 90 -137 266 -289 407 -353 144 -66 346 -96 522 -79 205 19 355 77 499 193 75 60 185 181 185 204 0 5 -39 42 -87 81 l-87 70 -85 -88 c-97 -99 -183 -155 -306 -198 -73 -25 -93 -27 -225 -28 -133 0 -152 2 -233 29 -88 29 -178 80 -250 141 -132 113 -239 338 -263 553 l-7 62 812 0 811 0 2 38 c16 388 -123 759 -356 953 -86 71 -215 140 -316 169 -97 27 -313 36 -417 16z m312 -231 c232 -49 418 -241 485 -500 11 -44 23 -115 27 -157 l6 -76 -664 3 c-365 1 -672 3 -683 4 -16 1 -18 7 -11 58 18 145 101 345 184 445 92 112 224 195 351 222 86 19 218 19 305 1z"/> <path d="M8695 3205 c-177 -39 -329 -139 -435 -284 l-45 -62 -7 53 c-3 29 -6 97 -7 151 l-1 97 -115 0 -115 0 0 -1060 0 -1060 125 0 124 0 3 693 3 692 28 88 c87 279 246 434 480 468 120 17 230 -6 325 -69 104 -68 175 -196 219 -397 13 -59 17 -183 20 -772 l4 -703 119 0 119 0 3 688 c4 665 4 689 25 763 53 188 152 338 275 415 137 86 324 103 486 42 114 -42 218 -177 262 -340 36 -135 40 -226 40 -906 l0 -663 123 3 122 3 3 635 c3 669 -4 849 -38 989 -91 373 -346 567 -720 548 -122 -6 -223 -35 -327 -92 -87 -49 -225 -186 -277 -277 -21 -38 -41 -68 -45 -68 -3 1 -26 42 -51 93 -85 176 -234 293 -422 331 -92 19 -220 19 -303 1z"/> <path d="M12125 3211 c-467 -76 -784 -420 -856 -930 -16 -112 -6 -340 20 -451 90 -394 369 -701 719 -790 295 -74 595 -29 826 125 86 58 257 238 256 271 0 5 -41 39 -90 77 l-89 67 -108 -109 c-97 -98 -117 -113 -203 -154 -52 -25 -120 -51 -150 -58 -70 -18 -268 -17 -340 0 -79 19 -205 81 -276 134 -216 164 -337 492 -304 822 40 391 245 665 562 751 96 26 271 24 373 -5 145 -41 277 -127 375 -245 25 -30 48 -54 53 -53 16 4 177 151 177 162 0 21 -113 144 -185 200 -155 123 -339 184 -570 190 -77 2 -162 0 -190 -4z"/> <path d="M7200 2100 l0 -1061 123 3 122 3 3 1058 2 1057 -125 0 -125 0 0 -1060z"/> <path d="M13510 2100 l0 -1060 125 0 125 0 0 1060 0 1060 -125 0 -125 0 0 -1060z"/> </g> </svg></div>
       <div id="harita-map-placeholder" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; pointer-events:none;">
@@ -6407,7 +6450,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         <div id="harita-direk-detay-icerik" style="font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;color:var(--text);line-height:1.9;"></div>
         <button type="button" id="harita-direk-ekle-duzenle-btn" style="width:100%;margin-top:10px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px;font-size:12px;font-weight:700;cursor:pointer;">Ekle</button>
       </div>
-      <div id="harita-direk-form" hidden style="border:1.5px solid var(--border);border-radius:10px;padding:12px;background:var(--surface);">
+      <div id="harita-direk-form" class="form" hidden style="margin-top:0;border:1.5px solid var(--border);border-radius:10px;padding:12px;background:var(--surface);">
         <div class="form-row3">
           <div class="field">
             <label class="field-label">Direk Tipi</label>
@@ -6558,8 +6601,14 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     </div>
 
     <!-- Not Detay Overlay -->
-    <div id="nd-detay-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:calc(70px + var(--nav-extra, 0px) + env(safe-area-inset-bottom, 0px));z-index:150;background:var(--bg);overflow-y:auto;">
-      <div style="max-width:480px;margin:0 auto;padding:calc(16px + max(env(safe-area-inset-top,0px), 28px)) 20px 40px;">
+    <div class="picker-overlay" id="nd-detay-overlay" hidden>
+      <div class="picker-backdrop" id="nd-detay-backdrop"></div>
+      <div class="picker-sheet nd-detay-sheet" id="nd-detay-sheet">
+        <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;margin:-4px -18px 2px;padding:0 14px;">
+          <button type="button" id="nd-detay-kapat-btn" aria-label="Kapat" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:16px;cursor:pointer;flex-shrink:0;">✕</button>
+        </div>
+        <div class="nd-detay-scroll">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
           <div id="nd-detay-kat-badge" style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;color:var(--text);"></div>
           <div id="nd-detay-durum" style="font-size:10px;"></div>
@@ -6573,6 +6622,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         <div style="display:flex;gap:8px;margin-top:16px;">
           <button type="button" id="nd-detay-duzenle-btn" style="flex:1;background:var(--surface-2);color:var(--text);border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:600;cursor:pointer;">✏️ Düzenle</button>
           <button type="button" id="nd-detay-paylas-btn" style="flex:1;background:var(--surface);color:var(--text);border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:600;cursor:pointer;">⬇ İndir</button>
+        </div>
         </div>
       </div>
     </div>
@@ -9107,7 +9157,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   <div id="harita-not-overlay" style="display:none;position:fixed;inset:0;z-index:2000;background:var(--bg);flex-direction:column;">
     <!-- Üst bar -->
     <div style="display:flex;align-items:center;gap:12px;padding:calc(14px + max(env(safe-area-inset-top,0px), 28px)) 20px 14px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;">
-      <button type="button" id="harita-not-kapat" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">←</button>
+      <button type="button" id="harita-not-kapat" aria-label="Geri" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <p class="history-title" style="margin:0;flex:1;">Not Oluştur</p>
     </div>
     <!-- Kaydırılabilir içerik -->
@@ -9211,7 +9261,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     },
     {
       id: 'hirdavat-menu',
-      title: 'Hırdavat Hesaplamaları',
+      title: 'Hırdavat Hesapları',
       desc: 'İletim hattı hırdavat hesaplama modülleri.',
       meta: 'İkaz Küresi ve diğer hesaplamalar',
       icon: hirdavatIcon,
@@ -9785,9 +9835,9 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   // değişmediği için korundu. "Hırdavat" ve "Malzeme" zaten mevcut hirdavat-menu/
   // malzeme-karakteristikleri modüllerinin FOLDER_SUBMODULES kaydını kullanıyor, ayrı placeholder
   // gerekmedi.
-  moduleRegistry['kat-sehim']         = { id:'kat-sehim',         title:'Sehim' };
-  moduleRegistry['kat-direk']         = { id:'kat-direk',         title:'Direk' };
-  moduleRegistry['kat-topraklama']    = { id:'kat-topraklama',    title:'Topraklama' };
+  moduleRegistry['kat-sehim']         = { id:'kat-sehim',         title:'Sehim Hesapları' };
+  moduleRegistry['kat-direk']         = { id:'kat-direk',         title:'Direk Hesapları' };
+  moduleRegistry['kat-topraklama']    = { id:'kat-topraklama',    title:'Topraklama Hesapları' };
   moduleRegistry['kat-diger-araclar'] = { id:'kat-diger-araclar', title:'Diğer Araçlar' };
 
   var recentModulesWrap = document.getElementById('recent-modules-wrap');
@@ -10205,7 +10255,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     currentBackTarget = null;
     window._mtbCurrentModId = null;
     var ndDetayOv = document.getElementById('nd-detay-overlay');
-    if(ndDetayOv) ndDetayOv.style.display = 'none';
+    if(ndDetayOv && !ndDetayOv.hidden){ ndDetayOv.hidden = true; ndDetayOv.classList.remove('is-open'); }
     var haritaHatOv = document.getElementById('harita-hat-overlay');
     if(haritaHatOv) haritaHatOv.style.display = 'none';
     var aiScr = document.getElementById('ai-screen');
@@ -10233,8 +10283,10 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   }
   backBtn.addEventListener('click', function(){
     var ndDetayOv = document.getElementById('nd-detay-overlay');
-    if(ndDetayOv && ndDetayOv.style.display !== 'none'){
-      ndDetayOv.style.display = 'none';
+    if(ndDetayOv && !ndDetayOv.hidden){
+      ndDetayOv.hidden = true;
+      ndDetayOv.classList.remove('is-open');
+      ndDetayOv.style.display = '';
       return;
     }
     var haritaHatOv = document.getElementById('harita-hat-overlay');
@@ -11207,6 +11259,229 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   if(skYenileBtn) skYenileBtn.addEventListener('click', sehimHavaKonumYenile);
 
   // ───────────────────────── Sehim Simülasyonu ─────────────────────────
+  // ═══════════ ANİMASYONLU SEHİM SAHNESİ (2026-09-26) ═══════════
+  // g: sehimSimulasyonRenderBody içindeki geometri (katener yolları, direk/arazi konumları)
+  function sehimSimSahneSvg(g){
+    var W = g.CANVAS_W, H0 = g.CANVAS_H, FG = 104, H = H0 + FG;
+    var gY = g.groundY;
+    function kule(x, tepeY, tabanY, id){
+      var h = tabanY - (tepeY - 34), top = tepeY - 34, bw = 16, tw = 5;
+      var s = '<g class="sss-kule" id="'+id+'" style="transform-origin:'+x+'px '+tabanY+'px">';
+      s += '<path d="M'+(x-bw)+' '+tabanY+' L'+(x-tw)+' '+top+' M'+(x+bw)+' '+tabanY+' L'+(x+tw)+' '+top+'" stroke="#3B4450" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
+      var n = Math.max(4, Math.round(h/16));
+      for(var i=0;i<n;i++){
+        var f0=i/n, f1=(i+1)/n, y0=tabanY-h*f0, y1=tabanY-h*f1;
+        var a0=x-bw+(bw-tw)*f0, b0=x+bw-(bw-tw)*f0, a1=x-bw+(bw-tw)*f1, b1=x+bw-(bw-tw)*f1;
+        s += '<path d="M'+a0+' '+y0+' L'+b1+' '+y1+' M'+b0+' '+y0+' L'+a1+' '+y1+' M'+a1+' '+y1+' H'+b1+'" stroke="#56606C" stroke-width="0.9" fill="none"/>';
+      }
+      s += '<path d="M'+(x-24)+' '+(tepeY-20)+' H'+(x+24)+' M'+(x-18)+' '+(tepeY-20)+' L'+x+' '+(tepeY-32)+' L'+(x+18)+' '+(tepeY-20)+'" stroke="#3B4450" stroke-width="1.8" fill="none"/>';
+      s += '<line x1="'+x+'" y1="'+(tepeY-20)+'" x2="'+x+'" y2="'+tepeY+'" stroke="#8C96A0" stroke-width="1.6"/>';
+      for(var k=0;k<4;k++) s += '<ellipse cx="'+x+'" cy="'+(tepeY-17+k*4)+'" rx="3.2" ry="1.1" fill="#B6784B"/>';
+      s += '<circle cx="'+x+'" cy="'+tepeY+'" r="2.4" fill="#2B3138"/>';
+      s += '</g>';
+      return s;
+    }
+    // ── Neco: iletken makarasına oturmuş, semaverin yanında çay içiyor ──
+    var nx = 26, nb = gY + FG - 14; // makara zemin teması
+    var neco = '<g id="sss-neco" class="sss-neco" transform="translate('+(nx)+' '+(nb)+') scale(1.22) translate('+(-nx)+' '+(-nb)+')">'+
+      // gölge
+      '<ellipse cx="'+(nx+62)+'" cy="'+(nb+3)+'" rx="70" ry="6" fill="rgba(0,0,0,0.18)"/>'+
+      // makara (yan yatmış tahta kablo makarası)
+      '<rect x="'+(nx+6)+'" y="'+(nb-40)+'" width="46" height="40" rx="3" fill="#8A5A34"/>'+
+      '<g stroke="#A9ADB2" stroke-width="1.4" opacity=".9">'+
+        [0,1,2,3,4,5].map(function(i){ return '<line x1="'+(nx+10)+'" y1="'+(nb-36+i*6.5)+'" x2="'+(nx+48)+'" y2="'+(nb-36+i*6.5)+'"/>'; }).join('')+
+      '</g>'+
+      '<ellipse cx="'+(nx+52)+'" cy="'+(nb-20)+'" rx="8" ry="22" fill="#B8804A" stroke="#6B4424" stroke-width="1.2"/>'+
+      '<ellipse cx="'+(nx+52)+'" cy="'+(nb-20)+'" rx="2.6" ry="7" fill="#6B4424"/>'+
+      '<ellipse cx="'+(nx+6)+'" cy="'+(nb-20)+'" rx="8" ry="22" fill="#A36B3A" stroke="#6B4424" stroke-width="1.2"/>'+
+      // Neco — bacaklar (oturuyor, dizler öne)
+      '<path d="M'+(nx+24)+' '+(nb-44)+' L'+(nx+46)+' '+(nb-44)+' L'+(nx+48)+' '+(nb-18)+'" stroke="#2B3A4A" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+      '<path d="M'+(nx+18)+' '+(nb-44)+' L'+(nx+40)+' '+(nb-42)+' L'+(nx+40)+' '+(nb-16)+'" stroke="#1F2A36" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+      '<path d="M'+(nx+36)+' '+(nb-14)+' h10 a3 3 0 0 1 3 3 v1 h-13z" fill="#111"/>'+
+      '<path d="M'+(nx+44)+' '+(nb-16)+' h10 a3 3 0 0 1 3 3 v1 h-13z" fill="#151515"/>'+
+      // gövde + yelek
+      '<path d="M'+(nx+14)+' '+(nb-44)+' L'+(nx+16)+' '+(nb-76)+' Q'+(nx+24)+' '+(nb-82)+' '+(nx+32)+' '+(nb-76)+' L'+(nx+32)+' '+(nb-44)+'Z" fill="#2B3A4A"/>'+
+      '<path d="M'+(nx+13)+' '+(nb-46)+' L'+(nx+15)+' '+(nb-75)+' Q'+(nx+23)+' '+(nb-80)+' '+(nx+31)+' '+(nb-75)+' L'+(nx+32)+' '+(nb-46)+'Z" fill="#FF7A1A"/>'+
+      '<path d="M'+(nx+14)+' '+(nb-54)+' H'+(nx+32)+' M'+(nx+14)+' '+(nb-62)+' H'+(nx+32)+'" stroke="#EDEDED" stroke-width="2"/>'+
+      // baş (yukarı, iletkenlere bakıyor)
+      '<g class="sss-bas" style="transform-origin:'+(nx+24)+'px '+(nb-80)+'px">'+
+        '<rect x="'+(nx+20)+'" y="'+(nb-86)+'" width="7" height="7" rx="2" fill="#C99470"/>'+
+        '<circle cx="'+(nx+25)+'" cy="'+(nb-93)+'" r="8.5" fill="#D9A57B"/>'+
+        '<circle cx="'+(nx+30)+'" cy="'+(nb-95)+'" r="1.3" fill="#1E1E1E"/>'+
+        '<path d="M'+(nx+28)+' '+(nb-89)+' q2.4 1.2 4 -.6" stroke="#7A3B26" stroke-width="1.1" fill="none" stroke-linecap="round"/>'+
+        '<path d="M'+(nx+15.5)+' '+(nb-95)+' C'+(nx+15.5)+' '+(nb-106)+' '+(nx+21)+' '+(nb-109)+' '+(nx+26)+' '+(nb-109)+' C'+(nx+32)+' '+(nb-109)+' '+(nx+35.5)+' '+(nb-104)+' '+(nx+35.5)+' '+(nb-96)+'Z" fill="#F5C230"/>'+
+        '<rect x="'+(nx+14)+'" y="'+(nb-97)+'" width="25" height="3" rx="1.5" fill="#E0AE1C"/>'+
+        '<path d="M'+(nx+25.4)+' '+(nb-107.5)+' l-2 6.6 h4z" fill="#2B2118"/>'+
+      '</g>'+
+      // çay tutan kol (yudum alma döngüsü)
+      '<g class="sss-kol" style="transform-origin:'+(nx+28)+'px '+(nb-72)+'px">'+
+        '<path d="M'+(nx+28)+' '+(nb-72)+' L'+(nx+40)+' '+(nb-60)+' L'+(nx+44)+' '+(nb-70)+'" stroke="#FF7A1A" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'+
+        '<circle cx="'+(nx+44.5)+'" cy="'+(nb-71)+'" r="3" fill="#D9A57B"/>'+
+        // ince belli çay bardağı
+        '<path d="M'+(nx+41)+' '+(nb-84)+' q3.5 4 1.4 7 q-1.6 2.6 1.2 6 h4.8 q2.8 -3.4 1.2 -6 q-2.1 -3 1.4 -7z" fill="rgba(255,255,255,0.55)" stroke="#E6EEF3" stroke-width=".6"/>'+
+        '<path d="M'+(nx+42.2)+' '+(nb-80)+' q2.6 3 1 5 q-1.2 2 .9 4.6 h3.6 q2.1 -2.6 .9 -4.6 q-1.6 -2 1 -5z" fill="#B3261E"/>'+
+        '<g class="sss-buhar-bardak"><path d="M'+(nx+45)+' '+(nb-87)+' q-3 -4 0 -8 q3 -4 0 -8" stroke="rgba(255,255,255,.75)" stroke-width="1.3" fill="none" stroke-linecap="round"/></g>'+
+      '</g>'+
+      // semaver
+      '<g transform="translate('+(nx+80)+' '+(nb)+')">'+
+        '<rect x="-8" y="-6" width="36" height="6" rx="2" fill="#8C6A2E"/>'+
+        '<path d="M-4 -6 q-2 -30 14 -34 q16 4 14 34z" fill="url(#sssPirinc)" stroke="#7A5A1E" stroke-width="1"/>'+
+        '<rect x="2" y="-44" width="16" height="6" rx="2" fill="#B08A3E"/>'+
+        '<path d="M24 -24 h7 v3 h-4 v3" stroke="#7A5A1E" stroke-width="2" fill="none"/>'+
+        '<path d="M-5 -30 q-5 0 -5 6 q0 5 5 6" stroke="#7A5A1E" stroke-width="2" fill="none"/>'+
+        '<path d="M31 -30 q5 0 5 6 q0 5 -5 6" stroke="#7A5A1E" stroke-width="2" fill="none"/>'+
+        // demlik
+        '<path d="M2 -44 q0 -12 8 -12 q8 0 8 12z" fill="#C0392B"/>'+
+        '<circle cx="10" cy="-57" r="2" fill="#8E231B"/>'+
+        '<path d="M18 -50 l6 -4" stroke="#C0392B" stroke-width="2.4" stroke-linecap="round"/>'+
+        '<ellipse cx="6" cy="-49" rx="2.4" ry="1.4" fill="#FEFEFE" opacity=".35"/>'+
+        '<g class="sss-buhar">'+
+          '<path class="b1" d="M10 -60 q-4 -6 0 -12 q4 -6 0 -12" stroke="rgba(255,255,255,.85)" stroke-width="2" fill="none" stroke-linecap="round"/>'+
+          '<path class="b2" d="M14 -60 q4 -6 0 -12 q-4 -6 0 -12" stroke="rgba(255,255,255,.7)" stroke-width="1.6" fill="none" stroke-linecap="round"/>'+
+          '<path class="b3" d="M6 -60 q-3 -6 1 -11 q3 -5 -1 -10" stroke="rgba(255,255,255,.6)" stroke-width="1.4" fill="none" stroke-linecap="round"/>'+
+        '</g>'+
+      '</g>'+
+    '</g>';
+
+    var bulutlar = '<g class="sss-bulut" opacity=".85">'+
+      '<g transform="translate('+(W*0.22)+' 62)"><ellipse rx="26" ry="9" fill="#FEFEFE"/><ellipse cx="14" cy="-6" rx="16" ry="9" fill="#FEFEFE"/><ellipse cx="-12" cy="-4" rx="12" ry="7" fill="#FEFEFE"/></g>'+
+      '<g transform="translate('+(W*0.7)+' 44)"><ellipse rx="32" ry="10" fill="#FEFEFE"/><ellipse cx="16" cy="-7" rx="18" ry="10" fill="#FEFEFE"/><ellipse cx="-14" cy="-5" rx="13" ry="8" fill="#FEFEFE"/></g>'+
+    '</g>';
+    var tepeler = '<path d="M0 '+(gY-40)+' Q'+(W*0.18)+' '+(gY-90)+' '+(W*0.38)+' '+(gY-52)+' T'+(W*0.72)+' '+(gY-60)+' T'+W+' '+(gY-48)+' V'+gY+' H0Z" fill="#9CC7B2" opacity=".55"/>'+
+                  '<path d="M0 '+(gY-20)+' Q'+(W*0.3)+' '+(gY-58)+' '+(W*0.55)+' '+(gY-30)+' T'+W+' '+(gY-34)+' V'+gY+' H0Z" fill="#7FB89A" opacity=".55"/>';
+
+    var farkVar = g.ikiEgriVar && Math.abs(g.sehimFarki) > 0.05;
+    var farkGrp = farkVar ? (
+      '<g id="sss-fark" opacity="0">'+
+        '<line x1="'+g.farkX+'" y1="'+g.farkYUst+'" x2="'+g.farkX+'" y2="'+g.farkYAlt+'" stroke="#FEFEFE" stroke-width="2" vector-effect="non-scaling-stroke"/>'+
+        '<line x1="'+(g.farkX-5)+'" y1="'+g.farkYUst+'" x2="'+(g.farkX+5)+'" y2="'+g.farkYUst+'" stroke="#FEFEFE" stroke-width="2" vector-effect="non-scaling-stroke"/>'+
+        '<line x1="'+(g.farkX-5)+'" y1="'+g.farkYAlt+'" x2="'+(g.farkX+5)+'" y2="'+g.farkYAlt+'" stroke="#FEFEFE" stroke-width="2" vector-effect="non-scaling-stroke"/>'+
+        '<g id="sss-fark-etiket"></g>'+
+      '</g>') : '';
+
+    var svg = ''+
+      '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;" data-sss="1">'+
+        '<defs>'+
+          '<linearGradient id="sssGok" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4E9FDD"/><stop offset=".65" stop-color="#A9D8F5"/><stop offset="1" stop-color="#E4F3FC"/></linearGradient>'+
+          '<linearGradient id="sssArazi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6DBE5A"/><stop offset=".22" stop-color="#4E9A45"/><stop offset=".25" stop-color="#8B6A47"/><stop offset="1" stop-color="#6B4F33"/></linearGradient>'+
+          '<linearGradient id="sssOn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5DAA4C"/><stop offset=".18" stop-color="#4A8E3E"/><stop offset=".2" stop-color="#7A5B3C"/><stop offset="1" stop-color="#5A4129"/></linearGradient>'+
+          '<linearGradient id="sssPirinc" x1="0" x2="1"><stop offset="0" stop-color="#8C6A2E"/><stop offset=".45" stop-color="#F1D27A"/><stop offset="1" stop-color="#9C7A36"/></linearGradient>'+
+          '<radialGradient id="sssGunes" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF6C8"/><stop offset=".4" stop-color="#FFE27A" stop-opacity=".9"/><stop offset="1" stop-color="#FFE27A" stop-opacity="0"/></radialGradient>'+
+          '<filter id="sssParilti" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
+        '</defs>'+
+        '<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="url(#sssGok)"/>'+
+        '<circle cx="'+(W*0.86)+'" cy="58" r="46" fill="url(#sssGunes)"/>'+
+        bulutlar + tepeler +
+        '<text x="'+(W/2)+'" y="24" fill="rgba(15,30,45,0.72)" font-size="11" font-family="Roboto, sans-serif" font-weight="800" letter-spacing="1.2" text-anchor="middle">1:1 ÖLÇEKLİ SEHİM SİMÜLASYONU</text>'+
+        '<g id="sss-arazi" class="sss-arazi">'+
+          '<path d="'+g.terrainFillPath+'" fill="url(#sssArazi)" stroke="#3E7A36" stroke-width="2" stroke-linejoin="round"/>'+
+          '<rect x="0" y="'+gY+'" width="'+W+'" height="'+FG+'" fill="url(#sssOn)"/>'+
+          '<line x1="0" y1="'+gY+'" x2="'+W+'" y2="'+gY+'" stroke="rgba(255,255,255,0.75)" stroke-width="1.5" stroke-dasharray="6 5"/>'+
+          '<text x="'+(W-10)+'" y="'+(gY-5)+'" fill="rgba(255,255,255,0.9)" font-size="8.5" font-family="Roboto, sans-serif" font-weight="700" text-anchor="end">REFERANS ZEMİN (0.00 m)</text>'+
+        '</g>'+
+        kule(g.solX, g.solY, g.terrainSolY, 'sss-kuleA') + kule(g.sagX, g.sagY, g.terrainSagY, 'sss-kuleB') +
+        '<text class="sss-etiket" x="'+g.solX+'" y="'+(g.solY-44)+'" fill="#0F1E2D" font-size="11.5" font-family="Roboto, sans-serif" font-weight="800" text-anchor="middle">Direk A</text>'+
+        '<text class="sss-etiket" x="'+g.sagX+'" y="'+(g.sagY-44)+'" fill="#0F1E2D" font-size="11.5" font-family="Roboto, sans-serif" font-weight="800" text-anchor="middle">Direk B</text>'+
+        // 1) olması gereken (cetvel) iletken — yeşil
+        '<path id="sss-iletken1" d="'+g.gerekenPath+'" fill="none" stroke="#1FD17A" stroke-width="2.6" stroke-linecap="round" vector-effect="non-scaling-stroke" filter="url(#sssParilti)"/>'+
+        // 2) hesaplanan (saha ölçümü) iletken — turuncu
+        (g.ikiEgriVar ? '<path id="sss-iletken2" d="'+g.hesaplananPath+'" fill="none" stroke="#FF8A1F" stroke-width="2.6" stroke-linecap="round" vector-effect="non-scaling-stroke" filter="url(#sssParilti)"/>' : '')+
+        '<circle id="sss-makara1" r="4" fill="#1FD17A" stroke="#FEFEFE" stroke-width="1.4" opacity="0"/>'+
+        '<circle id="sss-makara2" r="4" fill="#FF8A1F" stroke="#FEFEFE" stroke-width="1.4" opacity="0"/>'+
+        farkGrp +
+        neco +
+      '</svg>';
+    return { svg: svg, H: H };
+  }
+
+  // Sahne zaman çizelgesi (tek seferlik; bitince durur) — "Tekrar Oynat" ile yeniden başlar
+  function sehimSimOynat(){
+    var inner = document.getElementById('sim-svg-inner');
+    var svg = inner && inner.querySelector('svg[data-sss]');
+    if(!svg) return;
+    if(window._sssRaf){ cancelAnimationFrame(window._sssRaf); window._sssRaf = null; }
+    var vb0 = svg.getAttribute('viewBox').split(/\s+/).map(Number);
+    var base = { x:vb0[0], y:vb0[1], w:vb0[2], h:vb0[3] };
+    var il1 = svg.querySelector('#sss-iletken1'), il2 = svg.querySelector('#sss-iletken2');
+    var mk1 = svg.querySelector('#sss-makara1'), mk2 = svg.querySelector('#sss-makara2');
+    var fark = svg.querySelector('#sss-fark'), etiket = svg.querySelector('#sss-fark-etiket');
+    var odak = window._sehimSimFarkOdak;
+    var azHareket = false; try{ azHareket = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+    var L1 = il1 ? il1.getTotalLength() : 0, L2 = il2 ? il2.getTotalLength() : 0;
+    function hazirla(el, L){ if(!el) return; el.style.strokeDasharray = L + ' ' + L; el.style.strokeDashoffset = L; }
+    function bitmis(){
+      [il1, il2].forEach(function(el){ if(el){ el.style.strokeDasharray = ''; el.style.strokeDashoffset = ''; } });
+      if(mk1) mk1.setAttribute('opacity', 0); if(mk2) mk2.setAttribute('opacity', 0);
+      if(fark){ fark.setAttribute('opacity', 1); etiketCiz(1); }
+      svg.setAttribute('viewBox', base.x+' '+base.y+' '+base.w+' '+base.h);
+      svg.classList.add('sss-bitti'); svg.classList.remove('sss-oynuyor');
+      window._sehimSimAnimasyonda = false;
+      var btn = document.getElementById('sim-tekrar-btn'); if(btn) btn.disabled = false;
+    }
+    function etiketCiz(olcek){
+      if(!etiket || !odak) return;
+      var buyut = 1 + 0.7 * (1 - olcek);
+      var fs = 11 * olcek * buyut, pad = 5 * olcek * buyut, metin = 'Sehim hatası: ' + formatTR(Math.abs(odak.fark), 2) + ' m';
+      var w = metin.length * fs * 0.56 + pad * 2, h = fs + pad * 1.6;
+      var x = odak.x + 8 * olcek * buyut, y = odak.y - h / 2;
+      etiket.innerHTML = '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(4*olcek*buyut)+'" fill="#0F1E2D" opacity=".88"/>'+
+        '<text x="'+(x+pad)+'" y="'+(y+h/2+fs*0.36)+'" fill="#FEFEFE" font-size="'+fs+'" font-weight="800" font-family="Roboto, sans-serif">'+metin+'</text>';
+    }
+    svg.classList.remove('sss-bitti');
+    if(azHareket){ bitmis(); return; }
+    hazirla(il1, L1); hazirla(il2, L2);
+    if(fark) fark.setAttribute('opacity', 0);
+    svg.classList.remove('sss-oynuyor'); void svg.getBoundingClientRect(); svg.classList.add('sss-oynuyor');
+    window._sehimSimAnimasyonda = true;
+    var btn = document.getElementById('sim-tekrar-btn'); if(btn) btn.disabled = true;
+
+    // zaman çizelgesi (ms)
+    var T_IL1 = [1700, 3300], T_IL2 = [3500, 5100], T_ZIN = [5400, 6600], T_HOLD = [6600, 9600], T_ZOUT = [9600, 10900];
+    var farkVar = !!(fark && odak && il2);
+    var hedefW = base.w / 4.2, hedefH = hedefW * base.h / base.w;
+    var zv = odak ? {
+      x: Math.min(base.x + base.w - hedefW, Math.max(base.x, odak.x - hedefW/2)),
+      y: Math.min(base.y + base.h - hedefH, Math.max(base.y, odak.y - hedefH/2)), w: hedefW, h: hedefH } : null;
+    function e(t){ return t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+    function oran(t, a){ return Math.max(0, Math.min(1, (t - a[0]) / (a[1] - a[0]))); }
+    function lerpVB(a, b, k){ return (a.x+(b.x-a.x)*k)+' '+(a.y+(b.y-a.y)*k)+' '+(a.w+(b.w-a.w)*k)+' '+(a.h+(b.h-a.h)*k); }
+    function ciz(el, L, mk, k){
+      if(!el) return;
+      el.style.strokeDashoffset = L * (1 - k);
+      if(mk){
+        if(k > 0 && k < 1){ var p = el.getPointAtLength(L * k); mk.setAttribute('cx', p.x); mk.setAttribute('cy', p.y); mk.setAttribute('opacity', 1); }
+        else mk.setAttribute('opacity', 0);
+      }
+    }
+    var t0 = performance.now();
+    var son = farkVar ? T_ZOUT[1] : T_IL2[1] + 300;
+    function kare(now){
+      var t = now - t0;
+      ciz(il1, L1, mk1, e(oran(t, T_IL1)));
+      if(il2) ciz(il2, L2, mk2, e(oran(t, T_IL2)));
+      if(farkVar){
+        if(t >= T_ZIN[0] && t < T_HOLD[0]){
+          var k = e(oran(t, T_ZIN)); svg.setAttribute('viewBox', lerpVB(base, zv, k));
+          fark.setAttribute('opacity', Math.min(1, k * 1.4));
+          etiketCiz(1 - (1 - hedefW/base.w) * k);
+        } else if(t >= T_HOLD[0] && t < T_ZOUT[0]){
+          svg.setAttribute('viewBox', lerpVB(base, zv, 1));
+          var nabiz = 0.75 + 0.25 * Math.sin((t - T_HOLD[0]) / 180);
+          fark.setAttribute('opacity', nabiz);
+          etiketCiz(hedefW/base.w);
+        } else if(t >= T_ZOUT[0]){
+          var k2 = e(oran(t, T_ZOUT)); svg.setAttribute('viewBox', lerpVB(zv, base, k2));
+          fark.setAttribute('opacity', 1);
+          etiketCiz(hedefW/base.w + (1 - hedefW/base.w) * k2);
+        }
+      }
+      if(t < son){ window._sssRaf = requestAnimationFrame(kare); }
+      else { window._sssRaf = null; bitmis(); }
+    }
+    window._sssRaf = requestAnimationFrame(kare);
+  }
+  window.sehimSimOynat = sehimSimOynat;
+
   function sehimSimulasyonRenderBody(L, h, Shedef, Solculen){
     var gercekOlcek = true; // Bu modülde artık SADECE gerçek ölçek kullanılıyor.
     var ikiEgriVar = (Shedef !== null && Shedef > 0);
@@ -11251,7 +11526,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     var xOlculenM = olculenSolve.x;
 
     // ── SVG çizim geometrisi ──
-    var CANVAS_W = 700, PAD_X = 20, DRAW_W = CANVAS_W - PAD_X*2;
+    var CANVAS_W = 700, PAD_X = 58, DRAW_W = CANVAS_W - PAD_X*2; // kuleler + etiketler kenardan taşmasın
     var scaleX = DRAW_W / L;
     var maxDikey = Math.max(ikiEgriVar?Shedef:0, Solculen, Math.abs(h), 0.5);
     var scaleY = scaleX; // gerçek ölçek: dikey ve yatay eksen aynı
@@ -11371,75 +11646,15 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     var logoSagaKoy = (solRisk > 0 && solRisk >= sagRisk);
     var logoX = logoSagaKoy ? (CANVAS_W - logoPad - logoW) : logoPad;
 
-    var svg = ''+
-      '<svg viewBox="0 0 '+CANVAS_W+' '+CANVAS_H+'" style="width:100%;height:auto;display:block;">'+
-        '<defs>'+
-          '<linearGradient id="gokyuzu" x1="0" y1="0" x2="0" y2="1">'+
-            '<stop offset="0%" stop-color="#5AA7DE"/><stop offset="100%" stop-color="#BEE3F8"/>'+
-          '</linearGradient>'+
-          '<pattern id="zigzagArazi" width="16" height="11" patternUnits="userSpaceOnUse">'+
-            '<rect width="16" height="11" fill="#fff"/>'+
-            '<path d="M0 8 L4 3 L8 8 L12 3 L16 8" stroke="#111" stroke-width="1.5" fill="none"/>'+
-          '</pattern>'+
-        '</defs>'+
-        '<rect x="0" y="0" width="'+CANVAS_W+'" height="'+CANVAS_H+'" fill="url(#gokyuzu)" rx="14"/>'+
-        '<g transform="translate('+logoX+',12) scale(0.0388)" opacity="0.85">'+
-          '<g transform="translate(-103.000000,612.942871) scale(0.100000,-0.100000)" fill="#FFFFFF" stroke="none">'+
-            '<path d="M13593 6119 c-6 -6 -37 -98 -69 -205 -32 -107 -61 -194 -65 -194 -13 0 -607 -266 -623 -279 -23 -19 -20 -52 5 -58 32 -9 22 -57 -13 -61 -31 -4 -46 -30 -20 -38 58 -19 59 -21 20 -37 -21 -9 -38 -19 -38 -22 0 -3 14 -11 30 -16 37 -13 38 -26 5 -35 -27 -7 -34 -32 -10 -39 51 -16 51 -16 15 -33 -41 -20 -41 -34 0 -45 45 -11 39 -40 -31 -143 -124 -182 -271 -340 -452 -486 -150 -120 -288 -207 -502 -313 -277 -137 -520 -219 -845 -285 -243 -49 -373 -62 -700 -69 l-305 -6 -3 -27 c-3 -22 2 -29 23 -34 15 -4 156 -4 313 -1 367 7 569 33 883 112 705 178 1308 566 1633 1049 32 47 64 86 71 86 7 0 19 -8 26 -17 38 -45 214 -138 312 -164 26 -7 47 -19 47 -26 0 -13 -18 -94 -189 -848 -62 -271 -86 -394 -79 -402 6 -7 21 -13 33 -13 18 0 25 8 34 43 11 37 39 66 263 269 l251 226 111 -101 c61 -56 175 -160 253 -230 116 -105 143 -134 150 -165 9 -39 34 -51 62 -33 16 10 25 -33 -150 736 -44 193 -89 388 -100 434 -11 47 -16 87 -12 91 5 3 35 14 68 24 89 27 199 84 267 139 l60 49 15 -24 c37 -57 214 -216 291 -262 136 -81 299 -133 468 -150 63 -6 96 12 78 41 -8 13 -34 21 -100 31 -276 39 -472 143 -652 346 -57 64 -67 107 -27 114 11 2 24 8 29 13 13 11 -12 39 -35 39 -29 0 -22 17 12 29 36 13 34 35 -4 39 -35 4 -35 30 1 34 34 4 36 30 3 38 -30 7 -40 30 -13 30 11 0 25 7 32 15 11 13 8 17 -19 28 -37 14 -42 46 -11 77 15 15 18 25 11 38 -5 10 -72 45 -148 79 -274 122 -488 217 -491 219 -2 1 -29 88 -61 194 -61 199 -77 230 -108 199z m83 -361 l6 -28 -70 0 -70 0 30 103 c16 56 32 109 35 117 5 13 52 -119 69 -192z m28 -125 c3 -16 8 -63 12 -105 l6 -78 -112 0 c-111 0 -112 0 -107 23 3 12 9 56 13 97 3 41 9 78 11 83 2 4 42 7 88 7 83 0 83 0 89 -27z m-258 -65 c-13 -132 13 -118 -225 -118 l-206 0 210 94 c116 52 214 95 219 95 5 1 6 -31 2 -71z m510 -4 c93 -42 187 -84 209 -94 l40 -19 -206 0 -206 -1 -7 73 c-4 39 -10 82 -13 95 -3 12 -1 22 4 22 6 0 86 -34 179 -76z m-536 -206 c0 -42 -40 -272 -73 -423 l-32 -150 -30 3 c-43 5 -171 58 -230 95 -128 81 -171 154 -104 173 41 12 41 25 1 44 -33 16 -34 30 -2 30 10 0 23 7 30 15 10 13 6 18 -26 31 l-39 17 32 11 c48 17 50 24 7 42 l-39 17 33 14 c37 15 38 35 1 43 -17 4 -25 14 -27 33 l-3 27 250 0 251 0 0 -22z m321 -28 c4 -25 9 -70 13 -100 l7 -56 -72 -21 -71 -21 -74 20 c-85 23 -81 14 -62 146 l11 83 121 -3 121 -3 6 -45z m559 20 c0 -26 -5 -31 -30 -36 -16 -4 -30 -10 -30 -13 0 -14 24 -31 43 -31 26 0 16 -23 -13 -30 -35 -8 -35 -26 0 -38 38 -14 38 -28 0 -35 -16 -4 -30 -11 -30 -17 0 -6 14 -16 30 -21 17 -6 30 -14 30 -18 0 -4 -13 -12 -30 -18 -39 -14 -38 -32 1 -40 28 -5 30 -9 27 -42 -3 -29 -12 -43 -60 -81 -31 -25 -89 -62 -130 -82 -79 -38 -184 -75 -193 -66 -9 8 -74 324 -90 433 -8 55 -17 115 -20 133 l-6 32 251 0 250 0 0 -30z m-687 -280 c17 0 57 7 89 16 35 10 62 13 67 8 5 -5 16 -47 25 -94 l16 -85 -27 -20 c-15 -11 -60 -48 -100 -82 l-71 -63 -96 82 c-53 45 -96 87 -96 94 0 14 28 153 35 171 3 8 21 6 65 -8 34 -10 76 -19 93 -19z m-122 -306 c12 -15 9 -16 -41 -9 -30 4 -58 10 -61 14 -3 3 -2 21 3 39 l9 33 38 -30 c21 -17 44 -38 52 -47z m345 41 c3 -20 5 -38 2 -40 -2 -2 -31 -7 -64 -11 l-59 -6 50 45 c28 26 53 46 57 47 4 0 10 -16 14 -35z m-348 -90 c34 -4 62 -10 62 -13 -1 -11 -212 -183 -217 -178 -3 2 5 50 18 106 22 99 23 101 48 96 14 -3 54 -8 89 -11z m371 -22 c22 -83 39 -168 35 -172 -2 -2 -12 2 -21 11 -10 8 -61 50 -113 94 l-94 79 79 11 c44 6 85 12 92 13 7 0 17 -16 22 -36z m-183 -85 c34 -29 103 -88 153 -131 51 -43 91 -83 89 -88 -2 -4 -70 -71 -153 -147 l-150 -140 -35 29 c-19 15 -91 81 -159 146 l-124 119 140 116 c77 64 145 124 153 132 7 9 15 16 19 16 3 0 34 -24 67 -52z m-177 -495 l64 -59 -143 -129 c-239 -217 -274 -247 -277 -238 -3 8 118 555 133 606 6 18 6 18 223 -180z m519 -119 c40 -175 71 -318 70 -319 -3 -3 -146 125 -359 318 l-64 59 135 129 c74 70 137 129 140 129 3 0 38 -142 78 -316z"/>'+
-            '<path d="M5230 2595 l0 -1555 120 0 120 0 0 613 c0 663 4 737 51 882 38 120 89 205 175 291 115 117 232 160 410 152 83 -4 109 -9 159 -33 122 -58 205 -176 257 -360 22 -79 23 -88 26 -812 l3 -733 125 0 125 0 -4 758 -3 757 -27 110 c-89 369 -339 569 -687 552 -58 -3 -132 -13 -165 -22 -145 -39 -305 -150 -395 -274 l-45 -62 -3 646 -2 645 -120 0 -120 0 0 -1555z"/>'+
-            '<path d="M7250 4048 c-49 -17 -107 -79 -121 -130 -6 -24 -9 -65 -5 -92 18 -153 198 -225 325 -129 100 76 92 252 -15 326 -46 32 -128 43 -184 25z"/>'+
-            '<path d="M1675 3210 c-91 -15 -162 -37 -255 -82 -105 -51 -222 -161 -263 -250 -72 -154 -74 -322 -5 -468 12 -25 53 -77 92 -115 107 -106 185 -140 671 -290 251 -78 375 -150 428 -250 18 -33 22 -57 22 -140 0 -89 -3 -106 -27 -150 -54 -104 -169 -180 -318 -211 -94 -20 -315 -14 -405 11 -136 38 -274 117 -388 224 l-48 45 -74 -74 c-41 -41 -75 -80 -75 -86 0 -19 148 -153 225 -204 85 -55 192 -102 303 -132 67 -19 104 -22 287 -22 186 0 219 2 290 22 134 37 239 95 325 182 120 120 170 238 170 405 0 166 -50 286 -162 390 -114 106 -189 137 -713 300 -179 56 -271 101 -330 160 -99 98 -96 271 6 374 87 88 197 130 364 138 217 11 402 -51 568 -189 27 -22 52 -37 56 -32 4 5 35 46 69 91 l61 81 -44 41 c-103 95 -255 174 -407 212 -95 24 -325 34 -423 19z"/>'+
-            '<path d="M3733 3206 c-211 -40 -372 -130 -515 -285 -340 -372 -382 -1039 -91 -1478 90 -137 266 -289 407 -353 144 -66 346 -96 522 -79 205 19 355 77 499 193 75 60 185 181 185 204 0 5 -39 42 -87 81 l-87 70 -85 -88 c-97 -99 -183 -155 -306 -198 -73 -25 -93 -27 -225 -28 -133 0 -152 2 -233 29 -88 29 -178 80 -250 141 -132 113 -239 338 -263 553 l-7 62 812 0 811 0 2 38 c16 388 -123 759 -356 953 -86 71 -215 140 -316 169 -97 27 -313 36 -417 16z m312 -231 c232 -49 418 -241 485 -500 11 -44 23 -115 27 -157 l6 -76 -664 3 c-365 1 -672 3 -683 4 -16 1 -18 7 -11 58 18 145 101 345 184 445 92 112 224 195 351 222 86 19 218 19 305 1z"/>'+
-            '<path d="M8695 3205 c-177 -39 -329 -139 -435 -284 l-45 -62 -7 53 c-3 29 -6 97 -7 151 l-1 97 -115 0 -115 0 0 -1060 0 -1060 125 0 124 0 3 693 3 692 28 88 c87 279 246 434 480 468 120 17 230 -6 325 -69 104 -68 175 -196 219 -397 13 -59 17 -183 20 -772 l4 -703 119 0 119 0 3 688 c4 665 4 689 25 763 53 188 152 338 275 415 137 86 324 103 486 42 114 -42 218 -177 262 -340 36 -135 40 -226 40 -906 l0 -663 123 3 122 3 3 635 c3 669 -4 849 -38 989 -91 373 -346 567 -720 548 -122 -6 -223 -35 -327 -92 -87 -49 -225 -186 -277 -277 -21 -38 -41 -68 -45 -68 -3 1 -26 42 -51 93 -85 176 -234 293 -422 331 -92 19 -220 19 -303 1z"/>'+
-            '<path d="M12125 3211 c-467 -76 -784 -420 -856 -930 -16 -112 -6 -340 20 -451 90 -394 369 -701 719 -790 295 -74 595 -29 826 125 86 58 257 238 256 271 0 5 -41 39 -90 77 l-89 67 -108 -109 c-97 -98 -117 -113 -203 -154 -52 -25 -120 -51 -150 -58 -70 -18 -268 -17 -340 0 -79 19 -205 81 -276 134 -216 164 -337 492 -304 822 40 391 245 665 562 751 96 26 271 24 373 -5 145 -41 277 -127 375 -245 25 -30 48 -54 53 -53 16 4 177 151 177 162 0 21 -113 144 -185 200 -155 123 -339 184 -570 190 -77 2 -162 0 -190 -4z"/>'+
-            '<path d="M7200 2100 l0 -1061 123 3 122 3 3 1058 2 1057 -125 0 -125 0 0 -1060z"/>'+
-            '<path d="M13510 2100 l0 -1060 125 0 125 0 0 1060 0 1060 -125 0 -125 0 0 -1060z"/>'+
-          '</g>'+
-        '</g>'+
-        '<text x="'+(CANVAS_W/2)+'" y="26" fill="rgba(20,35,50,0.7)" font-size="11" font-family="IBM Plex Sans, sans-serif" font-weight="700" letter-spacing="1" text-anchor="middle">'+baslikMetni+'</text>'+
-        subtitleHtml+
-        // arazi (siyah-beyaz zikzak dolgu)
-        '<path d="'+terrainFillPath+'" fill="url(#zigzagArazi)" stroke="#111" stroke-width="2.5" stroke-linejoin="round"/>'+
-        // direkler (siyah, eşit boy, araziye göre konumlanmış)
-        '<line x1="'+solX+'" y1="'+(solY-30)+'" x2="'+solX+'" y2="'+terrainSolY+'" stroke="#111" stroke-width="4" stroke-linecap="round"/>'+
-        '<line x1="'+(solX-14)+'" y1="'+(solY-20)+'" x2="'+(solX+14)+'" y2="'+(solY-20)+'" stroke="#111" stroke-width="3" stroke-linecap="round"/>'+
-        '<line x1="'+sagX+'" y1="'+(sagY-30)+'" x2="'+sagX+'" y2="'+terrainSagY+'" stroke="#111" stroke-width="4" stroke-linecap="round"/>'+
-        '<line x1="'+(sagX-14)+'" y1="'+(sagY-20)+'" x2="'+(sagX+14)+'" y2="'+(sagY-20)+'" stroke="#111" stroke-width="3" stroke-linecap="round"/>'+
-        '<circle cx="'+solX+'" cy="'+solY+'" r="4.5" fill="#111"/>'+
-        '<circle cx="'+sagX+'" cy="'+sagY+'" r="4.5" fill="#111"/>'+
-        '<text x="'+(solX-14)+'" y="'+(solY-40)+'" fill="#FFFFFF" font-size="12" font-family=\'IBM Plex Sans, sans-serif\' font-weight="700" text-anchor="start">Direk A</text>'+
-        '<text x="'+(sagX+14)+'" y="'+(sagY-40)+'" fill="#FFFFFF" font-size="12" font-family=\'IBM Plex Sans, sans-serif\' font-weight="700" text-anchor="end">Direk B</text>'+
-        // zemin hattı (referans datum)
-        '<line x1="20" y1="'+groundY+'" x2="'+(CANVAS_W-20)+'" y2="'+groundY+'" stroke="#FFFFFF" stroke-width="2"/>'+
-        // direklerin zemin iz düşümü (siyah noktalar)
-        '<line x1="'+solX+'" y1="'+terrainSolY+'" x2="'+solX+'" y2="'+groundY+'" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="2,3" opacity="0.7"/>'+
-        '<line x1="'+sagX+'" y1="'+terrainSagY+'" x2="'+sagX+'" y2="'+groundY+'" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="2,3" opacity="0.7"/>'+
-        '<circle cx="'+solX+'" cy="'+groundY+'" r="5" fill="#111"/>'+
-        '<circle cx="'+sagX+'" cy="'+groundY+'" r="5" fill="#111"/>'+
-        // eğriler (gökyüzüne karşı yüksek kontrastlı renkler)
-        (ikiEgriVar ? '<path d="'+hedefPath+'" fill="none" stroke="#E8590C" stroke-width="2.2" stroke-dasharray="4,4"/>' : '')+
-        '<path d="'+olculenPath+'" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="0.1,7"/>'+
-        // (meme noktası işaretçileri kaldırıldı — sadece katener eğrileri çiziliyor)
-        // dikey sehim farkı ölçü çizgisi — iki eğri arasındaki gerçek dikey mesafeyi net gösterir
-        (ikiEgriVar && Math.abs(sehimFarki) > 0.05 ? (
-          '<line x1="'+farkX+'" y1="'+farkYUst+'" x2="'+farkX+'" y2="'+farkYAlt+'" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3,2.5"/>'+
-          '<line x1="'+(farkX-5)+'" y1="'+farkYUst+'" x2="'+(farkX+5)+'" y2="'+farkYUst+'" stroke="#FFFFFF" stroke-width="2"/>'+
-          '<line x1="'+(farkX-5)+'" y1="'+farkYAlt+'" x2="'+(farkX+5)+'" y2="'+farkYAlt+'" stroke="#FFFFFF" stroke-width="2"/>'+
-          '<rect x="'+(farkX+8)+'" y="'+((farkYUst+farkYAlt)/2-10)+'" width="'+(String(formatTR(Math.abs(sehimFarki),2)).length*6.4+34)+'" height="20" rx="5" fill="#FFFFFF"/>'+
-          '<text x="'+(farkX+15)+'" y="'+((farkYUst+farkYAlt)/2+4)+'" fill="#fff" font-size="11" font-weight="700" font-family=\'IBM Plex Mono, monospace\'>'+formatTR(Math.abs(sehimFarki),2)+' m</text>'
-        ) : '')+
-      '</svg>';
+    var _sss = sehimSimSahneSvg({ CANVAS_W:CANVAS_W, CANVAS_H:CANVAS_H, groundY:groundY, solX:solX, sagX:sagX, solY:solY, sagY:sagY,
+      terrainSolY:terrainSolY, terrainSagY:terrainSagY, terrainFillPath:terrainFillPath, gerekenPath:olculenPath, hesaplananPath:hedefPath,
+      ikiEgriVar:ikiEgriVar, sehimFarki:sehimFarki, farkX:farkX, farkYUst:farkYUst, farkYAlt:farkYAlt });
+    var svg = _sss.svg;
 
-    var legendHtml = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px;">'+
-      (ikiEgriVar ? (
-      '<div style="display:flex;flex-direction:column;gap:5px;">'+
-        '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:16px;height:0;border-top:2.5px dashed #E8590C;display:inline-block;"></span></span><span style="font-size:11px;color:var(--text-muted);">Ölçülen (Saha): <b style="color:var(--text);">'+formatTR(Shedef,2)+' m</b></span></div>'+
-      '</div>') : '<div></div>')+
-      '<div style="display:flex;flex-direction:column;gap:5px;">'+
-        '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:16px;height:2.5px;background:var(--surface);display:inline-block;"></span></span><span style="font-size:11px;color:var(--text-muted);">Hedef Sehim: <b style="color:var(--text);">'+formatTR(Solculen,2)+' m</b></span></div>'+
-      '</div>'+
-      '</div>';
-
+    var legendHtml = '<div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;font-family:Roboto,sans-serif;">'+
+      '<div style="display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-muted);"><span style="width:22px;height:3px;border-radius:2px;background:#1FD17A;box-shadow:0 0 6px #1FD17A;flex-shrink:0;"></span>Olması Gereken (Cetvel): <b style="color:var(--text);">'+formatTR(Solculen,2)+' m</b></div>'+
+      (ikiEgriVar ? '<div style="display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-muted);"><span style="width:22px;height:3px;border-radius:2px;background:#FF8A1F;box-shadow:0 0 6px #FF8A1F;flex-shrink:0;"></span>Hesaplanan (Saha): <b style="color:var(--text);">'+formatTR(Shedef,2)+' m</b></div>' : '')+
+    '</div>';
     var uyariHtml = (ikiEgriVar && kaymaMiktari > 0.5) ? (
       '<div style="background:var(--danger-bg);border:1.5px solid var(--danger);border-radius:10px;padding:12px 14px;margin-top:14px;">'+
         '<p style="margin:0;font-size:12px;color:var(--danger-ink);font-weight:600;line-height:1.5;">⚠ Sehim farkı (Cetvel − Hedef = '+formatTR(sehimFarki,2)+' m), iletkenin en dip noktasını yaklaşık <b>'+formatTR(kaymaMiktari,1)+' metre</b> kaydırmıştır. Bu durum orta açıklıktaki gabari mesafesini daraltabilir — iletkeni tekrar kontrol edin.</p>'+
@@ -11452,9 +11667,9 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     var svgOuter = '<div class="sim-svg-outer">' + svgWrapped + '</div>';
     var zoomHintHtml = '<p style="margin:10px 2px 0;font-size:11px;color:var(--text-muted);text-align:center;">🤏 2 parmakla yakınlaştırın ve kaydırın</p>'+
       (ikiEgriVar && Math.abs(sehimFarki) > 0.05 ? '<button type="button" id="sim-zoom-to-fark-btn" class="sim-zoom-fark-btn">🔍 Fark Bölgesine Yakınlaş</button>' : '');
-    window._sehimSimFarkOdak = (ikiEgriVar && Math.abs(sehimFarki) > 0.05) ? { x: farkX, y: (farkYUst+farkYAlt)/2 } : null;
+    window._sehimSimFarkOdak = (ikiEgriVar && Math.abs(sehimFarki) > 0.05) ? { x: farkX, y: (farkYUst+farkYAlt)/2, fark: sehimFarki } : null;
 
-    return svgOuter + zoomHintHtml + legendHtml + uyariHtml;
+    return svgOuter + '<div style="text-align:center;"><button type="button" id="sim-tekrar-btn" class="sim-tekrar-btn">\u25B6 Tekrar Oynat</button></div>' + zoomHintHtml + legendHtml + uyariHtml;
   }
 
   function sehimSimAttachPinchZoom(){
@@ -11484,6 +11699,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
       return { x: vb.x + (px/rect.width)*vb.w, y: vb.y + (py/rect.height)*vb.h };
     }
     wrap.addEventListener('touchstart', function(e){
+      if(window._sehimSimAnimasyonda) return;
       if(e.touches.length === 2){
         e.preventDefault();
         var rect = wrap.getBoundingClientRect();
@@ -11567,6 +11783,8 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     try{
       embed.innerHTML = sehimSimulasyonRenderBody(L, h, Shedef, Solculen);
       sehimSimAttachPinchZoom();
+      var _tb = document.getElementById('sim-tekrar-btn'); if(_tb) _tb.onclick = function(){ sehimSimOynat(); };
+      setTimeout(sehimSimOynat, 60);
     }catch(e){
       embed.innerHTML = '<div style="background:var(--danger-bg);border:1.5px solid var(--danger);border-radius:12px;padding:16px;text-align:center;font-family:\'IBM Plex Sans\',sans-serif;font-size:12px;color:var(--danger-ink);">⚠️ Simülasyon bu girdilerle çizilemedi. Lütfen değerleri kontrol edin.</div>';
     }
@@ -12446,6 +12664,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 
     function show(){
       if(closeTimer){ window.clearTimeout(closeTimer); closeTimer = null; }
+      overlayEl.style.display = '';
       overlayEl.hidden = false;
       overlayEl.classList.add('is-open');
     }
@@ -13094,7 +13313,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
       var headerH = 140, titleH = 90, bodyH = 220, footerH = 140;
       var totalH = headerH + titleH + bodyH + footerH;
 
-      var canvas = document.createElement('canvas');
+      var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
       canvas.width = W; canvas.height = totalH;
       var ctx = canvas.getContext('2d');
 
@@ -13237,7 +13456,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
       var toplamSatirYuksekligi = rowHeights.reduce(function(a,b){ return a+b; }, 0);
       var totalH = headerH + titleH + toplamSatirYuksekligi + totalRowH + 40 + footerH;
 
-      var canvas = document.createElement('canvas');
+      var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
       canvas.width = W; canvas.height = totalH;
       var ctx = canvas.getContext('2d');
 
@@ -13788,7 +14007,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         function satirYuksekligi(lines){ return titleLineH + lines.length*detailLineH + rowPad; }
 
         var totalH = headerH+titleH+semaH+kayit.items.reduce(function(s,it,idx){ return s+satirYuksekligi(itemLines[idx]); },0)+totalRowH+40+footerH;
-        var canvas = document.createElement('canvas');
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
         canvas.width=W; canvas.height=totalH;
         var ctx = canvas.getContext('2d');
         ctx.fillStyle=PAGE_BG; ctx.fillRect(0,0,W,totalH);
@@ -14038,7 +14257,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   // Malzeme Karakteristikleri ana modülü
   window.registerSubModule({
     id: 'malzeme-karakteristikleri',
-    title: 'Malzeme Karakteristikleri',
+    title: 'Malzeme Bilgileri',
     desc: 'Malzeme karakteristik hesaplama modülleri.',
     icon: '',
     active: true
@@ -15769,7 +15988,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 
         var footerH = 56;
         var H = (78 + 100 + totalRowsH + footerH) ;
-        var canvas = document.createElement('canvas');
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
         canvas.width = W*SCALE; canvas.height = H*SCALE;
         var ctx = canvas.getContext('2d');
         ctx.scale(SCALE, SCALE);
@@ -16377,7 +16596,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         function satirYuksekligi(lines){ return titleLineH + lines.length*detailLineH + rowPad; }
 
         var totalH = headerH+titleH+semaH+kayit.items.reduce(function(s,it,idx){ return s+satirYuksekligi(itemLines[idx]); },0)+totalRowH+40+footerH;
-        var canvas = document.createElement('canvas');
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
         canvas.width=W; canvas.height=totalH;
         var ctx = canvas.getContext('2d');
         ctx.fillStyle=PAGE_BG; ctx.fillRect(0,0,W,totalH);
@@ -18048,7 +18267,8 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       a: ayarLastResult.a, b: ayarLastResult.b, c: ayarLastResult.c, d: ayarLastResult.d,
       measured: r.vals,
       diffs: diffs,
-      kotVals: kotValsNow, // {A,B,C,D}: her biri girilen ham kot (m, number) veya null — opsiyonel (2026-09-16: artık referans/kilit yok, ham kotlar saklanıyor)
+      kotVals: kotValsNow, // {A,B,C,D}: her biri girilen ham kot (m veya mm, number) veya null — opsiyonel (2026-09-16: artık referans/kilit yok, ham kotlar saklanıyor)
+      kotBirim: AYAR_KOT_BIRIM, // 2026-09-25 EKLEME: kaydın hangi birimle (m/mm) girildiği — geçmiş kayıtlar kendi biriminde kalır
       hatGuzergah: (typeof ayarSeciliHatAdi !== 'undefined' && ayarSeciliHatAdi) ? ayarSeciliHatAdi : null // "Kayıtlı Hat Seçiniz" ile seçilmişse — opsiyonel
     };
     sahaRecords.push(record);
@@ -18357,16 +18577,22 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
   // B kotu=110.884 ise fark = (106.888+5)−(110.884+1) = +4mm olmalı. Yani "gerçek yükseklik"
   // (kot + kendi ayak boyu) iki ayak için eşitse fark sıfırdır — ayak boyu farkı ÇIKARILMIYOR,
   // her ayağın kotuna KENDİ ayak boyu EKLENİP öyle karşılaştırılıyor.
-  function computeKotDiffs(kotVals, rawOverride){
+  var AYAR_KOT_BIRIM = 'm'; // 'm' (varsayılan, ayak boy farkı dahil) | 'mm' (ham fark, ayak boy farkı hariç)
+  function computeKotDiffs(kotVals, rawOverride, birimOverride){
     var raw = rawOverride || AYAR_KOT_RAW;
+    var birim = birimOverride || AYAR_KOT_BIRIM;
     var harfler = { ab:['A','B'], bc:['B','C'], cd:['C','D'], da:['D','A'], ac:['A','C'], bd:['B','D'] };
     var diffs = {};
     Object.keys(harfler).forEach(function(key){
       var x = harfler[key][0], y = harfler[key][1];
       if(kotVals[x] === null || kotVals[y] === null){ diffs[key] = null; return; }
-      var yukseklikX = kotVals[x] + raw[x];
-      var yukseklikY = kotVals[y] + raw[y];
-      diffs[key] = Math.round((yukseklikX - yukseklikY) * 1000);
+      if(birim === 'mm'){
+        diffs[key] = Math.round(kotVals[x] - kotVals[y]);
+      } else {
+        var yukseklikX = kotVals[x] + raw[x];
+        var yukseklikY = kotVals[y] + raw[y];
+        diffs[key] = Math.round((yukseklikX - yukseklikY) * 1000);
+      }
     });
     return diffs;
   }
@@ -18426,6 +18652,31 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     });
   });
 
+  var AYAR_KOT_ACIKLAMA_M = 'Ayak farkı hesaba dahildir. Stub kotlarını metre olarak giriniz. Metre mertebesinden sonrasını yazarken virgül veya nokta koymayı unutmayın.';
+  var AYAR_KOT_ACIKLAMA_MM = 'Ayak farkı hesaba dahil değildir, ayakların milimetrik farkları hesaplanır. Ayak farkı girmeden virgülsüz değer giriniz.';
+  function ayarKotBirimUygula(){
+    document.querySelectorAll('.ayar-kot-birim-btn').forEach(function(b){
+      var aktif = b.dataset.birim === AYAR_KOT_BIRIM;
+      b.style.background = aktif ? 'var(--accent)' : 'transparent';
+      b.style.color = aktif ? '#fff' : 'var(--text-muted)';
+    });
+    var aciklamaEl = document.getElementById('ayar-kot-aciklama');
+    if(aciklamaEl) aciklamaEl.textContent = AYAR_KOT_BIRIM === 'mm' ? AYAR_KOT_ACIKLAMA_MM : AYAR_KOT_ACIKLAMA_M;
+    ['A','B','C','D'].forEach(function(k){
+      var el = document.getElementById('ayar-kot-' + k.toLowerCase());
+      if(el) el.placeholder = AYAR_KOT_BIRIM;
+    });
+    AYAR_KOT_HESAPLANDI = false;
+    ayarKotVeMesafeYenidenCiz();
+  }
+  document.querySelectorAll('.ayar-kot-birim-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(AYAR_KOT_BIRIM === b.dataset.birim) return;
+      AYAR_KOT_BIRIM = b.dataset.birim;
+      ayarKotBirimUygula();
+    });
+  });
+
   var ayarKotKiyaslaBtn = document.getElementById('ayar-kot-kiyasla-btn');
   if(ayarKotKiyaslaBtn){
     ayarKotKiyaslaBtn.addEventListener('click', function(){
@@ -18446,7 +18697,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     // saklanmış ham kotlarından (r.kotVals) ve o kaydın kendi ayak boyu numaralarından (r.a/b/c/d —
     // o anki global AYAR_KOT_RAW'a değil, kaydın kendi değerlerine göre, farklı bir direk açıkken
     // görüntülense bile doğru kalsın diye) yeniden hesaplanır.
-    var kotDiffs = r.kotVals ? computeKotDiffs(r.kotVals, { A:r.a, B:r.b, C:r.c, D:r.d }) : {};
+    var kotDiffs = r.kotVals ? computeKotDiffs(r.kotVals, { A:r.a, B:r.b, C:r.c, D:r.d }, r.kotBirim || 'm') : {};
     var mesafeSatirlar = SAHA_FIELDS.map(function(f){
       var d = r.diffs[f.key];
       var m = r.measured[f.key];
@@ -18541,7 +18792,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var footerH = 120;
       var totalH = headerH + titleH + kayitlar.length * recH + 40 + footerH;
 
-      var canvas = document.createElement('canvas');
+      var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
       canvas.width = W; canvas.height = totalH;
       var ctx = canvas.getContext('2d');
 
@@ -22750,6 +23001,27 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       if(mapInstance) return;
       mapInstance = L.map('harita-map', {zoomControl:true}).setView([39.0,35.0],6);
       window._mapInstance = mapInstance;
+      (function(){
+        var mapEl = document.getElementById('harita-map');
+        mapInstance.dragging.disable();
+        mapEl.style.touchAction = 'pan-y';
+        var cokluAktif = false;
+        function kapat(){
+          if(!cokluAktif) return;
+          cokluAktif = false;
+          mapInstance.dragging.disable();
+          mapEl.style.touchAction = 'pan-y';
+        }
+        mapEl.addEventListener('touchstart', function(e){
+          if(e.touches && e.touches.length >= 2){
+            cokluAktif = true;
+            mapInstance.dragging.enable();
+            mapEl.style.touchAction = 'none';
+          }
+        }, { passive:true });
+        mapEl.addEventListener('touchend', function(e){ if(!e.touches || e.touches.length < 2) kapat(); });
+        mapEl.addEventListener('touchcancel', kapat);
+      })();
       window._haritaMesafeTemizle = function(){ if(typeof haritaMesafeTemizle === 'function') haritaMesafeTemizle(); };
       // NOT: Boş harita alanına tıklandığında nokta panelini kapatma işi artık
       // baglaPopupButonlari() içindeki genel document click dinleyicisi tarafından yapılıyor.
@@ -24030,6 +24302,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       if(icerik){
         icerik.addEventListener('click', function(e){
           e.stopPropagation();
+          try{
           var notBtn = e.target.closest ? e.target.closest('.harita-not-ac-btn') : null;
           if(notBtn){
             haritaNoktaPaneliKapat();
@@ -24042,13 +24315,34 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
             haritaMesafeBaslat(currentPointInfo);
             return;
           }
+          } catch(_eOuter){ if(window.console) console.error('harita popup t\u0131klama hatas\u0131', _eOuter); }
           var direkBtn = e.target.closest ? e.target.closest('.harita-direk-duzenle-btn') : null;
           if(direkBtn){
             // Bilgiler artık panel İÇİNDE değil, "Haritayı Ortala"/"Kayıtlı Notlar" butonlarının
             // ALTINDA (haritanın altında, normal sayfa akışında) gösteriliyor — panel kapatılıp oraya kaydırılır.
-            haritaNoktaPaneliKapat();
-            haritaDirekDetayiGoster();
-            if(haritaDirekWrap){ haritaDirekWrap.hidden = false; setTimeout(function(){ haritaDirekWrap.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 150); }
+            try{
+              haritaNoktaPaneliKapat();
+              haritaDirekDetayiGoster();
+              if(haritaDirekDetay) haritaDirekDetay.hidden = false;
+              if(haritaDirekWrap){
+                haritaDirekWrap.hidden = false;
+                window.setTimeout(function(){
+                  try{
+                    var elem = document.getElementById('harita-direk-detay');
+                    if(!elem || elem.hidden) elem = haritaDirekWrap;
+                    if(elem && elem.scrollIntoView) elem.scrollIntoView({ behavior:'smooth', block:'start' });
+                    window.setTimeout(function(){
+                      try{
+                        var barEl = document.getElementById('home-bar');
+                        var ustPay = (barEl ? barEl.getBoundingClientRect().height : 0) + 14;
+                        var hedefY = elem.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0) - ustPay;
+                        window.scrollTo(0, Math.max(0, hedefY));
+                      }catch(_e3){ if(window.console) console.error('harita: kesin kaydırma hatası', _e3); }
+                    }, 260);
+                  }catch(_e2){ if(window.console) console.error('harita: scrollIntoView hatası', _e2); }
+                }, 180);
+              }
+            }catch(_e1){ if(window.console) console.error('harita: Direk Detayı açma hatası', _e1); }
             return;
           }
         });
@@ -24415,7 +24709,25 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
     // ── Dosya seç ──
     var fileInput=document.getElementById('harita-file-input');
-    document.getElementById('harita-file-btn').addEventListener('click',function(){ fileInput.click(); });
+    (function(){
+      var _hfBtn = document.getElementById('harita-file-btn');
+      var _hfOrijinal = _hfBtn.innerHTML;
+      var _hfZamanlayici = null;
+      function _hfSifirla(){
+        if(_hfZamanlayici){ clearTimeout(_hfZamanlayici); _hfZamanlayici = null; }
+        _hfBtn.innerHTML = _hfOrijinal; _hfBtn.disabled = false;
+        window.removeEventListener('blur', _hfSifirla);
+        window.removeEventListener('focus', _hfSifirla);
+      }
+      _hfBtn.addEventListener('click', function(){
+        _hfBtn.disabled = true;
+        _hfBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:50%;border:2px solid var(--text-faint);border-top-color:var(--accent);animation:sxSpin .7s linear infinite;"></span>Aç\u0131l\u0131yor\u2026</span>';
+        window.addEventListener('blur', _hfSifirla, { once:true });
+        window.addEventListener('focus', _hfSifirla, { once:true });
+        _hfZamanlayici = setTimeout(_hfSifirla, 15000);
+        fileInput.click();
+      });
+    })();
 
     // KML metnini işleyip haritaya ekleyen ortak fonksiyon
     function kmlMetniniIsle(text, fileName){
@@ -24824,7 +25136,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         var footerH = 200;
         var totalH = y + footerH;
 
-        var canvas = document.createElement('canvas');
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
         canvas.width = W; canvas.height = totalH;
         var ctx = canvas.getContext('2d');
 
@@ -26051,9 +26363,9 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var bar = document.getElementById('nd-kategori-bar');
       if(!bar) return;
       var aktif = ndAktifKat;
-      var btnler = '<button type="button" class="nd-kat-btn" data-kat="tumu" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:'+(aktif==='tumu'?'var(--surface-2)':'var(--inv-bg)')+';color:'+(aktif==='tumu'?'#fff':'var(--inv-text)')+';font-size:11px;font-weight:600;cursor:pointer;font-family:IBM Plex Sans,sans-serif;">Tümü</button>';
+      var btnler = '<button type="button" class="nd-kat-btn" data-kat="tumu" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid '+(aktif==='tumu'?'var(--accent)':'var(--border)')+';background:'+(aktif==='tumu'?'var(--accent-soft)':'var(--surface)')+';color:var(--text);font-size:11px;font-weight:600;cursor:pointer;font-family:IBM Plex Sans,sans-serif;">Tümü</button>';
       ndKategoriler.forEach(function(k){
-        btnler += '<button type="button" class="nd-kat-btn" data-kat="'+k.id+'" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid '+k.renk+';background:'+(aktif===k.id?k.renk:'var(--inv-bg)')+';color:'+(aktif===k.id?'#fff':k.renk)+';font-size:11px;font-weight:600;cursor:pointer;font-family:IBM Plex Sans,sans-serif;">'+k.ad+'</button>';
+        btnler += '<button type="button" class="nd-kat-btn" data-kat="'+k.id+'" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;border:1.5px solid '+k.renk+';background:'+(aktif===k.id?'var(--surface-2)':'var(--surface)')+';color:var(--text);font-size:11px;font-weight:600;cursor:pointer;font-family:IBM Plex Sans,sans-serif;"><span style="width:7px;height:7px;border-radius:50%;background:'+k.renk+';flex-shrink:0;"></span>'+k.ad+'</button>';
       });
       bar.innerHTML = btnler;
       bar.querySelectorAll('.nd-kat-btn').forEach(function(btn){
@@ -26131,7 +26443,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
               '<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-width:0;">' +
                 (n.sabitli?'<span style="font-size:11px;">📌</span>':'') +
                 (n.tamamlandi?'<span style="background:var(--ok);color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:8px;">✓</span>':'') +
-                '<span style="background:'+renk+';color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:8px;white-space:nowrap;">'+ad+'</span>' +
+                '<span style="display:inline-flex;align-items:center;gap:4px;background:var(--surface-2);border:1px solid '+renk+';color:var(--text);font-size:8px;font-weight:700;padding:1px 7px 1px 5px;border-radius:8px;white-space:nowrap;"><span style="width:5px;height:5px;border-radius:50%;background:'+renk+';flex-shrink:0;"></span>'+ad+'</span>' +
                 '<span style="font-size:8px;color:var(--text-muted);font-family:IBM Plex Mono,monospace;white-space:nowrap;">'+tarihTxt+'</span>' +
               '</div>' +
               '<div style="display:flex;gap:3px;flex-shrink:0;" onclick="event.stopPropagation();">' +
@@ -26207,11 +26519,23 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       });
     }
 
+    var ndDetayCtrl = createSheetController(
+      document.getElementById('nd-detay-overlay'),
+      document.getElementById('nd-detay-sheet'),
+      document.getElementById('nd-detay-backdrop'),
+      []
+    );
+    var ndDetayKapatBtn = document.getElementById('nd-detay-kapat-btn');
+    if(ndDetayKapatBtn) ndDetayKapatBtn.onclick = function(){ ndDetayCtrl.hide(); };
+    var ndDetayBackdropEl = document.getElementById('nd-detay-backdrop');
+    if(ndDetayBackdropEl) ndDetayBackdropEl.addEventListener('click', function(){ ndDetayCtrl.hide(); });
+
     function ndDetayAc(n){
       var renk = katRenkler[n.kategori]||'#9A9A9A';
       var ad   = katAdlar[n.kategori]||'Genel';
-      document.getElementById('nd-detay-kat-badge').textContent = ad;
-      document.getElementById('nd-detay-kat-badge').style.background = renk;
+      document.getElementById('nd-detay-kat-badge').innerHTML = '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+renk+';margin-right:5px;vertical-align:middle;"></span>'+ad;
+      document.getElementById('nd-detay-kat-badge').style.background = 'var(--surface-2)';
+      document.getElementById('nd-detay-kat-badge').style.border = '1.5px solid '+renk;
       document.getElementById('nd-detay-durum').innerHTML = (n.sabitli?'<span style="font-size:12px;">📌</span> ':'')+(n.tamamlandi?'<span style="background:var(--ok);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;">&#10003; Tamamlandi</span>':'');
       document.getElementById('nd-detay-baslik').textContent = n.baslik||'Başlıksız';
       document.getElementById('nd-detay-tarih').textContent = new Date(n.zaman).toLocaleString('tr-TR');
@@ -26243,10 +26567,10 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         ov.hidden=false; ov.classList.add('is-open');
       };
 
-      document.getElementById('nd-detay-overlay').style.display = '';
+      ndDetayCtrl.show();
     }
     function ndDetayKapat(){
-      document.getElementById('nd-detay-overlay').style.display = 'none';
+      ndDetayCtrl.hide();
     }
     function ndFormAc(id){
       // Kategori radio butonlarını dinamik güncelle
@@ -26447,9 +26771,10 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       btn.addEventListener('click', function(){
         ndAktifKat = btn.dataset.kat;
         document.querySelectorAll('.nd-kat-btn').forEach(function(b){
-          var renk = b.dataset.kat==='tumu' ? '#23262A' : (katRenkler[b.dataset.kat]||'#9A9A9A');
-          b.style.background = b===btn ? renk : 'var(--inv-bg)';
-          b.style.color = b===btn ? 'var(--text)' : renk;
+          var renk = b.dataset.kat==='tumu' ? null : (katRenkler[b.dataset.kat]||'#9A9A9A');
+          b.style.borderColor = renk || (b===btn ? 'var(--accent)' : 'var(--border)');
+          b.style.background = b===btn ? (renk ? 'var(--surface-2)' : 'var(--accent-soft)') : 'var(--surface)';
+          b.style.color = 'var(--text)';
         });
         ndRender();
       });
@@ -26950,7 +27275,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         function satirYuksekligi(lines){ return titleLineH + lines.length*detailLineH + rowPad; }
 
         var totalH = headerH+titleH+semaH+kayit.items.reduce(function(s,it,idx){ return s+satirYuksekligi(itemLines[idx]); },0)+totalRowH+40+footerH;
-        var canvas = document.createElement('canvas');
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
         canvas.width=W; canvas.height=totalH;
         var ctx = canvas.getContext('2d');
         ctx.fillStyle=PAGE_BG; ctx.fillRect(0,0,W,totalH);
@@ -28007,7 +28332,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         function satirYuksekligi(lines){ return titleLineH + lines.length*detailLineH + rowPad; }
 
         var totalH = headerH+titleH+semaH+kayit.items.reduce(function(s,it,idx){ return s+satirYuksekligi(itemLines[idx]); },0)+totalRowH+40+footerH;
-        var canvas = document.createElement('canvas');
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
         canvas.width=W; canvas.height=totalH;
         var ctx = canvas.getContext('2d');
         ctx.fillStyle=PAGE_BG; ctx.fillRect(0,0,W,totalH);
@@ -28191,7 +28516,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       format = format || 'png';
       var W=1080, pad=56, LH=38; // line height
       var PAGE_BG='#F4F7FA', ACCENT='#2FA866', BG_COLOR='#23262A', WHITE='#FFFFFF';
-      var katRenk=katRenkler[n.kategori]||'#9A9A9A', katAd=katAdlar[n.kategori]||'Genel';
+      var _ndKl=[{id:'is-emri',ad:'İş Emri',renk:'#E05A2B'},{id:'ariza',ad:'Arıza',renk:'#CC2200'},{id:'olcum',ad:'Ölçüm',renk:'#2FA866'},{id:'genel',ad:'Genel',renk:'#9A9A9A'},{id:'haritadan',ad:'Haritadan',renk:'#2FA866'}]; try{ var _ndKs=JSON.parse(localStorage.getItem('sehimci_nd_kategoriler_v1')||'null'); if(_ndKs&&_ndKs.length) _ndKl=_ndKl.concat(_ndKs); }catch(e){} var _ndK=null; _ndKl.forEach(function(k){ if(k.id===n.kategori) _ndK=k; }); var katRenk=(_ndK&&_ndK.renk)||'#9A9A9A', katAd=(_ndK&&_ndK.ad)||'Genel';
       var contentW = W - pad*2;
 
       var logoSvgEl=document.querySelector('#home-bar svg'), logoSrc=null;
@@ -28248,7 +28573,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         var footerH   = 130;
         var totalH    = headerH+baslikH+araH+notBasH+icerikH+konumH+hatH+gorselH+footerH+araH;
 
-        var canvas=document.createElement('canvas'); canvas.width=W; canvas.height=totalH;
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas')); canvas.width=W; canvas.height=totalH;
         var ctx=canvas.getContext('2d');
 
         // — Arka plan —
@@ -36622,7 +36947,7 @@ function ts3Senaryo7(p){
       var ayakH = ayakList.length ? (26 + ayakList.length * ayakRowH) : 0;
       var H = 168 + (ks.dolgu != null ? 46 : 0) + (krokiImg ? krokiH + 24 : 0) + 60 + listH + (listH ? 14 : 0) + ayakH + (ayakH ? 14 : 0) + 50;
 
-      var canvas = document.createElement('canvas');
+      var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
       canvas.width = W * SCALE; canvas.height = H * SCALE;
       var ctx = canvas.getContext('2d');
       ctx.scale(SCALE, SCALE);
@@ -37876,8 +38201,8 @@ function toKartOlustur(kayit){
         var half = Math.ceil(satirSayisi/2);
         var grafH = 280;
         var rowH = 52;
-        var H = 110 + 130 + 90 + (half*rowH + 52) + grafH + 40;
-        var canvas = document.createElement('canvas');
+        var H = 110 + 130 + 90 + (half*rowH + 52) + grafH + 40 + 16 + 36 + 110;
+        var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
         canvas.width = W; canvas.height = H;
         var ctx = canvas.getContext('2d');
 
@@ -38117,6 +38442,15 @@ function toKartOlustur(kayit){
         }
 
         y += grafH;
+
+        // Alt bilgi
+        ctx.strokeStyle = BORDER; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(pad, y + 20); ctx.lineTo(W - pad, y + 20); ctx.stroke();
+        ctx.fillStyle = SUBTEXT; ctx.textAlign = 'center'; ctx.font = '22px sans-serif';
+        ctx.fillText('sehimci uygulaması tarafından ' + ts + ' tarihinde oluşturulmuştur.', W/2, y + 60);
+        ctx.font = '18px sans-serif';
+        ctx.fillText('Bu bilgilendirme notundaki bilgiler ile ilgili yasal sorumluluk kullanıcıya aittir.', W/2, y + 92);
+        ctx.textAlign = 'left';
 
         // İndir
         var dataUrl = canvas.toDataURL('image/png', 0.96);
@@ -40424,7 +40758,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       var katmanH = katmanSatir>0 ? Math.max(katmanSatir*40 + 70, kabaMinH) : 0;
 
       var H = 110 + baslikH + (noktaSatir*44 + 60) + katmanH + (fiz ? fizH : 0) + 20;
-      var canvas = document.createElement('canvas');
+      var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
       canvas.width = W; canvas.height = H;
       var ctx = canvas.getContext('2d');
       ctx.fillStyle = BG; ctx.fillRect(0,0,W,H);
@@ -42354,7 +42688,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       var grafikH = grafikImg ? (W-pad*2) * (grafikImg.height/grafikImg.width) : 260;
       var H = 210 + grafikH + (haritaImg ? 440 : 310); // ba\u015fl\u0131k + grafik + alt notlar/(gerçek harita ya da şematik) + pay
 
-      var canvas = document.createElement('canvas');
+      var canvas = (window.sxKartCanvas ? window.sxKartCanvas() : document.createElement('canvas'));
       canvas.width = W*SCALE; canvas.height = H*SCALE;
       var ctx = canvas.getContext('2d');
       ctx.scale(SCALE, SCALE);
@@ -45252,6 +45586,253 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       list.forEach(function(k){ clearTimeout(k._sxT); k._sxT = setTimeout(function(){ k.classList.remove('sx-play'); }, 1900); });
     }); });
   }).observe(document.documentElement, {childList:true, subtree:true});
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   SEHİMCİ İNDİRME KARTI TASARIM KATMANI (PNG / JPG / PDF)
+   Tüm rapor/paylaşım kartları sxKartCanvas() ile oluşturulur. Bu canvas'ın
+   2B bağlamı, kart fonksiyonlarının eski (karışık koyu/açık) renklerini
+   çizim anında yeni tasarım diline çevirir:
+     • Antet: antrasit zemin + ince çizgi dokusu + yeşil vurgu şeridi, beyaz logo
+     • Gövde: açık kağıt zemin, beyaz bölümler, ince gri ayraçlar
+     • Yazılar: zemine göre otomatik kontrast (açık zeminde mürekkep siyahı,
+       koyu zeminde beyaz), ikincil yazılar tek tip gri
+     • Yazı tipi: Roboto; alt kenarda marka şeridi
+   Kart fonksiyonlarının hesap/düzen mantığına dokunulmaz.
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+  var P = {
+    antet:'#131517', antet2:'#1D2024', vurgu:'#2FA866', vurgu2:'#1E7F4B',
+    sayfa:'#EEF0F3', panel:'#F6F7F9', beyaz:'#FFFFFF',
+    murekkep:'#15171A', ikincil:'#6A7079', ayrac:'#DCE0E5',
+    beyazYazi:'#FFFFFF', beyazIkincil:'#A9AFB7'
+  };
+  var FONT_AILESI = "Roboto, 'Segoe UI', Arial, sans-serif";
+
+  function parse(c){
+    if(typeof c !== 'string') return null;
+    var s = c.trim().toLowerCase();
+    if(s === 'white') return {r:255,g:255,b:255,a:1};
+    if(s === 'black') return {r:0,g:0,b:0,a:1};
+    if(s === 'transparent') return {r:0,g:0,b:0,a:0};
+    var m = s.match(/^#([0-9a-f]{3,8})$/);
+    if(m){
+      var h = m[1];
+      if(h.length === 3 || h.length === 4) h = h.split('').map(function(x){ return x+x; }).join('');
+      return { r:parseInt(h.substr(0,2),16), g:parseInt(h.substr(2,2),16), b:parseInt(h.substr(4,2),16),
+               a: h.length === 8 ? parseInt(h.substr(6,2),16)/255 : 1 };
+    }
+    m = s.match(/^rgba?\(([^)]+)\)$/);
+    if(m){
+      var p = m[1].split(',').map(function(x){ return parseFloat(x); });
+      return { r:p[0], g:p[1], b:p[2], a: p.length > 3 ? p[3] : 1 };
+    }
+    return null;
+  }
+  function lum(c){ return (0.2126*c.r + 0.7152*c.g + 0.0722*c.b)/255; }
+  function sat(c){ var mx=Math.max(c.r,c.g,c.b), mn=Math.min(c.r,c.g,c.b); return mx === 0 ? 0 : (mx-mn)/mx; }
+  function notr(c){ var mx=Math.max(c.r,c.g,c.b), mn=Math.min(c.r,c.g,c.b); return (mx-mn)/255 < 0.13 || (lum(c) > 0.88 && sat(c) < 0.3); }
+
+  // Dolgu (zemin) eşlemesi
+  function zeminEsle(orj){
+    var c = parse(orj); if(!c || c.a === 0) return { renk: orj, koyu: null };
+    if(!notr(c)){
+      return { renk: orj, koyu: lum(c) < 0.5 && c.a > 0.5 };
+    }
+    var L = lum(c);
+    if(c.a < 0.5) return { renk: 'rgba(21,23,26,' + Math.min(0.06, c.a).toFixed(3) + ')', koyu: null };
+    if(L >= 0.97) return { renk: P.beyaz, koyu: false };
+    if(L >= 0.8)  return { renk: P.panel, koyu: false };
+    if(L < 0.12)  return { renk: P.sayfa, koyu: false };
+    return { renk: P.panel, koyu: false };
+  }
+  // Çizgi eşlemesi
+  function cizgiEsle(orj){
+    var c = parse(orj); if(!c) return orj;
+    if(!notr(c)) return orj;
+    return lum(c) < 0.75 ? P.ayrac : orj;
+  }
+  // Yazı eşlemesi (altındaki zemine göre kontrast)
+  function yaziEsle(orj, koyuZemin){
+    var c = parse(orj); if(!c) return orj;
+    if(!notr(c)){
+      var L0 = lum(c);
+      if(koyuZemin && L0 < 0.45) return P.beyazIkincil;
+      if(!koyuZemin && L0 > 0.62){
+        var k = 0.62 / L0;
+        return 'rgb(' + Math.round(c.r*k) + ',' + Math.round(c.g*k) + ',' + Math.round(c.b*k) + ')';
+      }
+      return orj;
+    }
+    var L = lum(c), ikincil = (L > 0.4 && L < 0.8) || c.a < 0.8;
+    if(koyuZemin) return ikincil ? P.beyazIkincil : P.beyazYazi;
+    return ikincil ? P.ikincil : P.murekkep;
+  }
+
+  function antetCiz(ctx, w, h){
+    ctx.save();
+    var g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, P.antet); g.addColorStop(1, P.antet2);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    // ince mühendislik ızgarası
+    ctx.strokeStyle = 'rgba(255,255,255,0.045)'; ctx.lineWidth = 1;
+    for(var x = 0; x < w; x += 24){ ctx.beginPath(); ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, h); ctx.stroke(); }
+    for(var y = 0; y < h; y += 24){ ctx.beginPath(); ctx.moveTo(0, y + 0.5); ctx.lineTo(w, y + 0.5); ctx.stroke(); }
+    // sağ üstte hafif yeşil ışıma
+    var rg = ctx.createRadialGradient(w * 0.92, h * 0.1, 0, w * 0.92, h * 0.1, h * 1.6);
+    rg.addColorStop(0, 'rgba(47,168,102,0.22)'); rg.addColorStop(1, 'rgba(47,168,102,0)');
+    ctx.fillStyle = rg; ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
+  function vurguSeridi(ctx, x, y, w, h){
+    ctx.save();
+    var g = ctx.createLinearGradient(x, 0, x + w, 0);
+    g.addColorStop(0, P.vurgu); g.addColorStop(1, P.vurgu2);
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, Math.max(4, h));
+    ctx.restore();
+  }
+
+  function sar(real, canvas){
+    var st = { fill: '#000000', stroke: '#000000', antet: null, antetYazisiSag: false, rects: [] };
+    function zeminAt(x, y){
+      for(var i = st.rects.length - 1; i >= 0; i--){
+        var r = st.rects[i];
+        if(x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return r.koyu;
+      }
+      return false;
+    }
+    function kayit(x, y, w, h, koyu){
+      if(koyu === null || koyu === undefined) return;
+      if(w * h < 400) return;
+      st.rects.push({x:x, y:y, w:w, h:h, koyu:koyu});
+      if(st.rects.length > 400) st.rects.shift();
+    }
+    canvas.__sxDurum = st;
+    var yolKutu = null;
+    var ozel = {
+      drawImage: function(img){
+        var a = Array.prototype.slice.call(arguments);
+        try{
+          var src = img && img.src ? String(img.src) : '';
+          var beyazLogo = src.indexOf('data:image/svg+xml') === 0 && /fill%3D%22%23FFFFFF%22|fill=\"#FFFFFF\"/i.test(src);
+          if(beyazLogo){
+            var dx = a.length >= 9 ? a[5] : a[1], dy = a.length >= 9 ? a[6] : a[2];
+            var dw = a.length >= 5 ? (a.length >= 9 ? a[7] : a[3]) : img.width, dh = a.length >= 5 ? (a.length >= 9 ? a[8] : a[4]) : img.height;
+            if(!zeminAt(dx + dw/2, dy + dh/2)){
+              var t = document.createElement('canvas'); t.width = Math.max(1, Math.round(dw)); t.height = Math.max(1, Math.round(dh));
+              var tc = t.getContext('2d'); tc.drawImage(img, 0, 0, t.width, t.height);
+              tc.globalCompositeOperation = 'source-in'; tc.fillStyle = P.murekkep; tc.fillRect(0, 0, t.width, t.height);
+              return real.drawImage(t, dx, dy, dw, dh);
+            }
+          }
+        }catch(e){}
+        return real.drawImage.apply(real, a);
+      },
+      fillRect: function(x, y, w, h){
+        var W = canvas.width;
+        // Antet: sayfanın en üstünde, tam genişlikte ilk büyük kutu
+        if(!st.antet && x <= 0 && y <= 0 && w >= W - 1 && h > 60 && h < canvas.height * 0.6){
+          var c0 = parse(st.fill);
+          if(c0 && notr(c0)){
+            st.antet = { h: h };
+            antetCiz(real, W, h);
+            kayit(0, 0, W, h, true);
+            return;
+          }
+        }
+        // Antetin altındaki ince ayraç -> yeşil vurgu şeridi
+        if(st.antet && h <= 3 && x <= 0 && w >= W - 1 && Math.abs(y + h - st.antet.h) <= 3){
+          vurguSeridi(real, 0, st.antet.h - 4, W, 4);
+          return;
+        }
+        if(typeof st.fill !== 'string'){ real.fillRect(x, y, w, h); return; }
+        var m = zeminEsle(st.fill);
+        // sayfa tamamını kaplayan zemin (antetten önce): açık kağıt
+        real.fillStyle = m.renk; real.fillRect(x, y, w, h); real.fillStyle = st.fill;
+        kayit(x, y, w, h, m.koyu);
+      },
+      rect: function(x, y, w, h){ yolKutu = {x:x, y:y, w:w, h:h}; return real.rect(x, y, w, h); },
+      roundRect: function(x, y, w, h, r){ yolKutu = {x:x, y:y, w:w, h:h}; return real.roundRect(x, y, w, h, r); },
+      beginPath: function(){ yolKutu = null; return real.beginPath(); },
+      fill: function(){
+        if(typeof st.fill !== 'string') return real.fill.apply(real, arguments);
+        var m = zeminEsle(st.fill);
+        real.fillStyle = m.renk; var r = real.fill.apply(real, arguments); real.fillStyle = st.fill;
+        if(yolKutu) kayit(yolKutu.x, yolKutu.y, yolKutu.w, yolKutu.h, m.koyu);
+        return r;
+      },
+      stroke: function(){
+        if(typeof st.stroke !== 'string') return real.stroke.apply(real, arguments);
+        real.strokeStyle = cizgiEsle(st.stroke); var r = real.stroke.apply(real, arguments); real.strokeStyle = st.stroke;
+        return r;
+      },
+      strokeRect: function(x, y, w, h){
+        if(typeof st.stroke !== 'string') return real.strokeRect(x, y, w, h);
+        real.strokeStyle = cizgiEsle(st.stroke); real.strokeRect(x, y, w, h); real.strokeStyle = st.stroke;
+      },
+      fillText: function(t, x, y, mw){
+        if(typeof st.fill !== 'string') return mw === undefined ? real.fillText(t, x, y) : real.fillText(t, x, y, mw);
+        var koyu = zeminAt(x, y - 4);
+        if(st.antet && y < st.antet.h && x > canvas.width * 0.5) st.antetYazisiSag = true;
+        real.fillStyle = yaziEsle(st.fill, koyu);
+        if(mw === undefined) real.fillText(t, x, y); else real.fillText(t, x, y, mw);
+        real.fillStyle = st.fill;
+      }
+    };
+    return new Proxy(real, {
+      get: function(t, k){
+        if(k === '__sxGercek') return real;
+        if(ozel[k]) return ozel[k];
+        if(k === 'fillStyle') return st.fill;
+        if(k === 'strokeStyle') return st.stroke;
+        var v = real[k];
+        return typeof v === 'function' ? v.bind(real) : v;
+      },
+      set: function(t, k, v){
+        if(k === 'fillStyle'){ st.fill = v; real.fillStyle = v; return true; }
+        if(k === 'strokeStyle'){ st.stroke = v; real.strokeStyle = v; return true; }
+        if(k === 'font' && typeof v === 'string'){ real.font = v.replace(/(^|\s)sans-serif\s*$/, '$1' + FONT_AILESI); return true; }
+        real[k] = v; return true;
+      }
+    });
+  }
+
+  window.sxKartCanvas = function(){
+    var canvas = document.createElement('canvas');
+    var gercekGetContext = canvas.getContext.bind(canvas);
+    var durum = null, sarili = null;
+    canvas.getContext = function(tip, opt){
+      var ctx = gercekGetContext(tip, opt);
+      if(tip !== '2d' || !ctx || typeof Proxy === 'undefined') return ctx;
+      if(!sarili){ sarili = sar(ctx, canvas); }
+      return sarili;
+    };
+    // Dışa aktarımdan hemen önce: alt marka şeridi + antet sağ etiketi
+    var gercekToDataURL = canvas.toDataURL.bind(canvas);
+    canvas.toDataURL = function(){
+      try{
+        var ctx = gercekGetContext('2d');
+        if(ctx && !canvas.__sxBitti){
+          canvas.__sxBitti = true;
+          vurguSeridi(ctx, 0, canvas.height - 6, canvas.width, 6);
+          var d = canvas.__sxDurum;
+          if(d && d.antet && !d.antetYazisiSag && canvas.width >= 700){
+            var W = canvas.width, hh = d.antet.h, fs = Math.round(Math.max(15, Math.min(22, hh * 0.15)));
+            ctx.save(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.font = '700 ' + fs + "px Roboto, 'Segoe UI', Arial, sans-serif";
+            ctx.fillText('YÜKSEK GERİLİM TESİSLERİ', W - 66, hh/2 - fs*0.7);
+            ctx.fillStyle = '#A9AFB7'; ctx.font = '500 ' + fs + "px Roboto, 'Segoe UI', Arial, sans-serif";
+            ctx.fillText('Hesaplama Araçları', W - 66, hh/2 + fs*0.7);
+            ctx.fillStyle = '#2FA866'; ctx.fillRect(W - 52, hh/2 - fs*1.4, 4, fs*2.8);
+            ctx.restore();
+          }
+        }
+      }catch(e){}
+      return gercekToDataURL.apply(null, arguments);
+    };
+    return canvas;
+  };
 })();
 
 </script>
