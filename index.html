@@ -3709,7 +3709,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
 
 /* ── ÖLÇÜM VURGUSU (sonuç hesaplandığında) ──
    Total-station nişangâhı gibi dört köşe kapanır, osiloskop taraması geçer. */
-#sx-fx-layer{ position:absolute; left:0; top:0; width:0; height:0; pointer-events:none; z-index:9000; }
+#sx-fx-layer{ position:absolute; left:0; top:0; width:0; height:0; pointer-events:none; z-index:8000; }
 .sx-reticle{ position:absolute; pointer-events:none; border-radius:14px; }
 .sx-reticle i{ position:absolute; width:16px; height:16px; border-color:var(--accent); border-style:solid; border-width:0;
   filter:drop-shadow(0 0 4px var(--accent-glow)); }
@@ -5446,7 +5446,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   </div>
 
   <!-- ═══ 3B STUB SİMÜLASYONU (Direk Ayak Ayar Ölçüleri) ═══ -->
-  <div id="ayar-3d-overlay" style="display:none;position:fixed;inset:0;z-index:4000;background:var(--surface);flex-direction:column;">
+  <div id="ayar-3d-overlay" style="display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:4000;background:var(--surface);flex-direction:column;">
     <div style="display:flex;align-items:center;gap:10px;padding:calc(10px + max(env(safe-area-inset-top,0px), 28px)) 14px 10px;background:var(--surface-2);flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.3);">
       <button type="button" id="ayar-3d-kapat" aria-label="Kapat" style="width:36px;height:36px;border-radius:11px;background:var(--danger-bg);border:1px solid var(--danger);color:var(--danger-ink);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       <div style="flex:1;min-width:0;">
@@ -5476,7 +5476,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     </div>
 
     <!-- Alt panel: hesaplanan ölçüler + görsel kot ayarı -->
-    <div id="ayar-3d-alt-panel" style="flex-shrink:0;max-height:30vh;overflow-y:auto;background:rgba(0,0,0,0.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:10px 12px 16px;border-top:1px solid var(--border);">
+    <div id="ayar-3d-alt-panel" style="flex-shrink:0;max-height:30vh;overflow-y:auto;background:var(--surface-2);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:10px 12px 16px;border-top:1px solid var(--border);">
       <div id="ayar-3d-alt-tutamac" style="width:100%;display:flex;justify-content:center;padding:2px 0 10px;cursor:grab;touch-action:none;">
         <div style="width:44px;height:5px;border-radius:3px;background:var(--tint-3);"></div>
       </div>
@@ -5819,7 +5819,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
       <div class="it-grid" id="kit-test-list"></div>
     </div>
 
-    <div id="kit-standart-overlay" hidden style="position:fixed;inset:0;background:rgba(10,42,74,0.45);z-index:500;align-items:flex-end;justify-content:center;">
+    <div id="kit-standart-overlay" hidden style="position:fixed;inset:0;background:var(--scrim);z-index:500;align-items:flex-end;justify-content:center;">
       <div id="kit-standart-panel" style="display:none;flex-direction:column;width:100%;max-width:480px;max-height:80vh;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(10,42,74,0.25);">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border, #E1E8EE);flex-shrink:0;">
           <p style="margin:0;font-weight:700;font-size:14px;color:var(--text);">İlgili Standart Bilgisi</p>
@@ -8018,7 +8018,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
           <button type="button" id="ts-mod-elle-btn" style="flex:1;padding:10px 0;border:none;background:var(--surface);color:var(--text-muted);font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;">Elle Doldur</button>
         </div>
 
-        <div id="ts-oto-alanlar">
+        <div id="ts-oto-alanlar" class="form" style="margin-top:0;">
           <div class="form-row3">
             <div class="field">
               <label class="field-label">Direk Tipi</label>
@@ -8783,7 +8783,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
             <p id="to-ozd-fiziksel-ekivalans-not" style="display:none;margin:-4px 0 10px;font-size:9px;color:var(--text-muted);line-height:1.5;">Parantez içindeki değerler <b>ekivalans aralığı</b>dır: bu aralıktaki diğer katman kombinasyonları da ölçüme neredeyse aynı iyilikte uyar (DES/VES'te bilinen bir belirsizlik — WinSev gibi yazılımlar da benzer bir aralık gösterir). Tek bir "doğru" sayı yerine bu aralığı dikkate alın.</p>
             <p id="to-ozd-fiziksel-ts-not" style="display:none;margin:0 0 6px;padding:8px 10px;background:var(--surface);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:9.5px;color:var(--text);line-height:1.6;">🔗 <b>T/S-ekivalans:</b> "🔗" işaretli katmanlarda (üstünde ve altında başka katman olan ara katmanlar) ρ ve h ayrı ayrı değil, BİRLİKTE çözünür — dirençli bir katmanda T=ρ×h, iletken bir katmanda S=h/ρ sabit kaldığı sürece ρ ile h birbirini telafi edebilir (klasik VES/DES teorisi, IPI2Win gibi profesyonel yazılımların da kullandığı yöntem). Bu yüzden o katmanlarda tek başına ρ ya da h yerine T/S değeri esas alınmalıdır.</p>
             <button type="button" id="to-ozd-ts-bilgi-ac-btn" style="display:none;margin:0 0 10px;padding:4px 9px;border-radius:6px;border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);font-family:'IBM Plex Sans',sans-serif;font-size:9.5px;font-weight:700;cursor:pointer;">ⓘ T/S Nedir? (birimler + örnek)</button>
-            <div id="to-ozd-ts-bilgi-panel" hidden style="margin:-4px 0 10px;padding:12px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;font-size:10.5px;color:#1A2733;line-height:1.75;">
+            <div id="to-ozd-ts-bilgi-panel" hidden style="margin:-4px 0 10px;padding:12px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;font-size:10.5px;color:var(--text);line-height:1.75;">
               <p style="margin:0 0 8px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;color:var(--text);">T ve S nedir? (Dar Zarrouk parametreleri)</p>
               <p style="margin:0 0 8px;"><b style="color:var(--accent);">T = ρ×h</b> (Transvers Direnç) — <b>birim: Ω·m²</b>. Akımın katmana DİK (yukarı-aşağı) geçerken karşılaştığı toplam direnç. Katman komşularına göre daha DİRENÇLİ ise, akım onu "delip geçmeyi" tercih eder — önemli olan direnç×kalınlık çarpımıdır.</p>
               <p style="margin:0 0 8px;"><b style="color:var(--accent);">S = h/ρ</b> (Boyuna İletkenlik) — <b>birim: 1/Ω (Siemens, S)</b>. Akımın katman BOYUNCA (yatay) akarken sağladığı toplam iletkenlik. Katman komşularına göre daha İLETKEN ise, akım onun içinde yanlamasına yayılmayı tercih eder.</p>
@@ -8843,7 +8843,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
           <div style="padding:12px;">
             <p id="to-ozd-ts-katman-ozet" style="margin:0 0 12px;font-size:10.5px;color:var(--text-muted);line-height:1.6;"></p>
 
-            <p style="margin:0 0 6px;font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;color:var(--text);">Dolgu Malzemesi <span style="font-weight:400;color:var(--text-muted);">— nerede, ne özdirenç?</span></p>
+            <p style="margin:0 0 6px;font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;color:var(--text);">Dolgu Malzemesi <span style="font-weight:400;color:var(--text-muted);">— Nerede kullanıldı Özdirenci nedir?</span></p>
             <div class="ts3-dolgu-alan-row" style="display:flex;gap:6px;margin-bottom:10px;">
               <button type="button" class="ts3-dolgu-alan-btn" data-alan="temel" style="flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;cursor:pointer;">Temel</button>
               <button type="button" class="ts3-dolgu-alan-btn" data-alan="kanal" style="flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;cursor:pointer;">Kanallar</button>
@@ -8936,7 +8936,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
              "Ölçümü Kaydet" ile aynı anda görünür olur (toOzdOrtakAlanlariGoster). -->
         <div id="to-ozd-hat-secimi-alan" class="field field-mini" hidden style="margin-bottom:12px;">
           <label class="field-label">Kayıtlı Hat Seçiniz (Opsiyonel)</label>
-          <button type="button" class="field-input picker-btn" id="to-ozd-hat-dropdown-btn">Kayıtlı Hat Seçiniz</button>
+          <div id="to-ozd-hat-dropdown-wrap" style="position:relative;"><button type="button" id="to-ozd-hat-dropdown-btn" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:11px 12px;font-family:inherit;font-size:13px;color:var(--text);cursor:pointer;text-align:left;box-sizing:border-box;"><span id="to-ozd-hat-dropdown-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Kayıtlı Hat Seçiniz (Opsiyonel)</span><span id="to-ozd-hat-dropdown-ok" style="font-size:11px;color:var(--text-muted);flex-shrink:0;">▼</span></button><div id="to-ozd-hat-dropdown-liste" hidden style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,0.18);max-height:260px;overflow-y:auto;"></div></div>
         </div>
 
         <div style="display:flex; gap:8px; margin-bottom:16px;">
@@ -17845,7 +17845,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     var sutun = document.getElementById('ayar-adim2-sutun');
     if(sutun) sutun.style.background = 'var(--surface-3)';
     var baslik = document.getElementById('ayar-adim2-baslik');
-    if(baslik) baslik.style.color = 'rgba(255,255,255,0.4)';
+    if(baslik) baslik.style.color = 'var(--text-faint)';
     var numBg = document.getElementById('ayar-adim2-numara-bg');
     if(numBg) numBg.style.background = 'var(--surface-3)';
     var numTxt = document.getElementById('ayar-adim2-numara-txt');
@@ -17978,7 +17978,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     var ayarAdim2Sutun = document.getElementById('ayar-adim2-sutun');
     if(ayarAdim2Sutun) ayarAdim2Sutun.style.background = 'var(--surface-2)';
     var adim2BaslikEl = document.getElementById('ayar-adim2-baslik');
-    if(adim2BaslikEl) adim2BaslikEl.style.color = 'rgba(255,255,255,0.9)';
+    if(adim2BaslikEl) adim2BaslikEl.style.color = 'var(--text)';
     var adim2NumBg = document.getElementById('ayar-adim2-numara-bg');
     if(adim2NumBg) adim2NumBg.style.background = 'var(--accent)';
     var adim2NumTxt = document.getElementById('ayar-adim2-numara-txt');
@@ -18032,7 +18032,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     var ayarAdim2Sutun = document.getElementById('ayar-adim2-sutun');
     if(ayarAdim2Sutun) ayarAdim2Sutun.style.background = 'var(--surface-2)';
     var adim2BaslikEl = document.getElementById('ayar-adim2-baslik');
-    if(adim2BaslikEl) adim2BaslikEl.style.color = 'rgba(255,255,255,0.9)';
+    if(adim2BaslikEl) adim2BaslikEl.style.color = 'var(--text)';
     var adim2NumBg = document.getElementById('ayar-adim2-numara-bg');
     if(adim2NumBg) adim2NumBg.style.background = 'var(--accent)';
     var adim2NumTxt = document.getElementById('ayar-adim2-numara-txt');
@@ -19770,6 +19770,8 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     var hataEl = document.getElementById('ayar-3d-hata');
     overlay.style.display = 'flex';
     hataEl.style.display = 'none';
+    var barEl0 = document.getElementById('home-bar');
+    overlay.style.top = (barEl0 ? barEl0.getBoundingClientRect().height : 0) + 'px';
 
     if(window.__ayar3dReady){
       ayar3dStartRender();
@@ -19851,7 +19853,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var active = btn.getAttribute('data-zemin') === AYAR3D.zemin;
       var disabled = btn.getAttribute('data-disabled') === '1';
       btn.style.background = (active && !disabled) ? 'var(--accent)' : 'transparent';
-      btn.style.borderColor = (active && !disabled) ? 'var(--accent)' : 'rgba(255,255,255,0.25)';
+      btn.style.borderColor = (active && !disabled) ? 'var(--accent)' : 'var(--border)';
     });
   }
   function ayar3dUpdateZeminAvailability(){
@@ -24534,7 +24536,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
             var pointKey=lat+'_'+lng;
             var z=mapInstance.getZoom(), lv=z>=14;
             var lid='hl-'+fileEntry.id+'-'+pointKey;
-            var icon=L.divIcon({className:'',html:'<div style="position:relative;"><div style="width:10px;height:10px;border-radius:50%;background:'+c+';border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>'+(displayName?'<div class="harita-label" data-lid="'+lid+'" style="position:absolute;left:14px;top:-3px;white-space:nowrap;font-size:10.5px;font-weight:600;font-family:\'IBM Plex Sans\',sans-serif;color:#1a1a2e;background:var(--nav-glass);padding:1px 6px;border-radius:3px;pointer-events:auto;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.15);display:'+(lv?'':'none')+';">'+displayName+'</div>':'')+'</div>',iconSize:[10,10],iconAnchor:[5,5]});
+            var icon=L.divIcon({className:'',html:'<div style="position:relative;"><div style="width:10px;height:10px;border-radius:50%;background:'+c+';border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>'+(displayName?'<div class="harita-label" data-lid="'+lid+'" style="position:absolute;left:14px;top:-3px;white-space:nowrap;font-size:10.5px;font-weight:600;font-family:\'IBM Plex Sans\',sans-serif;color:#1a1a2e;background:rgba(255,255,255,0.88);padding:1px 6px;border-radius:3px;pointer-events:auto;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.15);display:'+(lv?'':'none')+';">'+displayName+'</div>':'')+'</div>',iconSize:[10,10],iconAnchor:[5,5]});
             var marker=L.marker(f.latlng,{icon}).addTo(group);
             marker._origIconHtml = icon.options.html;
             marker._origColor = c;
@@ -36831,6 +36833,15 @@ function ts3Senaryo7(p){
   // arka plan tıklama davranışı dahil) tekrar kullanılır — sadece içeriği kendi verisiyle
   // dolduruluyor.
   window.ts3KullaniciSenaryolari = window.ts3KullaniciSenaryolari || [];
+  // 2026 EKLEME (kullanıcı isteği: "modülden çıkıldığında veya direk/katman verileri
+  // değişince... kullanıcının oluşturacağı senaryo isimleri yeniden Kullanıcı Senaryosu 1'den
+  // başlasın") — dizi temizlenince bir sonraki "Kaydet" tekrar idx=0'dan (Kullanıcı Senaryosu 1)
+  // başlar. Kartların kendisi zaten ilgili ızgaraların (ts3-sonuc-grid / to-ozd-ts-sonuc-grid)
+  // her yeni Hesapla'da innerHTML ile sıfırlanmasıyla ekrandan temizleniyor; burada sadece
+  // numaralandırmanın kaynağı olan diziyi sıfırlıyoruz.
+  window.ts3KullaniciSenaryolariSifirla = function(){
+    window.ts3KullaniciSenaryolari = [];
+  };
   function ts3KullaniciSenaryoBilgiAc(idx){
     if(!ts3SenaryoBilgiOverlay) return;
     var ks = window.ts3KullaniciSenaryolari[idx];
@@ -37293,10 +37304,10 @@ function ts3Senaryo7(p){
         card.setAttribute('data-idx', i);
         // 2026-08-21 DÜZELTME: bkz. yukarıdaki "Kullanıcı Senaryosu" kartı notu — cssText yerine
         // setAttribute, hex renklerin (ve dolayısıyla karanlık mod seçicilerinin) korunmasını sağlar.
-        card.setAttribute('style', 'border:1.5px solid ' + (gecersiz ? '#D97706' : 'var(--border)') + ';border-radius:10px;padding:10px 8px;text-align:center;background:' + (gecersiz ? '#FFF7ED' : (i===0 ? '#fff' : '#161616')) + ';cursor:pointer;width:100%;');
+        card.setAttribute('style', 'border:1.5px solid ' + (gecersiz ? 'var(--warn)' : (i===0 ? 'var(--accent)' : 'var(--border)')) + ';border-radius:10px;padding:10px 8px;text-align:center;background:' + (gecersiz ? 'var(--warn-bg)' : (i===0 ? 'var(--accent-soft)' : 'var(--surface)')) + ';cursor:pointer;width:100%;');
         card.innerHTML =
           '<p style="margin:0 0 4px;font-family:\'IBM Plex Sans\',sans-serif;font-size:10px;font-weight:700;color:var(--text);text-decoration:underline;text-decoration-style:dotted;">S' + i + ' — ' + ad + '</p>' +
-          '<p style="margin:0;font-family:\'IBM Plex Mono\',monospace;font-size:' + (gecersiz ? '11.5px' : '14px') + ';font-weight:700;color:' + (gecersiz ? '#B45309' : '#23262A') + ';">' + deger + '</p>';
+          '<p style="margin:0;font-family:\'IBM Plex Mono\',monospace;font-size:' + (gecersiz ? '11.5px' : '14px') + ';font-weight:700;color:' + (gecersiz ? 'var(--warn-ink)' : 'var(--text)') + ';">' + deger + '</p>';
         card.onclick = function(){ ts3SenaryoBilgiAc(i); };
         ts3SonucGrid.appendChild(card);
       });
@@ -37339,6 +37350,19 @@ function ts3Senaryo7(p){
     if(ts3SonucWrap) ts3SonucWrap.hidden = true;
     ts3SenaryoBilgiKapat();
     window.ts3SonSonuclar = null; // bug class #5: eski hesap sonucu detay penceresinde kalmasın
+    // 2026 EKLEME (kullanıcı isteği: "modülden çıkıldığında... simülasyon sıfırlansın... senaryo
+    // isimleri yeniden Kullanıcı Senaryosu 1'den başlasın") — modül HER açıldığında (yani bir
+    // önceki oturumdan çıkılıp tekrar girildiğinde) "Senaryo Tasarla" simülasyonunda önceden
+    // çizilmiş kanallar ve Kullanıcı Senaryosu sayacı artık burada temizleniyor. Not: dolgu
+    // seçimi bilerek dokunulmuyor (bkz. yukarıdaki NOT) — o modüller arası kalıcı bir tercih.
+    if(window.ts3KullaniciSenaryolariSifirla) window.ts3KullaniciSenaryolariSifirla();
+    try{
+      var ts3IframeEl = document.getElementById('ts3-tasarla-iframe');
+      var ts3Cw = ts3IframeEl && ts3IframeEl.contentWindow;
+      if(ts3Cw && ts3Cw.__tsSim && typeof ts3Cw.__tsSim.sifirlaKanallar === 'function'){
+        ts3Cw.__tsSim.sifirlaKanallar();
+      }
+    }catch(e){}
   };
 })();
 
@@ -38181,6 +38205,20 @@ function toHesapla(){
   if(window.markModuleUsed)markModuleUsed('topraklama-olcumu');
   var hb=document.getElementById('to-hesapla-btn');
   if(hb){hb.disabled=true;hb.style.opacity='0.5';hb.style.cursor='not-allowed';}
+  setTimeout(function(){
+    try{
+      var sonucEl = document.getElementById('to-sonuc');
+      if(sonucEl && sonucEl.scrollIntoView) sonucEl.scrollIntoView({ behavior:'smooth', block:'start' });
+      setTimeout(function(){
+        try{
+          var barEl = document.getElementById('home-bar');
+          var ustPay = (barEl ? barEl.getBoundingClientRect().height : 0) + 14;
+          var hedefY = sonucEl.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0) - ustPay;
+          window.scrollTo(0, Math.max(0, hedefY));
+        }catch(_e2){}
+      }, 260);
+    }catch(_e1){}
+  }, 180);
 }
 function toKartOlustur(kayit){
       var W = 1080, pad = 52;
@@ -39541,7 +39579,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       }
       html += '<tr>' +
         '<td style="border:1px solid var(--border);padding:5px;text-align:center;">'+(i+1)+'</td>' +
-        '<td style="border:1px solid var(--border);padding:5px;text-align:center;font-weight:700;color:'+(rBelirsiz&&!ts?'#C97B2E':'#23262A')+';font-family:\'IBM Plex Mono\',monospace;">'+formatTR(r,1)+rAralikTxt+'</td>' +
+        '<td style="border:1px solid var(--border);padding:5px;text-align:center;font-weight:700;color:'+(rBelirsiz&&!ts?'var(--warn-ink)':'var(--text)')+';font-family:\'IBM Plex Mono\',monospace;">'+formatTR(r,1)+rAralikTxt+'</td>' +
         '<td style="border:1px solid var(--border);padding:5px;text-align:center;">'+(bottomDepth!=null?formatTR(bottomDepth,2):'Yarı-sonsuz')+'</td>' +
         '<td style="border:1px solid var(--border);padding:5px;text-align:center;">'+(thickness!=null?formatTR(thickness,2):'—')+hAralikTxt+'</td>' +
       '</tr>';
@@ -40100,7 +40138,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       toOzdFarkTabloCiz(aArr, roArr, res.calc);
       var rmsYuzde = (Math.exp(res.rms) - 1) * 100;
       var kalite = toOzdKaliteEtiketi(rmsYuzde);
-      durumEl.innerHTML = 'Tamamlandı ('+dt+' sn) — RMS: <b style="color:' + (rmsYuzde>25?'var(--danger)':'#23262A') + ';font-size:13px;">%' + formatTR(rmsYuzde,1) + '</b> <span style="font-weight:700;color:' + kalite.color + ';">(' + kalite.text + ')</span>';
+      durumEl.innerHTML = 'Tamamlandı ('+dt+' sn) — RMS: <b style="color:' + (rmsYuzde>25?'var(--danger)':'var(--text)') + ';font-size:13px;">%' + formatTR(rmsYuzde,1) + '</b> <span style="font-weight:700;color:' + kalite.color + ';">(' + kalite.text + ')</span>';
       toOzdSonFizikselSonuc = { rho: res.rho, h: res.h, rmsYuzde: rmsYuzde, aArr: aArr.slice(), calc: res.calc.slice(), rhoAralik: res.rhoAralik, hAralik: res.hAralik, tsEkivalans: res.tsEkivalans };
 
       var canvasEl = document.getElementById('to-ozd-canvas-fiziksel');
@@ -40342,6 +40380,65 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   var toOzdTsKatmanOzetEl = document.getElementById('to-ozd-ts-katman-ozet');
   var toOzdTsDolguBilgiEl = document.getElementById('to-ozd-ts-dolgu-bilgi');
   var toOzdTsNotlarBtn = document.getElementById('to-ozd-ts-notlar-btn');
+  var toOzdHatDropdownBtn = document.getElementById('to-ozd-hat-dropdown-btn');
+  var toOzdHatDropdownLabel = document.getElementById('to-ozd-hat-dropdown-label');
+  var toOzdHatDropdownOk = document.getElementById('to-ozd-hat-dropdown-ok');
+  var toOzdHatDropdownListe = document.getElementById('to-ozd-hat-dropdown-liste');
+  var toOzdHatDropdownWrap = document.getElementById('to-ozd-hat-dropdown-wrap');
+  var toOzdHatDropdownAcik = false;
+  var toOzdSeciliHatAdi = null;
+  function toOzdHatDropdownKapat(){
+    if(toOzdHatDropdownListe) toOzdHatDropdownListe.hidden = true;
+    if(toOzdHatDropdownOk) toOzdHatDropdownOk.textContent = '▼';
+    toOzdHatDropdownAcik = false;
+  }
+  function toOzdHatDropdownAc(){
+    if(!toOzdHatDropdownBtn || !toOzdHatDropdownListe) return;
+    toOzdHatDropdownDoldur(toOzdSeciliHatAdi);
+    toOzdHatDropdownListe.hidden = false;
+    if(toOzdHatDropdownOk) toOzdHatDropdownOk.textContent = '▲';
+    toOzdHatDropdownAcik = true;
+  }
+  function toOzdHatDropdownDoldur(seciliAd){
+    if(!toOzdHatDropdownListe) return;
+    var kayitlar = window.hatGuzergahListesiGetir ? window.hatGuzergahListesiGetir() : [];
+    var html = '<div style="padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text);" data-to-ozd-hat-secenek="__elle_gir__">Elle Gir</div>';
+    html += kayitlar.map(function(r){
+      return '<div style="padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text);" data-to-ozd-hat-secenek="' + escapeHtml(r.ad) + '">' + escapeHtml(r.ad) + '</div>';
+    }).join('');
+    toOzdHatDropdownListe.innerHTML = html;
+    if(seciliAd){ toOzdSeciliHatAdi = seciliAd; if(toOzdHatDropdownLabel) toOzdHatDropdownLabel.textContent = seciliAd; }
+    else { toOzdSeciliHatAdi = null; if(toOzdHatDropdownLabel) toOzdHatDropdownLabel.textContent = 'Kayıtlı Hat Seçiniz (Opsiyonel)'; }
+  }
+  toOzdHatDropdownDoldur();
+  if(toOzdHatDropdownBtn){
+    toOzdHatDropdownBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      toOzdHatDropdownAcik ? toOzdHatDropdownKapat() : toOzdHatDropdownAc();
+    });
+  }
+  document.addEventListener('click', function(e){
+    if(toOzdHatDropdownAcik && toOzdHatDropdownWrap && !toOzdHatDropdownWrap.contains(e.target)) toOzdHatDropdownKapat();
+  });
+  if(toOzdHatDropdownListe){
+    toOzdHatDropdownListe.addEventListener('click', function(e){
+      var item = e.target.closest ? e.target.closest('[data-to-ozd-hat-secenek]') : null;
+      if(!item) return;
+      var deger = item.getAttribute('data-to-ozd-hat-secenek');
+      toOzdHatDropdownKapat();
+      if(deger === '__elle_gir__'){
+        var adGir = window.prompt('Hat / G\u00fczergah ad\u0131');
+        if(adGir && adGir.trim()){
+          if(window.hatGuzergahKaydet) window.hatGuzergahKaydet(adGir.trim(), '', '');
+          toOzdHatDropdownDoldur(adGir.trim());
+        }
+      } else {
+        toOzdSeciliHatAdi = deger;
+        if(toOzdHatDropdownLabel) toOzdHatDropdownLabel.textContent = deger;
+      }
+    });
+  }
+
   var toOzdTsGitBtn = document.getElementById('to-ozd-ts-git-btn');
   var toOzdTsKaynak = null; // 'kaba' | 'detay' — hangi yöntemin katman sonucu kullanılıyor
 
@@ -40645,7 +40742,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
         var kart = document.createElement('button');
         kart.type = 'button';
         kart.setAttribute('data-idx', i);
-        kart.style.cssText = 'border:1.5px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;background:' + (i===0 ? '#fff' : '#161616') + ';cursor:pointer;width:100%;';
+        kart.style.cssText = 'border:1.5px solid ' + (i===0 ? 'var(--accent)' : 'var(--border)') + ';border-radius:10px;padding:10px 8px;text-align:center;background:' + (i===0 ? 'var(--accent-soft)' : 'var(--surface)') + ';cursor:pointer;width:100%;';
         kart.innerHTML =
           '<p style="margin:0 0 4px;font-family:\'IBM Plex Sans\',sans-serif;font-size:10px;font-weight:700;color:var(--text);text-decoration:underline;text-decoration-style:dotted;">S' + i + ' — ' + ad + '</p>' +
           '<p style="margin:0;font-family:\'IBM Plex Mono\',monospace;font-size:14px;font-weight:700;color:var(--text);">' + sonuclar[i].R.toFixed(2) + ' Ω</p>';
@@ -42836,7 +42933,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
 <!-- 2026 GÜNCELLEME: Çok Katmanlı Topraklama Simülasyonu — "Senaryo Tasarla" ile açılan,
      TAM İZOLE bir <iframe srcdoc> içinde çalışan ayrı modül. CSS/JS çakışma riski SIFIR
      (kendi CSS/JS kodu tamamen ayrı bir belge bağlamında). -->
-<div id="ts3-tasarla-overlay" style="display:flex;visibility:hidden;pointer-events:none;position:fixed;inset:0;z-index:9999;background:var(--surface);flex-direction:column;">
+<div id="ts3-tasarla-overlay" style="display:flex;visibility:hidden;pointer-events:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:9999;background:var(--surface);flex-direction:column;">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface-2);color:var(--text);flex-shrink:0;">
     <div style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;">Senaryo Tasarla — Simülasyon</div>
     <button onclick="ts3TasarlaKapat()" style="background:var(--tint-2);border:none;color:var(--text);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;">✕ Kapat</button>
@@ -42853,7 +42950,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     --surface:#161616; --text:#23262A; --text-muted:#9A9A9A; --danger:#D9524A; --ok:#2E8B57;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;height:100%;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--surface);color:var(--text);-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--surface);color:#EDEDED;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
   #app{position:fixed;inset:0;display:flex;flex-direction:column;}
 
   /* ── Üst başlık ───────────────────────────────────────────────── */
@@ -42888,7 +42985,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   #stage{position:absolute;inset:0;display:block;width:100%;height:100%;}
 
   #zoomCtrl{position:absolute;right:10px;bottom:14px;display:flex;flex-direction:column;gap:6px;z-index:15;}
-  #zoomCtrl button{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:#161616;color:var(--navy);font-size:18px;font-weight:700;box-shadow:0 2px 6px rgba(18,46,67,.12);cursor:pointer;}
+  #zoomCtrl button{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--border);background:#161616;color:#EDEDED;font-size:18px;font-weight:700;box-shadow:0 2px 6px rgba(18,46,67,.12);cursor:pointer;}
   #scaleTag{position:absolute;left:10px;bottom:14px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:8px;padding:4px 9px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-muted);z-index:15;}
 
   #distTag{position:absolute;pointer-events:none;background:var(--navy);color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:11px;padding:4px 8px;border-radius:6px;display:none;z-index:16;white-space:nowrap;transform:translate(-50%,-130%);}
@@ -42897,19 +42994,19 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
 
   /* ── Alt panel (seçili kanal özellikleri) ─────────────────────── */
   #panel{position:absolute;left:0;right:0;bottom:0;background:#161616;border-top:1.5px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -4px 16px rgba(18,46,67,.15);z-index:18;max-height:44%;overflow-y:auto;padding:0 16px 18px;transform:translateY(105%);transition:transform .22s ease;}
-  #panel.open{transform:translateY(0);}
+  #panel.open{transform:translateY(calc(-1 * var(--kb-offset, 0px)));}
   /* 2026-09-13 EKLEME (kullanıcı isteği: &quot;Kanalı Sil/Tamam en üstte sabit kalsın, aşağılar
      kaydıkça yerleri değişmesin&quot;) — başlık + eylem butonları artık #panel'in kaydırılabilir
      içeriğinin İÇİNDE değil, sticky bir üst blokta; kullanıcı aşağı kaydırdıkça bu blok
      ekranın en üstünde sabit kalır, geri kalan alanlar onun altından kayar. */
   #panel-sticky-top{position:sticky;top:0;background:#161616;z-index:2;padding-top:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
-  #panel h3{margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:14px;color:var(--navy);display:flex;justify-content:space-between;align-items:center;}
+  #panel h3{margin:0 0 10px;font-family:'Oswald',sans-serif;font-size:14px;color:#EDEDED;display:flex;justify-content:space-between;align-items:center;}
   #panel h3 button{background:none;border:none;font-size:18px;color:var(--text-muted);cursor:pointer;padding:2px 6px;}
   .field-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
-  .field-row label{flex:1;font-size:11.5px;font-weight:600;color:var(--text);}
-  .field-row input[type=number]{width:78px;border:1.5px solid var(--border);border-radius:7px;padding:6px 8px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text);}
+  .field-row label{flex:1;font-size:11.5px;font-weight:600;color:#EDEDED;}
+  .field-row input[type=number]{width:78px;border:1.5px solid var(--border);border-radius:7px;padding:6px 8px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#EDEDED;background:#0D0D0D;caret-color:#EDEDED;}
   .field-row input[type=range]{flex:1;}
-  .field-row select{border:1.5px solid var(--border);border-radius:7px;padding:6px 8px;font-size:12px;color:var(--text);}
+  .field-row select{border:1.5px solid var(--border);border-radius:7px;padding:6px 8px;font-size:12px;color:#EDEDED;background:#0D0D0D;}
   .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;}
   .toggle-row label{font-size:11.5px;font-weight:600;}
   .switch{position:relative;width:40px;height:22px;flex-shrink:0;}
@@ -42922,7 +43019,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   .end-box .title{font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px;}
   .panel-actions{display:flex;gap:8px;margin-top:14px;}
   #panel-sticky-top .panel-actions{margin-top:0;}
-  .btn{flex:1;padding:11px;border-radius:9px;border:1.5px solid var(--border);background:#161616;color:var(--navy);font-weight:700;font-size:12.5px;cursor:pointer;}
+  .btn{flex:1;padding:11px;border-radius:9px;border:1.5px solid var(--border);background:#161616;color:#EDEDED;font-weight:700;font-size:12.5px;cursor:pointer;}
   .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;}
   .btn.danger{background:#161616;border-color:var(--danger);color:var(--danger);}
 
@@ -42930,7 +43027,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   .overlay{position:fixed;inset:0;background:rgba(18,46,67,.45);display:none;align-items:flex-end;justify-content:center;z-index:30;}
   .overlay.open{display:flex;}
   .sheet{width:100%;max-width:520px;max-height:72vh;overflow-y:auto;background:#161616;border-radius:16px 16px 0 0;padding:0 18px 22px;}
-  .sheet h2{margin:0 0 12px;padding:16px 0 12px;font-family:'Oswald',sans-serif;font-size:16px;color:var(--navy);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#161616;z-index:2;border-bottom:1px solid var(--border);}
+  .sheet h2{margin:0 0 12px;padding:16px 0 12px;font-family:'Oswald',sans-serif;font-size:16px;color:#EDEDED;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#161616;z-index:2;border-bottom:1px solid var(--border);}
   .sheet h2 button{background:none;border:none;font-size:20px;color:var(--text-muted);cursor:pointer;}
   .grp-title{font-size:10.5px;font-weight:700;color:var(--tan);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 4px;}
   .grp-title:first-child{margin-top:0;}
@@ -42940,7 +43037,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   #toast.gorunur{opacity:1;transform:translateX(-50%) translateY(0);}
 
   .res-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--surface);border-radius:8px;margin-bottom:6px;font-size:12px;}
-  .res-row b{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--navy);}
+  .res-row b{font-family:'IBM Plex Mono',monospace;font-size:14px;color:#EDEDED;}
   .res-total{background:var(--navy);color:#fff;border-radius:10px;padding:16px;text-align:center;margin-bottom:12px;}
   .res-total .val{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:700;}
   .res-total .lbl{font-size:10.5px;opacity:.8;margin-top:2px;}
@@ -42951,7 +43048,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   .nlayer-row button{flex:1;padding:7px 0;border-radius:7px;border:1.5px solid var(--border);background:#161616;color:var(--text-muted);font-weight:700;font-size:12px;cursor:pointer;}
   .nlayer-row button.active{background:var(--navy);border-color:var(--navy);color:#fff;}
   .kat-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:6px;}
-  .kat-table th{background:#161616;color:var(--navy);padding:5px;font-size:9.5px;border:1px solid var(--border);}
+  .kat-table th{background:#161616;color:#EDEDED;padding:5px;font-size:9.5px;border:1px solid var(--border);}
   .kat-table td{border:1px solid var(--border);padding:3px;text-align:center;}
   .kat-table input{width:100%;border:none;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:5px 2px;background:transparent;}
 
@@ -43045,12 +43142,12 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     </div>
     <div class=&quot;field-row&quot;>
       <label>Kanal Uzunluğu</label>
-      <span id=&quot;pUzunluk&quot; style=&quot;font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--navy);&quot;>—</span>
+      <span id=&quot;pUzunluk&quot; style=&quot;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#EDEDED;&quot;>—</span>
     </div>
     <div style=&quot;padding:8px 0;border-bottom:1px solid var(--border);&quot;>
       <div style=&quot;display:flex;justify-content:space-between;margin-bottom:3px;&quot;>
         <label style=&quot;font-size:11.5px;font-weight:600;&quot;>Kanal Dolgu Özdirenci</label>
-        <span id=&quot;pDolguVal&quot; style=&quot;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;color:var(--navy);&quot;>200 Ω·m</span>
+        <span id=&quot;pDolguVal&quot; style=&quot;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;color:#EDEDED;&quot;>200 Ω·m</span>
       </div>
       <input type=&quot;range&quot; id=&quot;pDolgu&quot; min=&quot;10&quot; max=&quot;500&quot; step=&quot;10&quot; value=&quot;200&quot; style=&quot;width:100%;display:none;&quot;>
       <div class=&quot;cslider&quot; id=&quot;pDolguCslider&quot;>
@@ -43113,7 +43210,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       <div style=&quot;padding:6px 0 12px;&quot;>
         <div style=&quot;display:flex;justify-content:space-between;margin-bottom:3px;&quot;>
           <label style=&quot;font-size:11.5px;font-weight:600;&quot;>Temel Dolgu Özdirenci</label>
-          <span id=&quot;sDolguVal&quot; style=&quot;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;color:var(--navy);&quot;>200 Ω·m</span>
+          <span id=&quot;sDolguVal&quot; style=&quot;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;color:#EDEDED;&quot;>200 Ω·m</span>
         </div>
         <input type=&quot;range&quot; id=&quot;sDolgu&quot; min=&quot;10&quot; max=&quot;500&quot; step=&quot;10&quot; value=&quot;200&quot; style=&quot;width:100%;display:none;&quot;>
         <div class=&quot;cslider&quot; id=&quot;sDolguCslider&quot;>
@@ -43169,6 +43266,77 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   // EŞİT uzaklıkta. Kaç kazık seçilirse seçilsin (1-4), HEPSİ AYNI stub noktasına bağlanır.
   // FİZİK (sahneyiHesapla) ile 2B/3B GÖRSELLEŞTİRME aynı bu tek fonksiyonu kullanır —
   // pozisyonlar arasında hiçbir tutarsızlık riski yok.
+  // 2026 GÜNCELLEME (kullanıcı bulgusu — &quot;başlangıç değeri Baz Senaryo'ya eşit değil&quot;): kök
+  // neden, direncBaslangic'in (aşağıda) o ana kadar sahneyiHesapla({channels:[]}) ile
+  // hesaplanmasıydı — sahneyiHesapla, GERÇEK çizilmiş kanal/kazık geometrisini işlemek için
+  // TAMAMEN AYRI bir fiziksel model kullanıyor (kazık/iletken için farklı formüller, ayaklar
+  // TEK bir düz N-elektrot matrisinde birleştiriliyor). Ana uygulamadaki Baz Senaryo (S0) ise
+  // ts3OrtakAyaklar/ts3Senaryo0 ile, HİYERARŞİK (önce ayak-içi kademeli birleşim, sonra 4 ayağın
+  // circulant birleşimi) bir modelle hesaplanıyor — iki model matematiksel olarak FARKLI
+  // sonuçlar verir (aynı girdilerle bile). Kanal/kazık ÇİZİLMEDEN ÖNCEKİ &quot;başlangıç&quot;
+  // referansının Baz Senaryo ile HER ZAMAN birebir eşleşmesi gerektiğinden, burada ana
+  // uygulamadaki ts3OrtakAyaklar/ts3Senaryo0 BİREBİR (aynı sabitler, aynı sıra, aynı kademeli
+  // kelepçe) yeniden üretiliyor — sahneyiHesapla'nın kendi (gerçek çizim geometrisine uygun,
+  // kasıtlı olarak farklı) modeli DEĞİŞMEDİ, sadece &quot;başlangıç&quot; referansı artık bunun yerine
+  // BU fonksiyonu kullanıyor.
+  function ts3BazSenaryoReferans(s){
+    var TS3_RHO_BETON_REF = 180;
+    var TS3_KADEME_PAD_H_REF = 0.5;
+    function betonKademeli(L, stubKenarM, rB1, rB2, rB3, rPit, rhoDolgu, rhoZemin){
+      var dStub = 2 * ts3LProfilYaricap(stubKenarM);
+      var D3 = Math.max(2*rB3, dStub*1.001), D2 = Math.max(2*rB2, D3), D1 = Math.max(2*rB1, D2);
+      var ikiPi = 2*Math.PI;
+      var R1;
+      if(D1 <= D3*1.0001 && D2 <= D3*1.0001){
+        R1 = TS3_RHO_BETON_REF/(ikiPi*L) * Math.log(D3/dStub);
+      } else {
+        var h3 = Math.max(0.1, L - 2*TS3_KADEME_PAD_H_REF);
+        var h2 = TS3_KADEME_PAD_H_REF, h1 = TS3_KADEME_PAD_H_REF;
+        R1 = TS3_RHO_BETON_REF/ikiPi * ( Math.log(D3/dStub)/h3 + Math.log(D2/D3)/h2 + Math.log(D1/D2)/h1 );
+      }
+      var Dpit = 2*Math.max(rPit, (D1/2)*1.001);
+      var ikiPiL = ikiPi*L;
+      var R2 = rhoDolgu/ikiPiL * Math.log(Dpit/D1);
+      var R3 = rhoZemin/ikiPiL * Math.max(0, Math.log(4*L/Dpit) - 1 + 0.5*Math.log(3));
+      return R1 + R2 + R3;
+    }
+    var rB3 = Math.sqrt((s.aBeton*s.aBeton)/Math.PI);
+    var kademe2M = (typeof s.kademe2 === 'number' && s.kademe2 > 0) ? s.kademe2 : s.aBeton;
+    var kademe1M = (typeof s.kademe1 === 'number' && s.kademe1 > 0) ? s.kademe1 : kademe2M;
+    var rB2 = Math.max(Math.sqrt((kademe2M*kademe2M)/Math.PI), rB3);
+    var rB1 = Math.max(Math.sqrt((kademe1M*kademe1M)/Math.PI), rB2);
+    var rPit = Math.max(Math.sqrt((s.aCukur*s.aCukur)/Math.PI), rB1*1.001);
+    var rhoEqFooting = ts3RhoEqS(s.temel, s.katmanlar);
+    var kazikDolguPayi = Math.min(TS3_KAZIK_DOLGU_PAYI_M, s.kazikBoy);
+    var kazikNativeBoy = s.kazikBoy - kazikDolguPayi;
+    var rhoKazikNative = kazikNativeBoy > 0 ? ts3RhoEff(s.temel+kazikDolguPayi, s.temel+s.kazikBoy, s.katmanlar) : 0;
+    var rhoKazik = (kazikDolguPayi*s.dolgu + kazikNativeBoy*rhoKazikNative) / s.kazikBoy;
+    var rhoZeminBeton = ts3RhoEff(0, s.temel, s.katmanlar);
+    var rKazik = ts3LProfilYaricap(TS3_KAZIK_KENAR_MM/1000);
+    var Rbeton = betonKademeli(s.temel, s.stubMm/1000, rB1, rB2, rB3, rPit, s.dolgu, rhoZeminBeton);
+    var Rkazik = ts3CubukDirenciDerinlikli(s.kazikBoy, rKazik, s.temel, rhoKazik);
+    var dIletken = 2*TS3_R_ILETKEN;
+    var Riletken = ts3CubukDirenciDerinlikli(s.temel, dIletken, 0, s.dolgu);
+    var TS3_STUB_ILETKEN_MESAFE_M = Math.max(0.3, (rB1 + s.aCukur/2) / 2);
+    var iletkenEleman = {R:Riletken, x:TS3_STUB_ILETKEN_MESAFE_M, y:0, rho:s.dolgu, L:s.temel};
+    var kazikEleman = {R:Rkazik, x:TS3_STUB_ILETKEN_MESAFE_M+Math.max(0.1, s.aCukur/2 - TS3_STUB_ILETKEN_MESAFE_M), y:0, rho:rhoKazik, L:s.kazikBoy};
+    var RiletkenKazikHam = ts3Birlestir([iletkenEleman, kazikEleman]);
+    var idealParalelIK = 1/(1/Riletken + 1/Rkazik);
+    var minIK = Math.min(Riletken, Rkazik);
+    var RiletkenKazik = (RiletkenKazikHam >= idealParalelIK - 1e-9 && RiletkenKazikHam <= minIK + 1e-9) ? RiletkenKazikHam : minIK;
+    var stubEleman = {R:Rbeton, x:0, y:0, rho:s.dolgu, L:s.temel};
+    var ikBileske = {R:RiletkenKazik, x:TS3_STUB_ILETKEN_MESAFE_M, y:0, rho:s.dolgu, L:s.temel+s.kazikBoy};
+    var RayakHam = ts3Birlestir([stubEleman, ikBileske]);
+    var idealParalelAyak = 1/(1/Rbeton + 1/RiletkenKazik);
+    var minAyak = Math.min(Rbeton, RiletkenKazik);
+    var Rayak = (RayakHam >= idealParalelAyak - 1e-9 && RayakHam <= minAyak + 1e-9) ? RayakHam : minAyak;
+    var ayakL = s.temel + s.kazikBoy;
+    var w = s.ayak;
+    var R12 = ts3MutualGenel(rhoEqFooting, ayakL, w);
+    var R13 = ts3MutualGenel(rhoEqFooting, ayakL, w*Math.sqrt(2));
+    return (Rayak + 2*R12 + R13) / 4.0;
+  }
+
   function kazikKoseleriHesapla(lp, aCukur, sayi){
     var m = Math.sqrt(lp.x*lp.x+lp.y*lp.y);
     var d = m > 0.01 ? {x:lp.x/m, y:lp.y/m} : {x:1,y:0};
@@ -44437,9 +44605,13 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   // noktası olarak kalır). direncGuncel ise HER render()'da yeniden hesaplanan CANLI değer.
   var direncBaslangic = null;
   function direncBaslanginiHesapla(){
+    // 2026 GÜNCELLEME (kullanıcı bulgusu — bkz. ts3BazSenaryoReferans notu yukarıda): eskiden
+    // sahneyiHesapla({channels:[]}) çağrılıyordu — bu, sahneyiHesapla'nın kendi (gerçek kanal
+    // geometrisi için tasarlanmış, kasıtlı farklı) modelini kullandığından ana uygulamanın Baz
+    // Senaryo değeriyle uyuşmuyordu. Artık ts3BazSenaryoReferans — ana uygulamanın ts3Senaryo0
+    // ile BİREBİR AYNI formülü — kullanılıyor, böylece &quot;başlangıç&quot; her zaman Baz Senaryo'ya eşit.
     try{
-      var r = sahneyiHesapla({ ayarlar: state.ayarlar, channels: [] });
-      direncBaslangic = r.Rtoplam;
+      direncBaslangic = ts3BazSenaryoReferans(state.ayarlar);
     } catch(e){ direncBaslangic = null; }
     direncGuncelle();
   }
@@ -44448,7 +44620,18 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     var elGun = document.getElementById('direncGuncel');
     if(elBas) elBas.textContent = (direncBaslangic!=null && isFinite(direncBaslangic)) ? direncBaslangic.toFixed(2)+' Ω' : '— Ω';
     try{
-      var rGuncel = sahneyiHesapla(state).Rtoplam;
+      // 2026 DÜZELTME (kullanıcı bulgusu — &quot;hiç kanal çizmeden sonuç, başlangıçtan yüksek
+      // görünüyor&quot;): sahneyiHesapla, GERÇEK çizilmiş kanal geometrisi için ayrı/kasıtlı farklı
+      // bir model kullanıyor (bkz. ts3BazSenaryoReferans notu) — stub↔kazık bağlantısını
+      // yatay &quot;kanal&quot; formülüyle modelliyor, oysa ts3BazSenaryoReferans aynı bağlantıyı düşey
+      // iletken + ideal-paralel sınırlama ile modelliyor. İki formül HİÇBİR kanal yokken bile
+      // birbirinden farklı (ve tutarsız) sonuç veriyordu. Hiç kanal çizilmemişken &quot;ilave
+      // topraklama yok&quot; demektir — bu durumda canlı sonuç, başlangıç referansıyla (aynı
+      // formülle) BİREBİR aynı olmalı; sahneyiHesapla'nın (kanal geometrisine özel) modeli
+      // sadece GERÇEKTEN bir kanal çizildiğinde devreye giriyor.
+      var rGuncel = (state.channels.length === 0)
+        ? ts3BazSenaryoReferans(state.ayarlar)
+        : sahneyiHesapla(state).Rtoplam;
       if(elGun) elGun.textContent = isFinite(rGuncel) ? rGuncel.toFixed(2)+' Ω' : '— Ω';
     } catch(e){ if(elGun) elGun.textContent = '— Ω'; }
   }
@@ -44522,9 +44705,16 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     var g = c.getContext('2d');
     function w2s(x,y){ return { x: W/2 + (x-cx0)*olcek, y: H/2 + (y-cy0)*olcek }; }
 
-    g.fillStyle = '#161616'; g.fillRect(0,0,W,H);
+    // 2026 GÜNCELLEME (kullanıcı bulgusu — &quot;kart görseli siyah, değerler okunmuyor&quot;): önceki
+    // koyu zemin (#161616) ile etiket/eksen renkleri (#23262A) neredeyse aynı koyulukta olduğu
+    // için metin zemine karışıp görünmez oluyordu. Bu görsel bir kez üretilip PNG olarak
+    // kaydediliyor — uygulamanın sonradan açık/koyu tema değişimini TAKİP EDEMEZ. Bu yüzden
+    // zemin, karanlık VEYA aydınlık moddaki bir kartın üzerinde de her zaman kendi başına
+    // okunaklı kalacak sabit, nötr AÇIK bir renge çevrildi; koyu metin/eksen renkleri bu açık
+    // zeminle zaten yüksek kontrast sağlıyor.
+    g.fillStyle = '#F2F4F6'; g.fillRect(0,0,W,H);
     var adim = olcek>=18 ? 1 : (olcek>=8 ? 5 : 10);
-    g.strokeStyle = 'rgba(91,116,136,0.15)'; g.lineWidth = 1;
+    g.strokeStyle = 'rgba(91,116,136,0.35)'; g.lineWidth = 1;
     for(var gx=Math.floor(minX/adim)*adim; gx<=maxX; gx+=adim){ var p1=w2s(gx,minY),p2=w2s(gx,maxY); g.beginPath(); g.moveTo(p1.x,p1.y); g.lineTo(p2.x,p2.y); g.stroke(); }
     for(var gy=Math.floor(minY/adim)*adim; gy<=maxY; gy+=adim){ var p3=w2s(minX,gy),p4=w2s(maxX,gy); g.beginPath(); g.moveTo(p3.x,p3.y); g.lineTo(p4.x,p4.y); g.stroke(); }
 
@@ -45326,6 +45516,28 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     disaridanVeriAktar: function(p){
       if(!p) return;
       var a = state.ayarlar;
+      // 2026 EKLEME (kullanıcı isteği): &quot;modülden çıkılınca veya direk/katman verileri
+      // değişince simülasyondaki kanallar sıfırlansın; ama sadece kanal dolgusu (dolgu
+      // özdirenci ve hangi kısımlarda kullanıldığı) değişince kanallar KALSIN ve yeni dolgu
+      // değerine göre yeniden hesaplansın&quot; — bunun için gelen p'nin dolgu HARİÇ (ayak/
+      // temel/aBeton/kademe1/kademe2/aCukur/stubKenar/kazikBoy/katmanlar) çekirdek imzasını
+      // bir öncekiyle kıyaslıyoruz. İmza değiştiyse (gerçekten farklı bir direk/katman verisi
+      // geldi demektir) çizilmiş kanallar artık geçersizdir ve sıfırlanır; üst penceredeki
+      // &quot;Kullanıcı Senaryosu&quot; sayacı da 1'e döner. İmza AYNIYSA (yalnızca dolgu değişti veya
+      // hiçbir şey değişmedi) kanallar OLDUĞU GİBİ bırakılır — aşağıdaki ayarlariYukle()/
+      // direncBaslanginiHesapla()/render() zaten güncel dolgu değeriyle yeniden hesaplar
+      // (kanalların kendi rho'su yoksa s.dolgu'yu CANLI okuyorlar, ayrı bir işlem gerekmez).
+      var coreImza = JSON.stringify({
+        ayak:p.ayak, temel:p.temel, aBeton:p.aBeton, kademe1:p.kademe1, kademe2:p.kademe2,
+        aCukur:p.aCukur, stubKenar:p.stubKenar, kazikBoy:p.kazikBoy, katmanlar:p.katmanlar
+      });
+      if(state.__ts3SonCoreImza !== coreImza){
+        state.channels = [];
+        state.selectedId = null;
+        nextChId = 1;
+        try{ if(window.parent && window.parent.ts3KullaniciSenaryolariSifirla) window.parent.ts3KullaniciSenaryolariSifirla(); }catch(e){}
+      }
+      state.__ts3SonCoreImza = coreImza;
       if(typeof p.ayak === 'number') a.ayak = p.ayak;
       if(typeof p.temel === 'number') a.temel = p.temel;
       if(typeof p.aBeton === 'number') a.aBeton = p.aBeton;
@@ -45337,10 +45549,22 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       if(typeof p.rhoDolgu === 'number') a.dolgu = p.rhoDolgu;
       a.kazikVar = true; // ana uygulamanın S0 modeli her zaman ayak kazığı varsayıyor
       if(!a.kazikSayisi) a.kazikSayisi = 1;
-      if(Array.isArray(p.katmanlar) && p.katmanlar.length >= 2){
+      if(Array.isArray(p.katmanlar) && p.katmanlar.length >= 1){
         a.katmanlar = p.katmanlar.map(function(k){ return (k.h!=null) ? {rho:k.rho, h:k.h} : {rho:k.rho}; });
       }
       ayarlariYukle();
+      direncBaslanginiHesapla();
+      render();
+    },
+    // 2026 EKLEME (kullanıcı isteği: &quot;modülden çıkıldığında simülasyon sıfırlansın&quot;) — üst
+    // pencere, &quot;Topraklama Senaryoları&quot; modülü YENİDEN açıldığında (bkz. window._ts3ModuleReset)
+    // bunu çağırır; çizilmiş tüm kanalları ve seçili durumu temizler, çekirdek veri imzasını da
+    // sıfırlayarak bir sonraki disaridanVeriAktar çağrısının veriyi &quot;yeni&quot; kabul etmesini sağlar.
+    sifirlaKanallar: function(){
+      state.channels = [];
+      state.selectedId = null;
+      nextChId = 1;
+      state.__ts3SonCoreImza = null;
       direncBaslanginiHesapla();
       render();
     }
@@ -45393,6 +45617,8 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     var ov = document.getElementById('ts3-tasarla-overlay');
     ov.style.visibility = 'visible';
     ov.style.pointerEvents = 'auto';
+    var barEl0 = document.getElementById('home-bar');
+    ov.style.top = (barEl0 ? barEl0.getBoundingClientRect().height : 0) + 'px';
     // Güvenlik amaçlı: overlay açıkken cihaz döndürülmüş/klavye kapanmış olabilir —
     // canvas'ı yine de güncel boyuta göre tazeler (artık hayati değil, ekstra sağlamlık).
     ts3TasarlaBoyutuDuzelt(0);
