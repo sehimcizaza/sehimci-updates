@@ -8802,7 +8802,8 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
              taşındı. Hesaplama yapılmadan önce boş (0 yükseklikli) kalır, görsel bir boşluk
              bırakmaz; toOzdZeminGorseliCiz çağrısı DEĞİŞMEDİ, sadece DOM'daki konumu değişti. -->
         <div id="to-ozd-fiziksel-zemin-gorsel" style="margin-bottom:10px;"></div>
-        <div id="to-ozd-senaryo-alan" hidden>
+        <div id="to-ozd-senaryo-alan" hidden style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;">
+        <div style="padding:10px 10px 0;">
         <div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--surface-2);color:var(--text);border:none;border-radius:11px;padding:11px 8px;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;font-weight:700;margin-bottom:8px;">
           <span>🧮 Topraklama Senaryolarını Hesapla</span>
           <span style="font-size:9.5px;font-weight:400;opacity:0.85;">(Kaba veya Detaylı yöntemin bulduğu katman sayısı AYNEN kullanılır)</span>
@@ -8821,7 +8822,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
              YÖNTEMİN kendi (N ne ise) katman sonucu AYNEN kullanılıyor. Hesap Kaba/Detaylı
              seçilir seçilmez VE her alan değişikliğinde OTOMATİK çalışır (ayrı "Hesapla"
              butonu YOK, kullanıcı isteği). -->
-        <div id="to-ozd-ts-wrap" hidden style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;">
+        <div id="to-ozd-ts-wrap" hidden style="border-top:1.5px solid var(--border);overflow:hidden;">
           <div style="background:var(--surface-2);padding:10px 14px;">
             <p style="margin:0;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:var(--text);letter-spacing:0.04em;">TOPRAKLAMA SENARYOLARI (Çok Katmanlı)</p>
           </div>
@@ -8915,6 +8916,8 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
             <button type="button" id="to-ozd-ts-notlar-btn" hidden style="width:100%;margin-top:10px;padding:9px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">ℹ️ Ölçümle İlgili Önemli Notlar</button>
           </div>
         </div>
+        </div><!-- /to-ozd-senaryo-alan -->
+
 
         <!-- Kayıtlı Hat Seçiniz (Opsiyonel) — 2026-08-14: herhangi bir yöntem (Kaba VEYA
              Fiziksel) çalışana kadar gizli (kullanıcı isteği: "hesaplama yapılmamışsa gösterme"),
@@ -19162,7 +19165,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     var d = zeminEntry;
     if(zeminEntry.govdeler){
       var govdeNum = Number(govde);
-      var key = (!isNaN(govdeNum) && govdeNum >= 21) ? '21_27' : '0_15';
+      var key = window.temelGovdeAnahtari(zeminEntry.govdeler, govdeNum);
       d = zeminEntry.govdeler[key];
       if(!d) return null;
     }
@@ -22396,6 +22399,25 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     { tipi:'2PF1', zemin:'iyi', govde:null, k1:690, k2:320, k3:80 },
     { tipi:'2PF1N', zemin:'iyi', govde:null, k1:720, k2:320, k3:80 }
   ];
+  // 2026-09-28 (kullanıcı bulgusu): Gövde aralık anahtarları TÜM tiplerde '0_15'/'21_27' DEĞİL —
+  // örn. 2PB1 iyi zeminde '0_21' ve '27_27' olarak birleştirilmiş. Aramalar artık sabit
+  // '0_15'/'21_27' varsaymıyor; "alt_üst" biçimindeki anahtarları ayrıştırıp seçilen gövdeyi
+  // kapsayan aralığı buluyor (0..21 → '0_21', 27 → '27_27'). Aralıkta kalmayan gövde için (ör. 18
+  // ve anahtarlar 0_15/21_27) eski davranış korunur: altındaki en yakın alt sınırlı aralık.
+  window.temelGovdeAnahtari = function(govdeler, govde){
+    if(!govdeler) return null;
+    var g = Number(govde);
+    var keys = Object.keys(govdeler).map(function(k){
+      var m = /^(\d+)_(\d+)$/.exec(k);
+      return m ? { key:k, lo:Number(m[1]), hi:Number(m[2]) } : null;
+    }).filter(Boolean).sort(function(a,b){ return a.lo - b.lo || a.hi - b.hi; });
+    if(!keys.length) return null;
+    if(isNaN(g)) return keys[0].key;
+    for(var i=0;i<keys.length;i++){ if(g >= keys[i].lo && g <= keys[i].hi) return keys[i].key; }
+    var alt = null;
+    for(var j=0;j<keys.length;j++){ if(keys[j].lo <= g) alt = keys[j]; }
+    return (alt || keys[0]).key;
+  };
   (function ayarTemelMergeKademe(){
     TEMEL_KADEME_PATCH.forEach(function(p){
       var tipiEntry = TEMEL_DATA[p.tipi];
@@ -22404,8 +22426,14 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       if(!zeminEntry) return;
       var target = zeminEntry;
       if(zeminEntry.govdeler){
-        if(!p.govde) return;
-        target = zeminEntry.govdeler[p.govde];
+        // govde:null → en düşük aralık; anahtar birebir yoksa (ör. 2PB1: '21_27' → '27_27')
+        // alt sınırına göre kapsayan/yakın aralık bulunur.
+        var hk = null, gk = Object.keys(zeminEntry.govdeler);
+        if(!p.govde){ hk = window.temelGovdeAnahtari(zeminEntry.govdeler, 0); }
+        else if(zeminEntry.govdeler[p.govde]){ hk = p.govde; }
+        else { hk = window.temelGovdeAnahtari(zeminEntry.govdeler, parseInt(String(p.govde).split('_')[1], 10)); } // üst sınıra göre: '21_27'→27→'27_27', '0_15'→15→'0_21'
+        if(!hk) return;
+        target = zeminEntry.govdeler[hk];
         if(!target) return;
       }
       if(p.k1 !== null) target.kademe1 = p.k1;
@@ -29262,9 +29290,10 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     if(sknob){ sknob.style.left = isDark ? '22px' : '3px'; }
     if(stog){ stog.style.background = isDark ? 'var(--accent)' : 'var(--surface-3)'; }
     settingsSheetCtrl.show();
-    document.querySelectorAll('.bnav-btn').forEach(function(b){ b.classList.remove('active'); });
+    // 2026-09-28 (kullanıcı isteği): Profil butonu artık yeşil "aktif" arka plana bürünmüyor —
+    // diğer alt bar butonlarıyla aynı görünümde kalır; mevcut aktif sekme değiştirilmez.
     var pp = document.getElementById('bnav-profile');
-    if(pp) pp.classList.add('active');
+    if(pp) pp.classList.remove('active');
   }
   function closeSettingsPanel(){
     settingsSheetCtrl.hide();
@@ -36608,7 +36637,7 @@ function ts3Senaryo7(p){
     var d = zeminEntry;
     if(zeminEntry.govdeler){
       var govdeNum = Number(govde);
-      var bucketKey = (!isNaN(govdeNum) && govdeNum >= 21) ? '21_27' : '0_15';
+      var bucketKey = window.temelGovdeAnahtari(zeminEntry.govdeler, govdeNum);
       d = zeminEntry.govdeler[bucketKey];
       if(!d) return null;
     }
@@ -37475,7 +37504,7 @@ function ts3Senaryo7(p){
     var d = zeminEntry;
     if(zeminEntry.govdeler){
       var govdeNum = Number(tsAyakState.govde);
-      var bucketKey = (!isNaN(govdeNum) && govdeNum >= 21) ? '21_27' : '0_15';
+      var bucketKey = window.temelGovdeAnahtari(zeminEntry.govdeler, govdeNum);
       d = zeminEntry.govdeler[bucketKey];
       if(!d) return null;
     }
@@ -37853,7 +37882,7 @@ function ts3Senaryo7(p){
     var d = zeminEntry;
     if(zeminEntry.govdeler){
       var govdeNum = Number(govde);
-      var bucketKey = (!isNaN(govdeNum) && govdeNum >= 21) ? '21_27' : '0_15';
+      var bucketKey = window.temelGovdeAnahtari(zeminEntry.govdeler, govdeNum);
       d = zeminEntry.govdeler[bucketKey];
       if(!d) return null;
     }
@@ -39227,7 +39256,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     // Katman numarası rozetleri — sol kenarda sabit, her bandın dikey ortasında
     bantSinirlari.forEach(function(bs){
       var cx = 24, cy = bs.yOrta;
-      svg += '<circle cx="'+cx+'" cy="'+cy+'" r="15" fill="#2B2F36" stroke="#FFFFFF" stroke-width="1.4" opacity="0.92"/>';
+      svg += '<circle cx="'+cx+'" cy="'+cy+'" r="15" fill="#14171A" stroke="#FFFFFF" stroke-width="2"/>';
       svg += '<text x="'+cx+'" y="'+(cy+5.5)+'" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="16" font-weight="700" fill="#fff">'+bs.katman.no+'</text>';
     });
 
@@ -39246,7 +39275,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     bolgeler.forEach(function(b){
       var derinlikMetni = b.ust==null ? (formatTR(b.alt,2)+'m — yarı-sonsuz') : (formatTR(b.alt,2)+' – '+formatTR(b.ust,2)+'m');
       svg += '<rect x="'+sagBaslangic+'" y="'+(legendY+6)+'" width="44" height="44" rx="7" fill="url(#'+b.malzeme.pattern+')" stroke="#FFFFFF" stroke-width="1.6"/>';
-      svg += '<text x="'+(sagBaslangic+22)+'" y="'+(legendY+33)+'" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="700" fill="#fff" style="paint-order:stroke;stroke:var(--surface-2);stroke-width:3px;">'+b.no+'</text>';
+      svg += '<text x="'+(sagBaslangic+22)+'" y="'+(legendY+33)+'" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="700" fill="#fff" stroke="#14171A" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke">'+b.no+'</text>';
       svg += '<text x="'+(sagBaslangic+58)+'" y="'+(legendY+26)+'" font-family="IBM Plex Sans, sans-serif" font-size="19" font-weight="700" fill="#FFFFFF">'+b.malzeme.simge+' '+b.malzeme.ad+'</text>';
       svg += '<text x="'+(sagBaslangic+58)+'" y="'+(legendY+50)+'" font-family="IBM Plex Mono, monospace" font-size="15.5" font-weight="600" fill="#3E5265">Katman '+b.no+' · '+derinlikMetni+'</text>';
       svg += '<text x="'+detayXsag+'" y="'+(legendY+50)+'" font-family="IBM Plex Mono, monospace" font-size="15.5" font-weight="700" fill="#9A9A9A">ρ≈'+formatTR(b.rho,1)+' Ω·m</text>';
@@ -40518,7 +40547,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       return;
     }
     toOzdTsKaynak = 'kaba';
-    toOzdTsKatmanOzetYaz(kat, 'Kaba yöntem (' + kat.length + ' katman)', '#23262A');
+    toOzdTsKatmanOzetYaz(kat, 'Kaba yöntem (' + kat.length + ' katman)', 'var(--text)');
     if(toOzdSenaryoKabaBtn){ toOzdSenaryoKabaBtn.style.background = 'var(--surface-2)'; toOzdSenaryoKabaBtn.style.color = 'var(--text)'; }
     if(toOzdSenaryoDetayBtn){ toOzdSenaryoDetayBtn.style.background = 'var(--inv-bg)'; toOzdSenaryoDetayBtn.style.color = '#C97B2E'; }
     if(toOzdTsWrap){ toOzdTsWrap.hidden = false; toOzdTsWrap.scrollIntoView({behavior:'smooth', block:'start'}); }
