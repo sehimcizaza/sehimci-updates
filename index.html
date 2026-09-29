@@ -2394,8 +2394,21 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 }
 .tool-row-scroll-inner{
   display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
-  padding:2px 2px; width:100%;
+  padding:2px 2px; flex:1 1 0; min-width:0; width:auto;
+  scroll-snap-type:x mandatory; scroll-padding-left:2px;
 }
+/* 2026-09-29 (kullanıcı isteği): kategori kartı daralınca hep İLK 2 modül görünür; kaydırma
+   olanağını göstermek için iki yanda ok var. Kartlar tam 2 tane sığacak genişliğe JS'te
+   ayarlanır (--tr-chip-w), oklar bir 'sayfa' (2 modül) kaydırır. */
+.tool-row-scroll-inner .tool-row-chip{ width:var(--tr-chip-w,78px); scroll-snap-align:start; }
+.tool-row-arrow{
+  flex:0 0 20px; align-self:center; height:78px; padding:0; margin:0; border:none; background:transparent;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text);
+  transition:opacity .2s ease; -webkit-tap-highlight-color:transparent;
+}
+.tool-row-arrow svg{ width:14px; height:22px; display:block; fill:currentColor; }
+.tool-row-arrow:disabled{ opacity:.22; cursor:default; }
+.tool-row-arrow:not(:disabled):active{ transform:scale(.9); }
 .tool-row-scroll-inner::-webkit-scrollbar{ display:none; }
 /* 2026-09-24 GÜNCELLEME (kullanıcı isteği: "modüllerin ikonlarını kaldırıp ilgili resimleri
    modül kutusunda full arka plan yap, yazılar resmin üstünde alta doğru olsun") — chip artık
@@ -6332,13 +6345,10 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
           <span id="hmp-son-nokta" style="font-size:9px;display:none;"></span>
         </div>
       </div>
-      <div style="display:flex;gap:6px;">
-        <button type="button" id="hmp-bitir-btn" style="flex:1;background:var(--surface-2);color:var(--text);border:none;border-radius:7px;padding:7px;font-size:11px;font-weight:600;cursor:pointer;display:none;">✓ Bitir</button>
-        <button type="button" id="hmp-iptal-btn" style="flex:1;background:var(--inv-bg);color:var(--text-faint);border:none;border-radius:7px;padding:7px;font-size:11px;font-weight:600;cursor:pointer;">✕ İptal</button>
-      </div>
-      <div style="display:flex;gap:6px;margin-top:6px;">
-        <button type="button" id="hmp-gabari-btn" style="display:none;flex:1;background:#2E6B4E;color:#fff;border:none;border-radius:7px;padding:9px;font-size:11.5px;font-weight:700;cursor:pointer;">📈 Sehim Göster</button>
-        <button type="button" id="hmp-hamliste-btn" style="display:none;flex:1;background:var(--surface);color:var(--text);border:none;border-radius:7px;padding:9px;font-size:11.5px;font-weight:700;cursor:pointer;">📋 Rakım Noktaları</button>
+      <div style="display:flex;gap:8px;">
+        <button type="button" id="hmp-bitir-btn" style="flex:1;background:var(--surface);color:var(--text);border:1.5px solid var(--border-strong);border-radius:10px;padding:9px 8px;font-size:12px;font-weight:700;cursor:pointer;display:none;">✓ Bitir</button>
+        <button type="button" id="hmp-hamliste-btn" style="display:none;flex:1;background:var(--surface);color:var(--text);border:1.5px solid var(--border-strong);border-radius:10px;padding:9px 8px;font-size:12px;font-weight:700;cursor:pointer;">📋 Rakım Noktaları</button>
+        <button type="button" id="hmp-iptal-btn" style="flex:1;background:var(--surface-2);color:var(--text);border:1.5px solid var(--border-strong);border-radius:10px;padding:9px 8px;font-size:12px;font-weight:700;cursor:pointer;">✕ İptal</button>
       </div>
     </div>
 
@@ -9982,7 +9992,8 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     'kat-diger-araclar': [
       { id: 'harita', title: 'kml/kmz Görüntüleyici' },
       { id: 'mesafe-olc', title: 'Mesafe Ölç' },
-      { id: 'not-defteri', title: 'Not Defteri' }
+      { id: 'not-defteri', title: 'Not Defteri' },
+      { id: 'hat-guzergah-kaydi', title: 'Hat / Güzergah Kaydı' }
     ],
     'hirdavat-menu': [
       { id: 'ikaz-kuresi', title: 'İkaz Küresi Hesaplama' },
@@ -10098,6 +10109,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         '</span>' +
       '</button>';
     }).join('');
+    toolRowArrowKur(innerEl, items.length);
     innerEl.querySelectorAll('[data-chip-id]').forEach(function(btn){
       btn.addEventListener('click', function(){
         var subM = moduleRegistry[btn.getAttribute('data-chip-id')];
@@ -10119,6 +10131,50 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         openModule(subM);
       });
     });
+  }
+
+  // 2026-09-29 (kullanıcı isteği + taslak): modül kartlarının iki yanına ◀ ▶ okları. 2'den fazla
+  // modül varsa oklar görünür (kaydırılabileceğini baştan belli eder); baştayken ◀, sondayken ▶
+  // soluk/pasif olur. Oklar bir 'sayfa' (2 modül) kaydırır.
+  function toolRowArrowDurum(innerEl){
+    var scrollEl = innerEl.parentNode;
+    var sol = scrollEl.querySelector('.tool-row-arrow-l'), sag = scrollEl.querySelector('.tool-row-arrow-r');
+    if(!sol || !sag) return;
+    var max = innerEl.scrollWidth - innerEl.clientWidth;
+    sol.disabled = innerEl.scrollLeft <= 2;
+    sag.disabled = innerEl.scrollLeft >= max - 2;
+  }
+  function toolRowArrowKur(innerEl, adet){
+    var scrollEl = innerEl.parentNode;
+    scrollEl.querySelectorAll('.tool-row-arrow').forEach(function(a){ a.remove(); });
+    if(adet <= 2) return;
+    function ok(yon){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tool-row-arrow tool-row-arrow-' + (yon < 0 ? 'l' : 'r');
+      b.setAttribute('aria-label', yon < 0 ? 'Önceki modüller' : 'Sonraki modüller');
+      b.innerHTML = yon < 0 ? '<svg viewBox="0 0 14 22"><path d="M13 1 L13 21 L1 11 Z"/></svg>' : '<svg viewBox="0 0 14 22"><path d="M1 1 L1 21 L13 11 Z"/></svg>';
+      b.addEventListener('click', function(e){
+        e.stopPropagation();
+        var chip = innerEl.querySelector('.tool-row-chip');
+        var sayfa = chip ? 2 * (chip.getBoundingClientRect().width + 8) : innerEl.clientWidth;
+        innerEl.scrollBy({ left: yon * sayfa, behavior: 'smooth' });
+      });
+      return b;
+    }
+    scrollEl.insertBefore(ok(-1), innerEl);
+    scrollEl.appendChild(ok(1));
+    innerEl.addEventListener('scroll', function(){ toolRowArrowDurum(innerEl); }, { passive: true });
+  }
+  function toolRowAcilisHazirla(innerEl, scrollTargetW){
+    // Her açılışta İLK modülden başla + tam 2 kart sığacak genişlik
+    var oklu = !!innerEl.parentNode.querySelector('.tool-row-arrow');
+    var innerW = scrollTargetW - (oklu ? 40 : 0) - 4;
+    var w = Math.max(72, Math.min(120, Math.floor((innerW - 8) / 2)));
+    innerEl.style.setProperty('--tr-chip-w', w + 'px');
+    innerEl.style.scrollBehavior = 'auto';
+    innerEl.scrollLeft = 0;
+    toolRowArrowDurum(innerEl);
   }
 
   function toolRowCollapse(wrap){
@@ -10157,6 +10213,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     var wrapW = wrap.getBoundingClientRect().width;
     var fullW = rowEl.getBoundingClientRect().width;
     var scrollTargetW = Math.max(0, wrapW - TOOL_ROW_COLLAPSED_W - TOOL_ROW_GAP);
+    toolRowAcilisHazirla(innerEl, scrollTargetW);
     // Başlangıç genişliğini (mevcut tam genişlik) sabitleyip bir sonraki karede hedefe geçerek
     // CSS transition'ın gerçek bir animasyon olarak tetiklenmesini sağlıyoruz.
     rowEl.style.width = fullW + 'px';
@@ -23345,11 +23402,9 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       if(serit) serit.hidden = true;
       var bitirBtn = document.getElementById('hmp-bitir-btn');
       var iptalBtn = document.getElementById('hmp-iptal-btn');
-      var gabariBtn = document.getElementById('hmp-gabari-btn');
       var hamListeBtn = document.getElementById('hmp-hamliste-btn');
       if(bitirBtn){ bitirBtn.style.display = 'none'; bitirBtn.textContent = '✓ Bitir'; }
       if(iptalBtn) iptalBtn.textContent = '✕ İptal';
-      if(gabariBtn) gabariBtn.style.display = 'none';
       if(hamListeBtn) hamListeBtn.style.display = 'none';
       _mesafeState = null;
     }
@@ -23433,12 +23488,10 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var kapat = document.getElementById('hmp-kapat-btn');
       var iptal = document.getElementById('hmp-iptal-btn');
       var bitir = document.getElementById('hmp-bitir-btn');
-      var gabari = document.getElementById('hmp-gabari-btn');
       var hamListe = document.getElementById('hmp-hamliste-btn');
       if(kapat){ kapat.onclick = haritaMesafeTemizle; }
       if(iptal){ iptal.onclick = haritaMesafeTemizle; }
       if(bitir){ bitir.onclick = haritaMesafeBitir; }
-      if(gabari){ gabari.onclick = function(){ haritaGabariProfiliGoster(); }; }
       if(hamListe){ hamListe.onclick = function(){ haritaGabariHamListeGoster(); }; }
     }
 
@@ -23450,32 +23503,11 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var bilgi   = document.getElementById('hmp-bilgi');
       var bitirBtn = document.getElementById('hmp-bitir-btn');
       var iptalBtn = document.getElementById('hmp-iptal-btn');
-      var gabariBtn = document.getElementById('hmp-gabari-btn');
       var hamListeBtn = document.getElementById('hmp-hamliste-btn');
       _mesafeState.tamamlandi = true;
       if(bilgi)    bilgi.textContent = '✅ ' + _mesafeState.noktalar.length + ' nokta ölçüldü';
       if(bitirBtn) bitirBtn.style.display = 'none';
-      if(iptalBtn) iptalBtn.textContent = 'Kapat';
-      var ikiBitisikNokta = _mesafeState.noktalar.length === 2;
-      if(gabariBtn){
-        gabariBtn.style.display = '';
-        gabariBtn.textContent = '📈 Sehim Göster';
-        if(ikiBitisikNokta){
-          gabariBtn.disabled = false;
-          gabariBtn.style.opacity = '';
-          gabariBtn.style.cursor = 'pointer';
-          gabariBtn.title = '';
-          gabariBtn.onclick = function(){ haritaGabariProfiliGoster(); };
-        } else {
-          gabariBtn.disabled = true;
-          gabariBtn.style.opacity = '0.5';
-          gabariBtn.style.cursor = 'not-allowed';
-          gabariBtn.title = 'Sadece aralarında başka direk olmayan, ard arda gelen 2 direk seçildiğinde kullanılabilir.';
-          gabariBtn.onclick = function(){
-            alert('Sehim Göster özelliği sadece aralarında başka direk olmayan, ard arda gelen 2 direk seçildiğinde kullanılabilir.\n\nŞu an ' + _mesafeState.noktalar.length + ' nokta ölçülü.');
-          };
-        }
-      }
+      if(iptalBtn) iptalBtn.textContent = '✕ Kapat';
       if(hamListeBtn){ hamListeBtn.style.display = ''; hamListeBtn.onclick = function(){ haritaGabariHamListeGoster(); }; }
       _mesafeState.clickHandler = null;
     }
@@ -23572,28 +23604,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       }
     }
 
-    // "Sehim Göster" — veri haz\u0131rlan\u0131nca A/B\'yi rak\u0131ma göre do\u011fru y\u00f6ne çevirir, tam paneli açar
-    function haritaGabariProfiliGoster(){
-      if(_mesafeState && _mesafeState.noktalar.length !== 2){
-        alert('Sehim Göster özelliği sadece aralarında başka direk olmayan, ard arda gelen 2 direk seçildiğinde kullanılabilir.\n\nŞu an ' + _mesafeState.noktalar.length + ' nokta ölçülü.');
-        return;
-      }
-      haritaGabariVeriHazirla(function(samples, totalDist){
-        // Direk A her zaman rak\u0131m\u0131 DAHA D\u00dc\u015e\u00dcK olan u\u00e7 nokta olsun — t\u0131klama s\u0131ras\u0131 fark etmez.
-        if(samples.length >= 2 && samples[0].elevation !== null && samples[samples.length-1].elevation !== null &&
-           samples[0].elevation > samples[samples.length-1].elevation){
-          var kaynakYedek = samples._kaynak;
-          var adAYedek = samples._adA, adBYedek = samples._adB;
-          samples = samples.slice().reverse().map(function(s){
-            return { dist: totalDist - s.dist, lat: s.lat, lng: s.lng, elevation: s.elevation };
-          });
-          samples._kaynak = kaynakYedek;
-          samples._adA = adBYedek; samples._adB = adAYedek;
-        }
-        haritaGabariSonucGoster(samples, totalDist);
-      }, null, 'hmp-gabari-btn');
-    }
-
     // "Ham Liste" — sadece ölçülen s\u0131rayla (ters çevirmeden), form/grafik olmadan basit bir liste g\u00f6sterir
     function haritaGabariHamListeGoster(){
       haritaGabariVeriHazirla(function(samples, totalDist){
@@ -23639,555 +23649,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       document.body.appendChild(overlay);
       document.getElementById('gabari-ham-kapat-btn').onclick = function(){ overlay.remove(); };
       overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.remove(); });
-    }
-
-    var _gabariVeri = null; // {samples, totalDist} - form gönderildiğinde kullanılır
-
-    function haritaGabariSonucGoster(samples, totalDist){
-      var eskiOverlay = document.getElementById('gabari-profil-overlay');
-      if(eskiOverlay) eskiOverlay.remove();
-      _gabariVeri = { samples: samples, totalDist: totalDist };
-
-      var yukseklikler = samples.map(function(s){ return s.elevation; }).filter(function(e){ return e !== null; });
-      var minY = yukseklikler.length ? Math.min.apply(null, yukseklikler) : null;
-      var maxY = yukseklikler.length ? Math.max.apply(null, yukseklikler) : null;
-
-      var rows = samples.map(function(s){
-        return '<div style="display:flex;justify-content:space-between;padding:6px 16px;border-bottom:1px solid var(--border);font-size:12px;font-family:\'IBM Plex Mono\',monospace;">'+
-          '<span style="color:var(--text-muted);">'+Math.round(s.dist)+' m</span>'+
-          '<span style="font-weight:700;color:var(--text);">'+(s.elevation!==null ? formatMesafeBasit(s.elevation)+' m' : '—')+'</span>'+
-        '</div>';
-      }).join('');
-
-      var ozetHtml = (minY!==null) ?
-        '<div style="display:flex;gap:14px;padding:10px 16px;background:var(--ok-bg);border-bottom:1px solid #DCEAE0;">'+
-          '<div><div style="font-size:9px;color:var(--text-muted);">EN DÜŞÜK RAKIM</div><div style="font-size:15px;font-weight:700;color:#2E6B4E;">'+formatMesafeBasit(minY)+' m</div></div>'+
-          '<div><div style="font-size:9px;color:var(--text-muted);">EN YÜKSEK RAKIM</div><div style="font-size:15px;font-weight:700;color:var(--danger-ink);">'+formatMesafeBasit(maxY)+' m</div></div>'+
-          '<div><div style="font-size:9px;color:var(--text-muted);">FARK</div><div style="font-size:15px;font-weight:700;color:var(--text);">'+formatMesafeBasit(maxY-minY)+' m</div></div>'+
-        '</div>' : '';
-
-      var formHtml =
-        '<div style="padding:14px 16px;border-bottom:1px solid var(--border);">'+
-          '<p style="margin:0 0 2px;font-family:\'Oswald\',sans-serif;font-size:12px;font-weight:700;color:var(--text);letter-spacing:0.04em;">⚡ SEHİM SİMÜLASYONU İÇİN VERİLER</p>'+
-          '<p style="margin:0 0 10px;font-size:9.5px;color:var(--text-muted);">Direk tipi/gövde/ayak seçimi Direk A (rakımı daha düşük olan direk) içindir — Direk B\'nin boyu zemin kotuna göre otomatik çizilir.</p>'+
-          '<button type="button" id="gab-direk-secim-btn" style="width:100%;text-align:left;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;">'+
-            '<span><span style="font-size:9px;color:var(--text-muted);display:block;">DİREK A — TİP / GÖVDE / AYAK</span><span id="gab-direk-secim-ozet" style="font-size:13px;font-weight:700;color:var(--text);font-family:\'IBM Plex Mono\',monospace;">—</span></span>'+
-            '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#9A9A9A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'+
-          '</button>'+
-          '<input type="hidden" id="gab-direk-tip">'+
-          '<input type="hidden" id="gab-direk-govde">'+
-          '<input type="hidden" id="gab-direk-ayak">'+
-          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;">'+
-            '<div class="field"><label class="field-label">Alet Yüksekliği (m)</label><input class="field-input" type="text" inputmode="decimal" id="gab-alet-yuksekligi" style="font-size:14px;padding:9px 10px;"></div>'+
-            '<div class="field"><label class="field-label">Klemp/Makara Açısı (grad)</label><input class="field-input" type="text" inputmode="decimal" id="gab-klemp-acisi" style="font-size:14px;padding:9px 10px;"></div>'+
-            '<div class="field"><label class="field-label">Cetvel Sehim Değeri (m)</label><input class="field-input" type="text" inputmode="decimal" id="gab-cetvel-sehim" style="font-size:14px;padding:9px 10px;"></div>'+
-            '<div class="field"><label class="field-label">Ölçülen Teğet Açısı (grad) <span style="color:var(--text-muted);font-weight:600;text-transform:none;letter-spacing:0;">— opsiyonel</span></label><input class="field-input" type="text" inputmode="decimal" id="gab-olculen-teget" style="font-size:14px;padding:9px 10px;"></div>'+
-          '</div>'+
-          '<p style="margin:0 0 10px;font-size:9.5px;color:var(--text-muted);">İlk 3 alan girilince siyah çizgi otomatik çizilir. Ölçülen Teğet Açısı da girilirse kırmızı (Hedef Sehim) çizgi de eklenir.</p>'+
-          '<div id="gabari-grafik-alani"></div>'+
-        '</div>';
-
-      var overlay = document.createElement('div');
-      overlay.id = 'gabari-profil-overlay';
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,20,30,0.55);z-index:99999;display:flex;align-items:flex-end;padding-bottom:var(--kb-offset, 0px);transition:padding-bottom 150ms ease-out;';
-      overlay.innerHTML =
-        '<div id="gabari-panel-govde" style="background:var(--surface);width:100%;max-height:66vh;overflow-y:auto;border-radius:16px 16px 0 0;-webkit-overflow-scrolling:touch;">'+
-          '<div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2;">'+
-            '<b style="font-family:\'Oswald\',sans-serif;font-size:14px;color:var(--text);">🏔️ Arazi Yükseklik Profili ('+Math.round(totalDist)+' m, '+samples.length+' nokta)</b>'+
-            '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">'+
-              '<button id="gabari-tamekran-btn" type="button" style="border:none;background:none;cursor:pointer;color:var(--text);line-height:1;padding:4px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>'+
-              '<button id="gabari-kapat-btn" type="button" style="border:none;background:none;font-size:20px;cursor:pointer;color:var(--text);line-height:1;">✕</button>'+
-            '</div>'+
-          '</div>'+
-          ozetHtml +
-          '<p style="margin:8px 16px;font-size:10px;color:var(--text-muted);">Rakım verisi '+(samples._kaynak||'bilinmeyen kaynak')+' (~30m çözünürlük) kaynağından alınmıştır, saha ölçümü yerine geçmez.</p>'+
-          formHtml +
-          '<details style="padding:10px 16px;">'+
-            '<summary style="font-size:11px;color:var(--text-muted);cursor:pointer;">Ham nokta listesini göster</summary>'+
-          '</details>'+
-          '<div id="gabari-ham-liste" style="display:none;">'+
-            '<div style="padding:8px 16px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text);font-family:\'IBM Plex Mono\',monospace;">'+(samples._adA||'—')+' → '+(samples._adB||'—')+'</div>'+
-            rows +
-          '</div>'+
-        '</div>';
-      document.body.appendChild(overlay);
-      document.getElementById('gabari-kapat-btn').onclick = function(){ overlay.remove(); };
-      overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.remove(); });
-      var detEl = overlay.querySelector('details');
-      if(detEl) detEl.addEventListener('toggle', function(){
-        document.getElementById('gabari-ham-liste').style.display = detEl.open ? '' : 'none';
-      });
-      var tamEkranBtn = document.getElementById('gabari-tamekran-btn');
-      var panelGovde = document.getElementById('gabari-panel-govde');
-      var tamEkranAcik = false;
-      if(tamEkranBtn && panelGovde){
-        tamEkranBtn.onclick = function(){
-          tamEkranAcik = !tamEkranAcik;
-          if(tamEkranAcik){
-            overlay.style.alignItems = 'stretch';
-            overlay.style.background = 'var(--inv-bg)';
-            panelGovde.style.maxHeight = 'none';
-            panelGovde.style.height = '100vh';
-            panelGovde.style.borderRadius = '0';
-            tamEkranBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v3a2 2 0 0 1-2 2H4M15 3v3a2 2 0 0 0 2 2h3M9 21v-3a2 2 0 0 0-2-2H4M15 21v-3a2 2 0 0 1 2-2h3"/></svg>';
-          } else {
-            overlay.style.alignItems = 'flex-end';
-            overlay.style.background = 'rgba(10,20,30,0.55)';
-            panelGovde.style.height = '';
-            panelGovde.style.maxHeight = '66vh';
-            panelGovde.style.borderRadius = '16px 16px 0 0';
-            tamEkranBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
-          }
-        };
-      }
-
-      haritaGabariFormBaslat();
-    }
-    function formatMesafeBasit(n){ return (Math.round(n*10)/10).toString().replace('.', ','); }
-
-    function haritaGabariFormBaslat(){
-      var tipHid = document.getElementById('gab-direk-tip');
-      var govdeHid = document.getElementById('gab-direk-govde');
-      var ayakHid = document.getElementById('gab-direk-ayak');
-      if(!tipHid || !window.DU_DATA || !window.DU_TIPLER) return;
-
-      // Varsay\u0131lan de\u011ferler: ilk direk tipi + ilk g\u00f6vde + ilk ayak
-      var ilkTip = window.DU_TIPLER[0];
-      var ilkGovdeler = (window.DU_DATA[ilkTip] && window.DU_DATA[ilkTip].govdeler) || [];
-      var ilkGovde = ilkGovdeler[0];
-      var ilkRow = window.DU_DATA[ilkTip] && window.DU_DATA[ilkTip].rows[String(ilkGovde)];
-      var ilkAyak = (ilkRow && ilkRow.ayaklar && ilkRow.ayaklar[0]);
-      tipHid.value = ilkTip; govdeHid.value = ilkGovde; ayakHid.value = ilkAyak;
-      haritaGabariSecimOzetiGuncelle();
-
-      var secimBtn = document.getElementById('gab-direk-secim-btn');
-      if(secimBtn) secimBtn.onclick = function(){ haritaGabariSihirbaziAc(1); };
-
-      var gabariGuncelleTimer = null;
-      function gabariGuncelleGecikmeli(){
-        if(gabariGuncelleTimer) clearTimeout(gabariGuncelleTimer);
-        gabariGuncelleTimer = setTimeout(haritaGabariCanliGuncelle, 400);
-      }
-
-      ['gab-alet-yuksekligi','gab-klemp-acisi','gab-cetvel-sehim','gab-olculen-teget'].forEach(function(id){
-        var el = document.getElementById(id);
-        if(!el) return;
-        el.setAttribute('enterkeyhint', 'done');
-        el.addEventListener('input', gabariGuncelleGecikmeli);
-        // Alandan \u00e7\u0131k\u0131ld\u0131\u011f\u0131nda (dokunarak ba\u015fka yere ge\u00e7ilse de, klavye "Tamam"a bas\u0131lsa da taray\u0131c\u0131 bunu blur olarak tetikler)
-        // hem güncelle hem de görsel odak/seçili görünümünü b\u0131rak.
-        el.addEventListener('blur', function(){
-          if(gabariGuncelleTimer) clearTimeout(gabariGuncelleTimer);
-          haritaGabariCanliGuncelle();
-        });
-      });
-    }
-
-    function haritaGabariSecimOzetiGuncelle(){
-      var tip = document.getElementById('gab-direk-tip').value;
-      var govde = document.getElementById('gab-direk-govde').value;
-      var ayak = document.getElementById('gab-direk-ayak').value;
-      var ozet = document.getElementById('gab-direk-secim-ozet');
-      if(ozet) ozet.textContent = tip + '  ·  ' + (govde>0?'+':'') + govde + '  ·  ' + ayak;
-    }
-
-    function haritaGabariSihirbaziAc(adim){
-      var eski = document.getElementById('gabari-sihirbaz-overlay');
-      if(eski) eski.remove();
-
-      var tip = document.getElementById('gab-direk-tip').value;
-      var govde = document.getElementById('gab-direk-govde').value;
-      var ayak = document.getElementById('gab-direk-ayak').value;
-
-      var baslik, secenekler, mevcutDeger, tikla;
-      if(adim === 1){
-        baslik = 'Direk Tipi Seçin';
-        secenekler = (window.MASTER_DIREK_TIPLERI || window.DU_TIPLER || []).filter(function(t){ return window.DU_DATA && window.DU_DATA[t]; });
-        mevcutDeger = tip;
-        tikla = function(v){
-          document.getElementById('gab-direk-tip').value = v;
-          var govdeler = (window.DU_DATA[v] && window.DU_DATA[v].govdeler) || [];
-          document.getElementById('gab-direk-govde').value = govdeler[0];
-          var row = window.DU_DATA[v] && window.DU_DATA[v].rows[String(govdeler[0])];
-          document.getElementById('gab-direk-ayak').value = (row && row.ayaklar && row.ayaklar[0]);
-          haritaGabariSihirbaziAc(2);
-        };
-      } else if(adim === 2){
-        baslik = 'Gövde Seçin';
-        secenekler = (window.DU_DATA[tip] && window.DU_DATA[tip].govdeler) || [];
-        mevcutDeger = govde;
-        tikla = function(v){
-          document.getElementById('gab-direk-govde').value = v;
-          var row = window.DU_DATA[tip] && window.DU_DATA[tip].rows[String(v)];
-          document.getElementById('gab-direk-ayak').value = (row && row.ayaklar && row.ayaklar[0]);
-          haritaGabariSihirbaziAc(3);
-        };
-      } else {
-        baslik = 'En Kısa Ayak Seçin';
-        var row2 = window.DU_DATA[tip] && window.DU_DATA[tip].rows[String(govde)];
-        secenekler = (row2 && row2.ayaklar) || [];
-        mevcutDeger = ayak;
-        tikla = function(v){
-          document.getElementById('gab-direk-ayak').value = v;
-          haritaGabariSecimOzetiGuncelle();
-          var ov = document.getElementById('gabari-sihirbaz-overlay');
-          if(ov) ov.remove();
-          haritaGabariCanliGuncelle();
-        };
-      }
-
-      var rows = secenekler.map(function(s){
-        var etiket = (adim===2 && s>0) ? ('+'+s) : String(s);
-        var secili = String(s) === String(mevcutDeger);
-        return '<button type="button" class="gab-sihirbaz-secenek" data-v="'+s+'" style="width:100%;text-align:left;padding:14px 16px;border:none;border-bottom:1px solid #F0F4F8;background:'+(secili?'var(--info-bg)':'var(--inv-bg)')+';font-size:14.5px;font-weight:'+(secili?'700':'500')+';color:'+(secili?'var(--accent)':'var(--inv-text)')+';display:flex;justify-content:space-between;align-items:center;cursor:pointer;">'+
-          '<span>'+etiket+'</span>'+(secili?'<span style="color:var(--accent);">✓</span>':'')+
-        '</button>';
-      }).join('');
-
-      var overlay = document.createElement('div');
-      overlay.id = 'gabari-sihirbaz-overlay';
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,20,30,0.55);z-index:100001;display:flex;align-items:flex-end;';
-      overlay.innerHTML =
-        '<div style="background:var(--surface);width:100%;max-height:70vh;overflow-y:auto;border-radius:16px 16px 0 0;">'+
-          '<div style="padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--border);position:sticky;top:0;background:var(--surface);">'+
-            (adim>1 ? '<button type="button" id="gab-sihirbaz-geri" style="border:none;background:none;cursor:pointer;padding:2px;display:flex;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>' : '<span style="width:22px;"></span>')+
-            '<b style="font-family:\'Oswald\',sans-serif;font-size:15px;color:var(--text);flex:1;">'+baslik+'</b>'+
-            '<span style="font-size:10px;color:var(--text-muted);font-weight:700;">'+adim+'/3</span>'+
-            '<button type="button" id="gab-sihirbaz-kapat" style="border:none;background:none;font-size:18px;cursor:pointer;color:var(--text);line-height:1;">✕</button>'+
-          '</div>'+
-          '<div style="display:flex;gap:4px;padding:10px 16px 4px;">'+
-            [1,2,3].map(function(i){ return '<div style="flex:1;height:4px;border-radius:2px;background:'+(i<=adim?'var(--accent)':'var(--info-bg)')+';"></div>'; }).join('')+
-          '</div>'+
-          rows +
-        '</div>';
-      document.body.appendChild(overlay);
-      document.getElementById('gab-sihirbaz-kapat').onclick = function(){ overlay.remove(); };
-      overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.remove(); });
-      var geriBtn = document.getElementById('gab-sihirbaz-geri');
-      if(geriBtn) geriBtn.onclick = function(){ haritaGabariSihirbaziAc(adim-1); };
-      var secenekBtns = overlay.querySelectorAll('.gab-sihirbaz-secenek');
-      for(var i=0; i<secenekBtns.length; i++){
-        (function(btn){
-          btn.onclick = function(){ tikla(btn.getAttribute('data-v')); };
-        })(secenekBtns[i]);
-      }
-    }
-
-    function haritaGabariAttachPinchZoom(){
-      var wrap = document.getElementById('gabari-svg-wrap');
-      var inner = document.getElementById('gabari-svg-inner');
-      var resetBtn = document.getElementById('gabari-zoom-reset');
-      if(!wrap || !inner) return;
-      if(wrap._pinchZoomBagli) return; // ayn\u0131 elemana tekrar dinleyici eklenmesin
-      wrap._pinchZoomBagli = true;
-      var svgEl = inner.querySelector('svg');
-      if(!svgEl) return;
-      var vb0 = (svgEl.getAttribute('viewBox')||'0 0 700 400').split(/\s+/).map(Number);
-      var baseVB = { x: vb0[0], y: vb0[1], w: vb0[2], h: vb0[3] };
-      var curVB = { x: baseVB.x, y: baseVB.y, w: baseVB.w, h: baseVB.h };
-      var minW = baseVB.w / 6;
-      var startDist = 0, startVB = null, startUserMidX = 0, startUserMidY = 0;
-      function setVB(){
-        curVB.w = Math.max(minW, Math.min(baseVB.w, curVB.w));
-        curVB.h = curVB.w * (baseVB.h/baseVB.w);
-        curVB.x = Math.min(baseVB.x + baseVB.w - curVB.w, Math.max(baseVB.x, curVB.x));
-        curVB.y = Math.min(baseVB.y + baseVB.h - curVB.h, Math.max(baseVB.y, curVB.y));
-        svgEl.setAttribute('viewBox', curVB.x+' '+curVB.y+' '+curVB.w+' '+curVB.h);
-        var zoomluMu = curVB.w < baseVB.w - 0.5;
-        if(resetBtn) resetBtn.style.display = zoomluMu ? '' : 'none';
-      }
-      function dist(t0, t1){ var dx=t1.clientX-t0.clientX, dy=t1.clientY-t0.clientY; return Math.sqrt(dx*dx+dy*dy); }
-      function pxToUser(px, py, vb){ return { x: vb.x + (px/wrap.getBoundingClientRect().width)*vb.w, y: vb.y + (py/wrap.getBoundingClientRect().height)*vb.h }; }
-      wrap.addEventListener('touchstart', function(e){
-        if(e.touches.length === 2){
-          e.preventDefault();
-          var rect = wrap.getBoundingClientRect();
-          startDist = dist(e.touches[0], e.touches[1]);
-          startVB = { x: curVB.x, y: curVB.y, w: curVB.w, h: curVB.h };
-          var midPx = (e.touches[0].clientX+e.touches[1].clientX)/2 - rect.left;
-          var midPy = (e.touches[0].clientY+e.touches[1].clientY)/2 - rect.top;
-          var userMid = pxToUser(midPx, midPy, startVB);
-          startUserMidX = userMid.x; startUserMidY = userMid.y;
-        }
-      }, { passive:false });
-      wrap.addEventListener('touchmove', function(e){
-        if(e.touches.length === 2){
-          e.preventDefault();
-          var rect = wrap.getBoundingClientRect();
-          var newDist = dist(e.touches[0], e.touches[1]);
-          var ratio = (newDist||1) / (startDist||1);
-          var newW = Math.max(minW, Math.min(baseVB.w, startVB.w / ratio));
-          var newH = newW * (baseVB.h/baseVB.w);
-          var midPx = (e.touches[0].clientX+e.touches[1].clientX)/2 - rect.left;
-          var midPy = (e.touches[0].clientY+e.touches[1].clientY)/2 - rect.top;
-          curVB.w = newW; curVB.h = newH;
-          curVB.x = startUserMidX - (midPx/rect.width)*newW;
-          curVB.y = startUserMidY - (midPy/rect.height)*newH;
-          setVB();
-        }
-      }, { passive:false });
-      if(resetBtn){
-        resetBtn.onclick = function(){
-          curVB = { x: baseVB.x, y: baseVB.y, w: baseVB.w, h: baseVB.h };
-          setVB();
-        };
-      }
-    }
-
-    function haritaGabariCanliGuncelle(){
-      var alan = document.getElementById('gabari-grafik-alani');
-      if(!_gabariVeri || !alan) return;
-      try{
-        function parseNumYerel(s){ if(s===undefined||s===null||String(s).trim()==='') return NaN; return parseFloat(String(s).trim().replace(',', '.')); }
-        function toRadYerel(deg){ return deg * Math.PI / 180; }
-
-        var tip = document.getElementById('gab-direk-tip').value;
-        var govde = parseInt(document.getElementById('gab-direk-govde').value, 10);
-        var ayak = parseFloat(document.getElementById('gab-direk-ayak').value);
-        var aletYuksekligi = parseNumYerel(document.getElementById('gab-alet-yuksekligi').value);
-        var klempAcisi = parseNumYerel(document.getElementById('gab-klemp-acisi').value);
-        var olculenTeget = parseNumYerel(document.getElementById('gab-olculen-teget').value);
-        var cetvelSehim = parseNumYerel(document.getElementById('gab-cetvel-sehim').value);
-
-        // Siyah çizgi (Ölçülen/Cetvel) için gereken 3 temel veri — bunlar tamamlanmadan hiçbir şey çizilmez
-        if(isNaN(aletYuksekligi) || isNaN(klempAcisi) || isNaN(cetvelSehim)){
-          alan.innerHTML = '';
-          return;
-        }
-        if(!window.hesaplaAskiGergiYuksekligiMetre) return;
-        var T = window.hesaplaAskiGergiYuksekligiMetre(tip, govde, ayak);
-        if(T === null || !(T > 0)) return;
-
-        var L = _gabariVeri.totalDist;
-        var kotFarki = Math.tan(toRadYerel((100-klempAcisi)*0.9)) * L - aletYuksekligi;
-
-        // Ölçülen Teğet Açısı opsiyonel — sadece doluysa k\u0131rm\u0131z\u0131/Hedef Sehim çizgisi de hesaplan\u0131r
-        var bulunanSehim = null;
-        var tegetUyariHtml = '';
-        if(!isNaN(olculenTeget)){
-          var alfaAcisi = (100-olculenTeget)*0.9, betaAcisi = (100-klempAcisi)*0.9;
-          var target2 = (Math.tan(toRadYerel(betaAcisi)) - Math.tan(toRadYerel(alfaAcisi))) * L;
-          if(target2 >= 0){
-            var bs = Math.pow(Math.sqrt(target2) + Math.sqrt(aletYuksekligi), 2) / 4;
-            if(isFinite(bs) && bs > 0) bulunanSehim = bs;
-          }
-          if(bulunanSehim === null){
-            tegetUyariHtml = '<div style="margin-bottom:10px;padding:11px 12px;border-radius:10px;background:var(--danger-bg);border:1.5px solid var(--danger);">'+
-              '<div style="font-size:11.5px;font-weight:700;color:var(--danger);">⚠️ Hedef Sehim çizgisi çizilemiyor: bu Ölçülen Teğet Açısı (' + formatMesafeBasit(olculenTeget) + ') ile Klemp/Makara Açısı (' + formatMesafeBasit(klempAcisi) + ') birlikte geçersiz bir sonuç veriyor. Klemp/Makara Açısı, Ölçülen Teğet Açısından küçük veya eşit olmalı.</div>'+
-            '</div>';
-          }
-        }
-
-        var grafikHtml = haritaGabariGrafikCiz(_gabariVeri.samples, L, kotFarki, bulunanSehim, cetvelSehim, T);
-        var aletUyariHtml = (aletYuksekligi > T) ?
-          '<div style="margin-bottom:10px;padding:11px 12px;border-radius:10px;background:var(--warn-bg);border:1.5px solid #C77700;">'+
-            '<div style="font-size:11.5px;font-weight:700;color:#C77700;">⚠️ Alet Yüksekliği (' + formatMesafeBasit(aletYuksekligi) + ' m), Direk ' + (_gabariVeri.samples._adA||'A') + '\'nın boyundan (' + formatMesafeBasit(T) + ' m) daha fazla. Teknisyen veriyi kontrol etsin.</div>'+
-          '</div>' : '';
-        alan.innerHTML = aletUyariHtml + tegetUyariHtml + grafikHtml;
-        haritaGabariAttachPinchZoom();
-      } catch(hata){
-        alan.innerHTML = '<p style="padding:12px;color:var(--danger-ink);font-size:11.5px;">Beklenmeyen bir hata: '+(hata && hata.message ? hata.message : hata)+'</p>';
-      }
-    }
-
-    window._gabariUyariGoster = function(ev, mesaj){
-      if(ev && ev.stopPropagation) ev.stopPropagation();
-      var eski = document.getElementById('gabari-uyari-balon');
-      if(eski) eski.remove();
-      var b = document.createElement('div');
-      b.id = 'gabari-uyari-balon';
-      b.style.cssText = 'position:fixed;z-index:100000;background:var(--surface-2);color:var(--text);padding:6px 11px;border-radius:8px;font-size:11.5px;font-weight:700;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,0.35);pointer-events:none;font-family:\'IBM Plex Mono\',monospace;';
-      b.textContent = mesaj;
-      document.body.appendChild(b);
-      var x = (ev && ev.clientX) || (window.innerWidth/2), y = (ev && ev.clientY) || (window.innerHeight/2);
-      b.style.left = Math.max(6, Math.min(x-60, window.innerWidth-160))+'px';
-      b.style.top = Math.max(6, y-40)+'px';
-      setTimeout(function(){ if(b.parentNode) b.remove(); }, 2800);
-    };
-
-    function haritaGabariGrafikCiz(samples, L, h, Shedef, Solculen, T){
-      var kirmiziVar = (Shedef !== null && Shedef > 0);
-      var poleAGround = samples[0].elevation, poleBGround = samples[samples.length-1].elevation;
-      if(poleAGround===null || poleBGround===null){
-        return '<p style="padding:12px;color:var(--danger-ink);font-size:12px;">Direk konumlarında rakım verisi eksik olduğu için grafik çizilemiyor.</p>';
-      }
-      var poleATop = poleAGround + T;
-      var poleBTop = poleATop - h;
-      // Katener formülü "B, A'dan ne kadar yüksek" (hLocal = poleBTop - poleATop) bekliyor;
-      // bu modülde h ters yönde tanımlı (poleBTop = poleATop - h) olduğu için işareti çevriliyor.
-      var hLocal = -h;
-
-      // Katener (hiperbolik) sehim modeli — Sehim Kontrolleri / Gabari Kontrol ile AYNI formül.
-      function sehimIcinC(c){
-        if(Math.abs(hLocal) < 1e-9) return c*(Math.cosh(L/(2*c)) - 1);
-        var X0_ = L/2 - c*Math.asinh(hLocal/(2*c*Math.sinh(L/(2*c))));
-        var xMeme_ = X0_ + c*Math.asinh(hLocal/L);
-        var yRelA_ = c*Math.cosh((0-X0_)/c) - c;
-        var yRelMeme_ = c*Math.cosh((xMeme_-X0_)/c) - c;
-        var kirisAtMeme_ = yRelA_ + hLocal*(xMeme_/L);
-        return kirisAtMeme_ - yRelMeme_;
-      }
-      function solveVertexReal(S){
-        var lo=1e-3, hi=1e8;
-        for(var iter=0; iter<80; iter++){
-          var mid = Math.sqrt(lo*hi);
-          if(sehimIcinC(mid) > S) lo=mid; else hi=mid;
-        }
-        var c = Math.sqrt(lo*hi);
-        var X0, xMeme;
-        if(Math.abs(hLocal) < 1e-9){ X0=L/2; xMeme=L/2; }
-        else {
-          X0 = L/2 - c*Math.asinh(hLocal/(2*c*Math.sinh(L/(2*c))));
-          xMeme = X0 + c*Math.asinh(hLocal/L);
-        }
-        var yRelA = c*Math.cosh((0-X0)/c) - c;
-        return { x: Math.max(0,Math.min(L,xMeme)), c:c, X0:X0, yRelA:yRelA };
-      }
-      var olculenSolve = solveVertexReal(Solculen);
-      var hedefSolve = kirmiziVar ? solveVertexReal(Shedef) : null;
-      function elevAtSolve(xReal, sv){
-        var yRel = sv.c*Math.cosh((xReal-sv.X0)/sv.c) - sv.c;
-        return poleATop + (yRel - sv.yRelA); // gerçek katener eğrisiyle mutlak rakım
-      }
-      function acikilikAnaliziYap(sv){
-        var enAz = Infinity, enAzKonum = 0, enAzZemin = null;
-        samples.forEach(function(s){
-          if(s.elevation === null) return;
-          var gap = elevAtSolve(s.dist, sv) - s.elevation;
-          if(gap < enAz){ enAz = gap; enAzKonum = s.dist; enAzZemin = s.elevation; }
-        });
-        return { acikilik: enAz, konum: enAzKonum, zemin: enAzZemin };
-      }
-
-      // Siyah çizgi (Ölçülen/Cetvel) HER ZAMAN mevcuttur ve zemin açıklığı buna göre kontrol edilir
-      var siyahAnaliz = acikilikAnaliziYap(olculenSolve);
-      // K\u0131rm\u0131z\u0131 çizgi (Hedef Sehim) sadece Ölçülen Teğet Açısı girilmişse mevcuttur
-      var kirmiziAnaliz = kirmiziVar ? acikilikAnaliziYap(hedefSolve) : null;
-
-      var ESIK = 10; // metre — siyah/k\u0131rm\u0131z\u0131 çizginin zeminden olmas\u0131 gereken minimum aç\u0131kl\u0131k
-      var siyahSorunlu = siyahAnaliz.acikilik < ESIK;
-      var kirmiziSorunlu = kirmiziVar && kirmiziAnaliz.acikilik < ESIK;
-
-      var CANVAS_W=700, PAD_X=24, GRAFIK_YUKSEKLIK=260, TOP_PAD=44, BOTTOM_PAD=28;
-      var scaleX = (CANVAS_W-2*PAD_X)/L;
-      var terrainElevs = samples.map(function(s){ return s.elevation; }).filter(function(e){ return e!==null; });
-      var allE = terrainElevs.concat([poleATop, poleBTop]);
-      var minE = Math.min.apply(null, allE), maxE = Math.max.apply(null, allE);
-      var vRange = Math.max(5, maxE-minE);
-      var scaleY = GRAFIK_YUKSEKLIK / vRange;
-      var CANVAS_H = GRAFIK_YUKSEKLIK + TOP_PAD + BOTTOM_PAD;
-      function toPx(xReal){ return PAD_X + xReal*scaleX; }
-      function toPy(E){ return TOP_PAD + (maxE-E)*scaleY; }
-
-      var terrainLine = samples.map(function(s,i){
-        var e = s.elevation===null ? minE : s.elevation;
-        return (i===0?'M ':'L ') + toPx(s.dist) + ' ' + toPy(e);
-      }).join(' ');
-      var tabanY = CANVAS_H - BOTTOM_PAD + 12;
-      var terrainFill = terrainLine + ' L '+toPx(L)+' '+tabanY+' L '+toPx(0)+' '+tabanY+' Z';
-
-      function curveLine(sv){
-        var N=60, d='';
-        for(var i=0;i<=N;i++){
-          var x=(L*i)/N;
-          d += (i===0?'M ':'L ') + toPx(x) + ' ' + toPy(elevAtSolve(x,sv)) + ' ';
-        }
-        return d;
-      }
-      var olculenLine = curveLine(olculenSolve);
-      var vxO = olculenSolve.x, vyO = elevAtSolve(vxO, olculenSolve);
-      var kirmiziLine = kirmiziVar ? curveLine(hedefSolve) : null;
-      var vxH = kirmiziVar ? hedefSolve.x : null, vyH = kirmiziVar ? elevAtSolve(vxH, hedefSolve) : null;
-
-      // En kritik (en az aç\u0131kl\u0131kl\u0131) noktaya üçgen uyar\u0131 ikonu — t\u0131klan\u0131nca aç\u0131kl\u0131k mesaj\u0131n\u0131 g\u00f6sterir
-      function uyariIkonu(analiz, sv, renk){
-        if(analiz.acikilik >= ESIK) return '';
-        var ix = toPx(analiz.konum), iy = toPy(elevAtSolve(analiz.konum, sv));
-        var mesaj = 'Açıklık: ' + formatMesafeBasit(analiz.acikilik) + ' m (' + Math.round(analiz.konum) + '. metrede)';
-        return '<g onclick="window._gabariUyariGoster(event, \''+mesaj.replace(/'/g, '')+'\')" style="cursor:pointer;">'+
-          '<polygon points="'+ix+','+(iy-16)+' '+(ix-8)+','+(iy-2)+' '+(ix+8)+','+(iy-2)+'" fill="#FFC107" stroke="'+renk+'" stroke-width="1.5"/>'+
-          '<text x="'+ix+'" y="'+(iy-5)+'" font-size="10" font-weight="900" text-anchor="middle" fill="#111">!</text>'+
-        '</g>';
-      }
-      var siyahUyariIkon = uyariIkonu(siyahAnaliz, olculenSolve, '#111');
-      var kirmiziUyariIkon = kirmiziVar ? uyariIkonu(kirmiziAnaliz, hedefSolve, '#E8590C') : '';
-
-      var svg = '<svg viewBox="0 0 '+CANVAS_W+' '+CANVAS_H+'" style="width:100%;height:auto;display:block;background:var(--surface);border-radius:12px;">'+
-        '<text x="12" y="18" font-size="9.5" font-weight="700" fill="#9A9A9A" font-family=\'IBM Plex Mono,monospace\'>Ara Mesafe: '+Math.round(L)+' m</text>'+
-        '<path d="'+terrainFill+'" fill="#DDD9C8" stroke="#8A8368" stroke-width="1.5" stroke-linejoin="round"/>'+
-        (kirmiziVar ? '<path d="'+kirmiziLine+'" fill="none" stroke="#E8590C" stroke-width="2.2" stroke-dasharray="4,4"/>' : '')+
-        '<path d="'+olculenLine+'" fill="none" stroke="#111" stroke-width="2.2"/>'+
-        '<line x1="'+toPx(0)+'" y1="'+toPy(poleATop)+'" x2="'+toPx(0)+'" y2="'+toPy(poleAGround)+'" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>'+
-        '<line x1="'+toPx(L)+'" y1="'+toPy(poleBTop)+'" x2="'+toPx(L)+'" y2="'+toPy(poleBGround)+'" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>'+
-        '<circle cx="'+toPx(0)+'" cy="'+toPy(poleATop)+'" r="4" fill="#111"/>'+
-        '<circle cx="'+toPx(L)+'" cy="'+toPy(poleBTop)+'" r="4" fill="#111"/>'+
-        siyahUyariIkon + kirmiziUyariIkon +
-        '<text x="'+toPx(0)+'" y="'+(toPy(poleATop)-10)+'" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="Oswald,sans-serif">'+(samples._adA||'A')+'</text>'+
-        '<text x="'+toPx(0)+'" y="'+(toPy(poleATop)-24)+'" font-size="10" font-weight="700" fill="#9A9A9A" text-anchor="middle" font-family=\'IBM Plex Mono,monospace\'>'+T.toFixed(1).replace('.', ',')+' m</text>'+
-        '<text x="'+toPx(L)+'" y="'+(toPy(poleBTop)-10)+'" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="Oswald,sans-serif">'+(samples._adB||'B')+'</text>'+
-        '<text x="'+toPx(L)+'" y="'+(toPy(poleBTop)-24)+'" font-size="10" font-weight="700" fill="#9A9A9A" text-anchor="middle" font-family=\'IBM Plex Mono,monospace\'>'+(poleBTop-poleBGround).toFixed(1).replace('.', ',')+' m</text>'+
-      '</svg>';
-
-      var adA = samples._adA || 'A';
-      var legend = '<div style="display:grid;grid-template-columns:'+(kirmiziVar?'1fr 1fr':'1fr')+';gap:14px;margin-top:8px;">'+
-        (kirmiziVar ? (
-        '<div style="display:flex;flex-direction:column;gap:5px;">'+
-          '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:14px;height:0;border-top:2.5px dashed #E8590C;display:inline-block;"></span></span><span style="font-size:10.5px;color:var(--text-muted);">Hedef Sehim: <b style="color:var(--text);">'+formatMesafeBasit(Shedef)+' m</b></span></div>'+
-        '</div>') : '')+
-        '<div style="display:flex;flex-direction:column;gap:5px;">'+
-          '<div style="display:flex;align-items:center;gap:8px;"><span style="width:18px;display:flex;align-items:center;flex-shrink:0;"><span style="width:14px;height:2.5px;background:var(--surface);display:inline-block;"></span></span><span style="font-size:10.5px;color:var(--text-muted);">Ölçülen (Cetvel): <b style="color:var(--text);">'+formatMesafeBasit(Solculen)+' m</b></span></div>'+
-        '</div>'+
-      '</div>';
-
-      // --- Durum kutular\u0131 ---
-      var kutular = '';
-      var herIkisiUygun = !siyahSorunlu && !kirmiziSorunlu;
-
-      if(herIkisiUygun){
-        kutular += '<div style="margin-top:10px;padding:12px;border-radius:10px;background:var(--ok-bg);border:1.5px solid #2E6B4E;">'+
-          '<div style="font-size:11.5px;font-weight:700;color:#2E6B4E;margin-bottom:5px;">✅ GABARİ YETERLİ GÖRÜNÜYOR</div>'+
-          '<div style="font-size:12.5px;color:var(--text);">En düşük açıklık (Ölçülen/Cetvel): <b>'+formatMesafeBasit(siyahAnaliz.acikilik)+' m</b> (yaklaşık '+Math.round(siyahAnaliz.konum)+'. metrede, zemin '+formatMesafeBasit(siyahAnaliz.zemin)+' m)</div>'+
-          '<div style="font-size:9.5px;color:var(--text-muted);margin-top:6px;">Askı/Gergi Noktası Yüksekliği: '+formatMesafeBasit(T)+' m · Kot Farkı: '+formatMesafeBasit(h)+' m · Eşik: '+ESIK+' m</div>'+
-        '</div>';
-      } else {
-        // Siyah çizgi (Ölçülen/Cetvel) uyar\u0131s\u0131 — kritik/sert uyar\u0131
-        if(siyahSorunlu){
-          kutular += '<div style="margin-top:10px;padding:12px;border-radius:10px;background:var(--danger-bg);border:1.5px solid var(--danger);">'+
-            '<div style="font-size:11.5px;font-weight:700;color:var(--danger);margin-bottom:5px;">⚠️ Verileri yeniden inceleyiniz. Bu gabari sahaya uygun görünmüyor</div>'+
-            '<div style="font-size:12.5px;color:var(--text);">Ölçülen (Cetvel) çizgisi ile zemin arasındaki açıklık: <b>'+formatMesafeBasit(siyahAnaliz.acikilik)+' m</b> (yaklaşık '+Math.round(siyahAnaliz.konum)+'. metrede, zemin '+formatMesafeBasit(siyahAnaliz.zemin)+' m) — '+ESIK+' m eşiğinin altında'+(siyahAnaliz.acikilik<0?' (iletken zemine giriyor!)':'')+'.</div>'+
-          '</div>';
-        }
-        // K\u0131rm\u0131z\u0131 çizgi (Hedef Sehim) uyar\u0131s\u0131 — siyahtan farkl\u0131, ayr\u0131 bir kutu
-        if(kirmiziSorunlu){
-          kutular += '<div style="margin-top:10px;padding:12px;border-radius:10px;background:var(--warn-bg);border:1.5px solid #C77700;">'+
-            '<div style="font-size:11.5px;font-weight:700;color:#C77700;margin-bottom:5px;">⚠️ Hedef Sehim çizgisi de zemine yakın</div>'+
-            '<div style="font-size:12.5px;color:var(--text);">Hedef Sehim ile zemin arasındaki açıklık: <b>'+formatMesafeBasit(kirmiziAnaliz.acikilik)+' m</b> (yaklaşık '+Math.round(kirmiziAnaliz.konum)+'. metrede) — '+ESIK+' m eşiğinin altında.</div>'+
-          '</div>';
-        }
-      }
-
-      // --- Sehim hatas\u0131 / meme noktas\u0131 kaymas\u0131 bilgisi (yaln\u0131zca k\u0131rm\u0131z\u0131 çizgi varsa, Sehim Kontrolleri mod\u00fclündeki mant\u0131kla ayn\u0131) ---
-      if(kirmiziVar){
-        var sehimHatasi = Solculen - Shedef;
-        var kaymaMiktari = Math.abs(vxO - vxH);
-        if(kaymaMiktari > 0.5){
-          kutular += '<div style="margin-top:10px;padding:12px;border-radius:10px;background:var(--info-bg);border:1.5px solid #7C93AC;">'+
-            '<div style="font-size:11px;color:#3A4D5C;line-height:1.5;">📏 Sehim farkı (Cetvel − Hedef = '+formatMesafeBasit(sehimHatasi)+' m), iletkenin en dip noktasını yaklaşık <b>'+formatMesafeBasit(kaymaMiktari)+' metre</b> kaydırmıştır.</div>'+
-          '</div>';
-        }
-      } else {
-        kutular += '<div style="margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--info-bg);border:1px dashed #C8D3DB;">'+
-          '<div style="font-size:10.5px;color:var(--text-muted);">Ölçülen Teğet Açısı girilirse Hedef Sehim çizgisi ve sehim hatası bilgisi de eklenir.</div>'+
-        '</div>';
-      }
-
-      var svgSarmalanmis = '<div id="gabari-svg-wrap" style="position:relative;overflow:hidden;border-radius:12px;touch-action:pan-y;">'+
-          '<div id="gabari-svg-inner">'+svg+'</div>'+
-          '<button type="button" id="gabari-zoom-reset" style="display:none;position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.85);color:var(--text);border:none;border-radius:8px;padding:6px 12px;font-size:10.5px;font-weight:700;cursor:pointer;">Sıfırla</button>'+
-        '</div>'+
-        '<p style="margin:6px 2px 0;font-size:9.5px;color:var(--text-muted);text-align:center;">🤏 2 parmakla yakınlaştırın ve kaydırın</p>';
-
-      return svgSarmalanmis + legend + kutular;
     }
 
     function haritaMesafeNoktaEkle(pi){
