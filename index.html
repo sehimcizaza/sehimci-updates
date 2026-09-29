@@ -757,6 +757,7 @@ button,input{font-family:inherit;}
   background:var(--bg);
 }
 .form{display:flex; flex-direction:column; gap:16px; margin-top:18px;}
+.form[hidden]{display:none;}
 .form-row2{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
 .form-row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
 .form-row4{display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px;}
@@ -2777,6 +2778,9 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 }
 
 /* Kot farkı / Target çipleri */
+/* 2026-09-28 (kullanıcı bildirdi): çipler üstteki hareketli sehim göstergesine (bx-meter) yapışıktı —
+   sonuç bloğu ile çip satırı arasına boşluk eklendi. */
+#screen-teget-acisi .bx-step-3 #details{ margin-top:18px; }
 #screen-teget-acisi .bx-chips{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 #screen-teget-acisi .bx-chip{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; background:var(--bx-tile); border-radius:14px; padding:10px 12px; min-width:0; }
 #screen-teget-acisi .bx-chip-k{ font-size:12px; color:var(--bx-muted); white-space:nowrap; }
@@ -8613,7 +8617,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
                 <text x="365" y="168" text-anchor="middle" font-size="9" fill="#FFFFFF" font-weight="700">H</text>
               </g>
 
-              <text x="200" y="186" text-anchor="middle" font-size="8.5" fill="#9A9A9A" font-family="IBM Plex Sans, sans-serif">Dört kazık aynı doğrultuda, eşit "a" aralığıyla; cihaz P1-P2 ortasında (a/2)</text>
+              <text x="200" y="186" text-anchor="middle" font-size="8.5" font-weight="700" style="fill:var(--text)" font-family="IBM Plex Sans, sans-serif">Dört kazık aynı doğrultuda, eşit "a" aralığıyla; cihaz P1-P2 ortasında (a/2)</text>
             </svg>
           </div>
         </div>
@@ -8622,7 +8626,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         <div style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px;">
           <div style="background:var(--surface-2);padding:9px 10px 9px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
             <p style="margin:0;font-family:'Oswald',sans-serif;font-size:12.5px;font-weight:700;color:var(--text);letter-spacing:0.03em;white-space:nowrap;">WENNER ÖLÇÜM TABLOSU</p>
-            <div style="display:flex;gap:4px;flex-shrink:0;" id="to-ozd-birim-toggle" data-birim="ohm">
+            <div style="display:flex;gap:4px;flex-shrink:0;" id="to-ozd-birim-toggle" data-birim="ohmm">
               <button type="button" class="to-ozd-birim-opt" data-val="ohm" style="display:flex;align-items:center;gap:3px;padding:5px 9px;border-radius:7px;border:1.5px solid transparent;background:var(--surface);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;cursor:pointer;">
                 <span class="to-ozd-birim-tik" style="width:12px;">✓</span>Ω
               </button>
@@ -8654,18 +8658,28 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
              Başlat'a basılana kadar gizli kalır (2026-08-14, kullanıcı isteği: "sadece iki buton
              kutusu olacak"). -->
         <div id="to-ozd-sonuc-wrap" style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;">
-          <div style="background:var(--surface-2);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
-            <p style="margin:0;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:var(--text);">Katman Ön Analizi (Kaba)</p>
-            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-              <button class="btn-primary" type="button" id="to-ozd-grafik-btn" style="width:auto;flex-shrink:0;padding:9px 18px;margin:0;font-size:12.5px;text-transform:none;background:#F5A623;color:var(--warn-ink);box-shadow:0 2px 6px rgba(0,0,0,0.25);">Başlat</button>
+          <div style="background:var(--surface-2);padding:10px 14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <p style="margin:0;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;color:var(--text);">Katman Ön Analizi (Kaba)</p>
               <button type="button" id="to-ozd-kaba-daralt-btn" title="Daralt / Genişlet" style="width:30px;height:30px;flex-shrink:0;border-radius:8px;border:none;background:var(--tint-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">
                 <svg id="to-ozd-kaba-daralt-ikon" viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .2s;"><path d="M5 7.5l5 5 5-5"/></svg>
               </button>
+            </div>
+            <div style="display:flex;align-items:stretch;gap:10px;margin-top:10px;">
+              <div style="position:relative;flex:1 1 0;min-width:0;height:46px;border:1.5px solid var(--border-strong);border-radius:12px;background:var(--surface);overflow:hidden;">
+                <span style="position:absolute;top:5px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:4px;pointer-events:none;font-size:9.5px;font-weight:700;color:var(--text-muted);white-space:nowrap;">Katman Sayısı:</span>
+                <select id="to-ozd-kaba-nlayer" style="position:absolute;inset:0;width:100%;height:100%;box-sizing:border-box;padding:16px 0 0;border:none;outline:none;background:transparent;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;text-align:center;text-align-last:center;-webkit-appearance:none;appearance:none;cursor:pointer;">
+                  <option value="0" selected>Oto</option><option value="1">1</option><option value="2">2</option>
+                  <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                </select>
+              </div>
+              <button type="button" class="btn-primary" id="to-ozd-grafik-btn" style="flex:1 1 0;min-width:0;height:46px;min-height:0;margin:0;padding:0 8px;border-radius:12px;font-size:13px;text-transform:none;white-space:nowrap;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.25);background:#F5A623;color:var(--warn-ink);">Başlat</button>
             </div>
           </div>
           <div id="to-ozd-kaba-govde">
           <div id="to-ozd-kaba-icerik" hidden style="padding:12px;">
             <p style="margin:0 0 8px;font-family:'Oswald',sans-serif;font-size:12.5px;font-weight:700;color:var(--text);letter-spacing:0.03em;">GÖRÜNÜR ÖZDİRENÇ — WENNER AÇIKLIĞI GRAFİĞİ</p>
+            <p id="to-ozd-kaba-sapma" style="margin:0 0 6px;font-size:11px;color:var(--text-muted);"></p>
             <canvas id="to-ozd-canvas" style="width:100%;display:block;border-radius:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:14px;"></canvas>
 
         <!-- Katman Ön Analizi ayarları/tablosu (≥4 ölçümde görünür) -->
@@ -8696,7 +8710,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
               <div>
                 <label style="display:block;font-size:9.5px;font-weight:700;color:var(--text-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.03em;">Katman Sınırlarını Elle Belirle (opsiyonel)</label>
                 <input type="text" id="to-ozd-param-manuel" placeholder="örn. 1, 3  (a değerleri, virgülle)" style="width:100%;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--text);">
-                <p style="margin:3px 0 0;font-size:9px;color:var(--text-muted);line-height:1.4;">Boş bırakılırsa sınırlar otomatik (eğrideki dönüş noktalarından) bulunur.</p>
+                <p style="margin:3px 0 0;font-size:9px;color:var(--text-muted);line-height:1.4;">Boş bırakılırsa sınırlar otomatik (eğrideki dönüş noktalarından) bulunur. <b>Buraya yazılan her değer bir sınırdır, katman sayısı değildir</b> (1 değer = 2 katman). Katman sayısını doğrudan seçmek için başlıktaki "Katman" seçicisini kullanın; bu kutuyu kullanırsanız seçici "Oto"ya döner.</p>
               </div>
               <button type="button" id="to-ozd-yeniden-hesapla-btn" style="width:100%;padding:8px;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;font-weight:700;color:var(--text);cursor:pointer;">🔄 Ön-Tahmini Yeniden Hesapla</button>
             </div>
@@ -8711,7 +8725,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
               <tbody id="to-ozd-katman-tablo"><tr><td colspan="4" style="border:1px solid var(--border);padding:6px;text-align:center;color:var(--text-muted);">Grafik oluşturulunca otomatik hesaplanır.</td></tr></tbody>
             </table>
             <div id="to-ozd-kaba-zemin-gorsel" style="margin-bottom:10px;"></div>
-            <p id="to-ozd-katman-not" style="margin:0;font-size:9.5px;color:var(--text-muted);line-height:1.5;">Bu, eğrideki eğim değişimlerine (dönüş noktaları + monoton eğrilerde hız değişimleri) bakan hızlı ve kaba bir okumadır (kesin ters-çözüm değildir). <b>Not:</b> bu kutu, "Sehimci Detaylı Fiziksel Model" kutusundan TAMAMEN BAĞIMSIZDIR — ikisi ayrı sistemdir, birbirini etkilemez.</p>
+            <p id="to-ozd-katman-not" style="margin:0;font-size:9.5px;color:var(--text-muted);line-height:1.5;">Bu, eğrideki eğim değişimlerine (dönüş noktaları + monoton eğrilerde hız değişimleri) bakan hızlı ve kaba bir okumadır (kesin ters-çözüm değildir).</p>
         </div>
           </div>
           </div><!-- /to-ozd-kaba-govde -->
@@ -8736,14 +8750,15 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
                  (flex-wrap:nowrap) — etiket kısaltıldı, seçici daraltıldı, "(önerilen)" kompakt,
                  buton flex:1 ile kalan alanı dolduruyor ve gerekirse yazı boyutu clamp() ile
                  küçülüp/kısalıp sayfadan taşmayı engelliyor (text-overflow:ellipsis son çare). -->
-            <div id="to-ozd-nlayer-satiri" style="display:flex;align-items:center;gap:5px;flex-wrap:nowrap;margin-top:10px;">
-              <label style="font-size:9.5px;color:var(--text-2);flex-shrink:0;white-space:nowrap;">Katman:</label>
-              <select id="to-ozd-nlayer" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:4px 2px;border:1px solid var(--border-strong);border-radius:5px;background:var(--surface);color:var(--text);flex-shrink:0;width:40px;">
-                <option value="2">2</option><option value="3">3</option>
-                <option value="4" selected>4</option><option value="5">5</option>
-              </select>
-              <span id="to-ozd-nlayer-onerilen-etiket" hidden style="font-size:8.5px;font-weight:700;color:#F4B860;flex-shrink:0;white-space:nowrap;">(önerilen)</span>
-              <button type="button" class="btn-primary" id="to-ozd-fiziksel-btn" style="flex:1 1 auto;min-width:0;background:#C97B2E;padding:7px 6px;margin:0;font-size:clamp(9.5px,3vw,12.5px);text-transform:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;">Hesapla</button>
+            <div id="to-ozd-nlayer-satiri" style="display:flex;align-items:stretch;gap:10px;margin-top:10px;">
+              <div style="position:relative;flex:1 1 0;min-width:0;height:46px;border:1.5px solid var(--border-strong);border-radius:12px;background:var(--surface);overflow:hidden;">
+                <span style="position:absolute;top:5px;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:4px;pointer-events:none;font-size:9.5px;font-weight:700;color:var(--text-muted);white-space:nowrap;">Katman Sayısı:<span id="to-ozd-nlayer-onerilen-etiket" hidden style="font-size:8.5px;font-weight:700;color:#F4B860;">(önerilen)</span></span>
+                <select id="to-ozd-nlayer" style="position:absolute;inset:0;width:100%;height:100%;box-sizing:border-box;padding:16px 0 0;border:none;outline:none;background:transparent;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;text-align:center;text-align-last:center;-webkit-appearance:none;appearance:none;cursor:pointer;">
+                  <option value="2">2</option><option value="3">3</option>
+                  <option value="4" selected>4</option><option value="5">5</option>
+                </select>
+              </div>
+              <button type="button" class="btn-primary" id="to-ozd-fiziksel-btn" style="flex:1 1 0;min-width:0;height:46px;min-height:0;margin:0;padding:0 8px;border-radius:12px;font-size:13px;text-transform:none;white-space:nowrap;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.25);background:#C97B2E;">Başlat</button>
             </div>
           </div>
           <div id="to-ozd-fiziksel-govde">
@@ -8789,7 +8804,6 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
             <p id="to-ozd-fark-not" style="margin:0 0 0;font-size:9px;color:var(--text-muted);line-height:1.5;display:none;">Kırmızı işaretli satırlar %15'in üzerinde fark gösteriyor — bu genelde ölçüm gürültüsüne veya modelin çözemediği çok ince bir katmana işaret eder.</p>
             <div id="to-ozd-aykiri-uyari" style="display:none;margin:10px 0 0;padding:10px 12px;background:var(--danger-bg);border-left:4px solid var(--danger);border-radius:0 8px 8px 0;font-size:10.5px;color:var(--danger-ink);line-height:1.65;"></div>
 
-            <p style="margin:10px 0 0;font-size:9.5px;color:var(--text-muted);line-height:1.5;"><b>Yöntem hakkında:</b> Ölçülen eğriye en uygun katmanlı-yer modelini sayısal olarak arayan bir fiziksel çözümleme kullanılır — bu kutu, "Katman Ön Analizi (Kaba)" kutusundan TAMAMEN BAĞIMSIZDIR, ikisi birbirini etkilemez. Özellikle çok ince/gizli katmanlarda ve eğrinin düzleşmediği en alt katmanda belirsizlik kalabilir. Fark (residual) tablosu, modelin verinin neresini iyi/kötü açıkladığını gösterir.</p>
           </div>
           </div><!-- /to-ozd-fiziksel-govde -->
         </div>
@@ -8810,7 +8824,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         </div>
         <div id="to-ozd-senaryo-secim" style="display:flex;gap:8px;margin-bottom:8px;">
           <button type="button" id="to-ozd-senaryo-kaba-btn" style="flex:1;padding:10px 6px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">Kaba</button>
-          <button type="button" id="to-ozd-senaryo-detay-btn" style="flex:1;padding:10px 6px;border-radius:9px;border:1.5px solid #C97B2E;background:var(--surface);color:#C97B2E;font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">Detaylı</button>
+          <button type="button" id="to-ozd-senaryo-detay-btn" style="flex:1;padding:10px 6px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">Detaylı</button>
         </div>
         <p id="to-ozd-senaryo-durum" style="margin:0 0 10px;font-size:10px;color:var(--text-muted);text-align:center;"></p>
         </div>
@@ -8922,8 +8936,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
         <!-- Kayıtlı Hat Seçiniz (Opsiyonel) — 2026-08-14: herhangi bir yöntem (Kaba VEYA
              Fiziksel) çalışana kadar gizli (kullanıcı isteği: "hesaplama yapılmamışsa gösterme"),
              "Ölçümü Kaydet" ile aynı anda görünür olur (toOzdOrtakAlanlariGoster). -->
-        <div id="to-ozd-hat-secimi-alan" class="field field-mini" hidden style="margin-bottom:12px;">
-          <label class="field-label">Kayıtlı Hat Seçiniz (Opsiyonel)</label>
+        <div id="to-ozd-hat-secimi-alan" hidden style="margin-bottom:12px;">
           <div id="to-ozd-hat-dropdown-wrap" style="position:relative;"><button type="button" id="to-ozd-hat-dropdown-btn" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:11px 12px;font-family:inherit;font-size:13px;color:var(--text);cursor:pointer;text-align:left;box-sizing:border-box;"><span id="to-ozd-hat-dropdown-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Kayıtlı Hat Seçiniz (Opsiyonel)</span><span id="to-ozd-hat-dropdown-ok" style="font-size:11px;color:var(--text-muted);flex-shrink:0;">▼</span></button><div id="to-ozd-hat-dropdown-liste" hidden style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,0.18);max-height:260px;overflow-y:auto;"></div></div>
         </div>
 
@@ -9146,7 +9159,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     <!-- Üst bar -->
     <div style="display:flex;align-items:center;gap:12px;padding:calc(14px + max(env(safe-area-inset-top,0px), 28px)) 20px 14px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;">
       <button type="button" id="harita-not-kapat" aria-label="Geri" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <p class="history-title" style="margin:0;flex:1;">Not Oluştur</p>
+      <p class="history-title" id="harita-not-baslik" style="margin:0;flex:1;">Not Oluştur</p>
     </div>
     <!-- Kaydırılabilir içerik -->
     <div style="overflow-y:auto;flex:1;padding:20px;">
@@ -10185,7 +10198,15 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     if(moduleRegistry[id]) openModule(moduleRegistry[id]);
   };
 
+  // Harita modülündeki direk bilgi giriş/detay alanını (kaydedilmemiş taslak dahil) kapatır.
+  window.haritaDirekAlaniniKapat = function(){
+    ['harita-direk-form','harita-direk-detay','harita-direk-wrap'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.hidden = true;
+    });
+  };
   function openModule(m, opts){
+    if(window.haritaDirekAlaniniKapat) window.haritaDirekAlaniniKapat();
     currentBackTarget = (opts && opts.backTarget) || null;
     moduleTitle.textContent = m.title;
     // 2026-09-22 EKLEME (kullanıcı isteği: "Modül her açıldığında normal hesaba dönsün") —
@@ -10240,6 +10261,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     });
   }
   function goHome(){
+    if(window.haritaDirekAlaniniKapat) window.haritaDirekAlaniniKapat();
     currentBackTarget = null;
     window._mtbCurrentModId = null;
     var ndDetayOv = document.getElementById('nd-detay-overlay');
@@ -23065,6 +23087,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
           }
         };
       }
+      mapInstance.on('click', function(){ if(window.haritaDirekAlaniniKapat) window.haritaDirekAlaniniKapat(); });
       mapInstance.on('zoomend', function(){
         var z=mapInstance.getZoom();
         var seciliLblId = _seciliNoktaMarkerRef ? _seciliNoktaMarkerRef._origLblId : null;
@@ -24303,6 +24326,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
     function haritaNotAc(){
       if(!currentPointInfo) return;
+      notDuzenlemeModunuSifirla();
       renderMevcutNotlar(currentPointInfo.pointKey);
       document.getElementById('harita-not-nokta-adi').textContent = currentPointInfo.displayName;
       document.getElementById('harita-not-metin').value='';
@@ -25303,6 +25327,12 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var btn = e.target.closest ? e.target.closest('[data-genislet-id]') : null; if(!btn) return;
       var id = btn.getAttribute('data-genislet-id');
       var note = loadNotes().find(function(n){ return n.id === id; }); if(!note) return;
+      notlarListesineDon = false;
+      notDetayGoster(note);
+    });
+
+    // Not detay sheet içeriğini doldurup açar (hem "Genişlet" hem Kayıtlı Notlar > "Görüntüle" kullanır)
+    function notDetayGoster(note){
       currentDetayNote = note;
       var _detayDosya = haritaGosterimDosyaAdi(note.fileName);
       document.getElementById('harita-not-detay-nokta').textContent = note.pointName + (_detayDosya ? ' ('+_detayDosya+')' : '');
@@ -25312,7 +25342,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         (note.text ? '<p style="margin:0;font-size:14px;color:var(--text);line-height:1.6;">'+note.text+'</p>' : '') +
         '<span style="font-size:11px;color:var(--text-muted);">'+note.createdAt+'</span>';
       notDetaySheetCtrl.show();
-    });
+    }
 
     // ── Not detay sheet ──
     var notDetaySheetCtrl = createSheetController(
@@ -25320,7 +25350,16 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       document.getElementById('harita-not-detay-sheet'),
       document.getElementById('harita-not-detay-backdrop'), []
     );
-    document.getElementById('harita-not-detay-kapat').addEventListener('click', function(){ notDetaySheetCtrl.hide(); });
+    var notlarListesineDon = false;     // Kayıtlı Notlar > Görüntüle ile açıldıysa kapanınca listeye dön
+    var duzenlenenNotId = null;         // Düzenleme modunda olan notun id'si (null = yeni not)
+    var duzenlemeListedenGeldi = false; // Kayıtlı Notlar > Düzenle ile açıldıysa bitince listeye dön
+    function notlarListesiniYenidenAc(){
+      setTimeout(function(){ var b = document.getElementById('harita-notlar-btn'); if(b) b.click(); }, 350);
+    }
+    document.getElementById('harita-not-detay-kapat').addEventListener('click', function(){
+      notDetaySheetCtrl.hide();
+      if(notlarListesineDon){ notlarListesineDon = false; notlarListesiniYenidenAc(); }
+    });
 
     document.getElementById('harita-not-detay-sil-btn').addEventListener('click', function(){
       if(!currentDetayNote) return;
@@ -25330,14 +25369,17 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       notDetaySheetCtrl.hide();
       if(currentPointInfo) renderSeciliNoktaNotlari(currentPointInfo);
       currentDetayNote = null;
+      if(notlarListesineDon){ notlarListesineDon = false; notlarListesiniYenidenAc(); }
     });
 
     document.getElementById('harita-not-detay-ekle-btn').addEventListener('click', function(){
+      notlarListesineDon = false;
       notDetaySheetCtrl.hide();
       setTimeout(function(){ if(currentPointInfo) haritaNotAc(); }, 350);
     });
 
     document.getElementById('harita-not-detay-paylas-btn').addEventListener('click', function(){
+      notlarListesineDon = false;
       if(currentPointInfo){ notDetaySheetCtrl.hide(); setTimeout(function(){ acPaylasSecimi(currentPointInfo); }, 350); }
     });
 
@@ -25346,7 +25388,35 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       show: function(){ notOverlayEl.style.display='flex'; window.scrollTo(0,0); },
       hide: function(){ notOverlayEl.style.display='none'; }
     };
-    document.getElementById('harita-not-kapat').addEventListener('click', function(){ notSheetCtrl.hide(); });
+    // Editörü "Yeni not" moduna döndürür (başlık + buton metni + düzenleme durumu)
+    function notDuzenlemeModunuSifirla(){
+      duzenlenenNotId = null;
+      var b = document.getElementById('harita-not-baslik'); if(b) b.textContent = 'Not Oluştur';
+      var k = document.getElementById('harita-not-kaydet'); if(k && !k.disabled) k.textContent = 'Notu Kaydet';
+    }
+    // Kayıtlı Notlar listesinden bir notu düzenlemek için editörü mevcut içerikle açar
+    function notDuzenleAc(note){
+      var coords = String(note.pointKey || '').split('_');
+      currentPointInfo = { pointKey: note.pointKey, displayName: note.pointName || 'Nokta', fileName: note.fileName || '', lat: coords[0] || '', lng: coords[1] || '' };
+      duzenlenenNotId = note.id;
+      document.getElementById('harita-not-baslik').textContent = 'Notu Düzenle';
+      document.getElementById('harita-not-kaydet').textContent = 'Değişiklikleri Kaydet';
+      document.getElementById('harita-not-nokta-adi').textContent = note.pointName || 'Nokta';
+      document.getElementById('harita-not-metin').value = note.text || '';
+      notImageUrl = note.imageUrl || null;
+      var onizWrap = document.getElementById('harita-not-fotograf-onizleme');
+      if(notImageUrl){ document.getElementById('harita-not-img').src = notImageUrl; onizWrap.hidden = false; }
+      else { onizWrap.hidden = true; }
+      document.getElementById('harita-not-mevcut-wrap').hidden = true; // düzenlerken "önceki notlar" gizli
+      notSheetCtrl.show();
+    }
+    document.getElementById('harita-not-kapat').addEventListener('click', function(){
+      var donus = duzenlenenNotId && duzenlemeListedenGeldi;
+      notSheetCtrl.hide();
+      if(duzenlenenNotId){ notDuzenlemeModunuSifirla(); }
+      duzenlemeListedenGeldi = false;
+      if(donus) notlarListesiniYenidenAc();
+    });
 
     var notImageUrl = null;
     var galeriInput = document.getElementById('harita-not-galeri-input');
@@ -25938,6 +26008,33 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     });
 
     document.getElementById('harita-not-kaydet').addEventListener('click', function(){
+      // ── Mevcut notu düzenleme ──
+      if(duzenlenenNotId){
+        var yeniMetin = document.getElementById('harita-not-metin').value.trim();
+        if(!yeniMetin && !notImageUrl){ alert('Lütfen not metni yazın veya fotoğraf ekleyin.'); return; }
+        var tumNotlarD = loadNotes();
+        var hedefNot = tumNotlarD.find(function(n){ return n.id === duzenlenenNotId; });
+        if(!hedefNot){ alert('Düzenlenen not bulunamadı.'); notSheetCtrl.hide(); notDuzenlemeModunuSifirla(); return; }
+        hedefNot.text = yeniMetin;
+        hedefNot.imageUrl = notImageUrl || null;
+        saveNotes(tumNotlarD);
+        if(currentPointInfo){ try{ renderSeciliNoktaNotlari(currentPointInfo); }catch(err){} }
+        var kBtn = document.getElementById('harita-not-kaydet');
+        kBtn.textContent = '✓ Güncellendi';
+        kBtn.disabled = true;
+        var donusListe = duzenlemeListedenGeldi;
+        setTimeout(function(){
+          kBtn.disabled = false;
+          notSheetCtrl.hide();
+          notDuzenlemeModunuSifirla();
+          duzenlemeListedenGeldi = false;
+          notImageUrl = null;
+          document.getElementById('harita-not-metin').value = '';
+          document.getElementById('harita-not-fotograf-onizleme').hidden = true;
+          if(donusListe) notlarListesiniYenidenAc();
+        }, 800);
+        return;
+      }
       if(!currentPointInfo) return;
       var metin = document.getElementById('harita-not-metin').value.trim();
       if(!metin && !notImageUrl){ alert('Lütfen not metni yazın veya fotoğraf ekleyin.'); return; }
@@ -26003,9 +26100,13 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
               return '<div style="padding:7px 0;border-top:1px solid var(--border);">' +
                 (n.imageUrl ? '<div style="margin-bottom:6px;">'+thumbHtml(n.imageUrl)+'</div>' : '') +
                 (n.text ? '<p style="margin:0 0 4px;font-size:12.5px;color:var(--text);">'+n.text+'</p>' : '') +
-                '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">' +
                   '<span style="font-size:10.5px;color:var(--text-muted);">'+n.createdAt+'</span>' +
-                  '<button type="button" data-del-note="'+n.id+'" style="background:none;border:none;color:var(--danger);font-size:11px;cursor:pointer;padding:0;">Sil</button>' +
+                  '<span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
+                    '<button type="button" data-view-note="'+n.id+'" style="background:none;border:1px solid var(--accent);color:var(--accent);border-radius:6px;font-size:11px;cursor:pointer;padding:3px 9px;">Görüntüle</button>' +
+                    '<button type="button" data-edit-note="'+n.id+'" style="background:none;border:1px solid var(--border);color:var(--text);border-radius:6px;font-size:11px;cursor:pointer;padding:3px 9px;">Düzenle</button>' +
+                    '<button type="button" data-del-note="'+n.id+'" style="background:none;border:none;color:var(--danger);font-size:11px;cursor:pointer;padding:3px 4px;">Sil</button>' +
+                  '</span>' +
                 '</div></div>';
             }).join('') +
           '</div>';
@@ -26014,6 +26115,27 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       notlarSheetCtrl.show();
     });
     document.getElementById('harita-notlar-liste').addEventListener('click', function(e){
+      // Görüntüle / Düzenle butonları
+      var vBtn = e.target.closest ? e.target.closest('[data-view-note],[data-edit-note]') : null;
+      if(vBtn){
+        var hedefId = vBtn.getAttribute('data-view-note') || vBtn.getAttribute('data-edit-note');
+        var duzenle = vBtn.hasAttribute('data-edit-note');
+        var hedef = loadNotes().find(function(n){ return n.id === hedefId; });
+        if(!hedef) return;
+        notlarSheetCtrl.hide();
+        setTimeout(function(){
+          if(duzenle){
+            duzenlemeListedenGeldi = true;
+            notDuzenleAc(hedef);
+          } else {
+            var c = String(hedef.pointKey || '').split('_');
+            currentPointInfo = { pointKey: hedef.pointKey, displayName: hedef.pointName || 'Nokta', fileName: hedef.fileName || '', lat: c[0] || '', lng: c[1] || '' };
+            notlarListesineDon = true;
+            notDetayGoster(hedef);
+          }
+        }, 350);
+        return;
+      }
       // Paylaş butonu
       var pBtn = e.target.closest ? e.target.closest('[data-paylas-pk]') : null;
       if(pBtn){
@@ -28499,6 +28621,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       // devam ediyordu. Aşağıdaki 4 satır bunu sıfırlıyor; pendingNoteInfo varsa
       // (arama/bildirimden gelme) zaten hemen altta currentPointInfo tekrar set ediliyor.
       currentPointInfo = null;
+      if(window.haritaDirekAlaniniKapat) window.haritaDirekAlaniniKapat();
       if(seciliNotlarWrap) seciliNotlarWrap.hidden = true;
       seciliPaylasPi = null;
       if(dropdownLabel) dropdownLabel.textContent = '📂 Dosya Seç';
@@ -31520,12 +31643,33 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       // tam sayfa ekranlardaki (kırpma olmayan) davranışın aynısı elde edilir.
       var r = btn.getBoundingClientRect();
       liste.style.position = 'fixed';
-      liste.style.bottom = 'auto';
-      liste.style.top = (r.bottom + 4) + 'px';
       liste.style.left = r.left + 'px';
       liste.style.width = r.width + 'px';
       liste.style.zIndex = '1500';
+      liste.style.overflowY = 'auto';
+      liste.style.overscrollBehavior = 'contain';
+      liste.style.webkitOverflowScrolling = 'touch';
+      liste.style.maxHeight = '260px';
+      liste.style.top = (r.bottom + 4) + 'px';
+      liste.style.bottom = 'auto';
       liste.hidden = false;
+      // 2026-09-29 (kullanıcı geri bildirimi): buton ekranın altına yakınken liste ekran dışına
+      // taşıyor ve sayfa kaydırılınca (scroll dinleyicisi listeyi kapattığı için) devamı görülemiyordu.
+      // Artık açılırken altta/üstte kalan alan ölçülüyor: yer yetmiyorsa liste YUKARI açılıyor ya da
+      // yüksekliği kalan alana göre sınırlanıp KENDİ İÇİNDE kaydırılıyor.
+      var vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+      var ihtiyac = Math.min(liste.scrollHeight, 260);
+      var altBosluk = vh - r.bottom - 96;   // 96px: alttaki yüzen gezinme çubuğu payı
+      var ustBosluk = r.top - 12;
+      if(altBosluk >= ihtiyac){
+        liste.style.maxHeight = Math.min(260, altBosluk) + 'px';
+      } else if(ustBosluk > altBosluk){
+        liste.style.top = 'auto';
+        liste.style.bottom = (vh - r.top + 4) + 'px';
+        liste.style.maxHeight = Math.max(120, Math.min(260, ustBosluk)) + 'px';
+      } else {
+        liste.style.maxHeight = Math.max(120, altBosluk) + 'px';
+      }
       if(ok) ok.textContent = '▲';
       acik = true;
     }
@@ -31533,7 +31677,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     document.addEventListener('click', function(e){ if(acik && !wrap.contains(e.target)) kapat(); });
     // Liste açıkken herhangi bir kaydırma (sheet'in kendi iç scroll'u dahil) olursa
     // kapat — position:fixed olduğu için sheet kayarsa buton ile hizası bozulur.
-    document.addEventListener('scroll', function(){ if(acik) kapat(); }, true);
+    document.addEventListener('scroll', function(e){ if(acik && !(e.target && e.target.nodeType===1 && liste.contains(e.target))) kapat(); }, true);
 
     function dropdownDoldur(seciliAdParam){
       var kayitlar = window.hatGuzergahListesiGetir ? window.hatGuzergahListesiGetir() : [];
@@ -34757,7 +34901,9 @@ bolgeGecerliligiDuzelt();
 bolgeSeciciDoldur();
 stIletkenTuruneGoreUIGuncelle();
 
-ornekVeriYukle();
+// Sehim Tevziat: Direk Listesi artık boş başlıyor (ön tanımlı örnek liste kaldırıldı) — kullanıcı direkleri kendisi ekler.
+direkTabloCiz();
+stHesapla();
 
 // ══════════════════ GLOBAL EXPOSURE (2026-09-04) ══════════════════
 // Bu tüm modül tek büyük bir IIFE içinde çalışıyor (uygulamanın geneli böyle) — ama HTML'deki
@@ -35754,7 +35900,7 @@ function tsKnnTahmin(A, B, C, D, E, F, G, k){
 //
 // v3 DEĞİŞİKLİKLERİ (kullanıcı başka bir AI'dan - Gemini - aldığı hesaplamayı verip
 // karşılaştırma istedi, kritik değerlendirme yapıldı):
-//  - Gemini'nin İYİ kısımları alındı: eşdeğer yarıçap formülleri (kenar×0.215), Tagg
+//  - Gemini'nin İYİ kısımları alındı: eşdeğer yarıçap formülleri (kenar×0.215 — 2026-09-28'de 0.47 olarak DÜZELTİLDİ, bkz. ts3LProfilYaricap), Tagg
 //    derinlik-düzeltmeli çubuk formülü (zaten vardı), beton kılıf iki-silindir modeli
 //    (zaten vardı), VE devirsel (circulant) matris kısayolu — 4 SİMETRİK ayak için
 //    R_baz=(Rself+2·R12+R13)/4, genel matris-tersi yöntemiyle MATEMATIKSEL ÖZDEŞ
@@ -36126,8 +36272,19 @@ function ts3BetonDirenciKademeli(L, stubKenarM, rB1, rB2, rB3, rPit, rhoDolgu, r
   return R1 + R2 + R3;
 }
 
-// L profil (köşebent) eşdeğer silindirik yarıçapı — kenar genişliğinin ~%21.5'i.
-function ts3LProfilYaricap(kenarM){ return 0.215 * kenarM; }
+// L profil (köşebent) eşdeğer silindirik YARIÇAPI (r_eq) = kenar × 0.47.
+// 2026-09-28 DÜZELTME (kullanıcı isteği — kazık L profil, yuvarlak iletkene çevrilirken kullanılan
+// katsayı araştırıldı): eski 0.215 katsayısı (başka bir yapay zekâdan gelmişti) YANLIŞTI — gerçek
+// eşdeğer yarıçapın yaklaşık yarısıydı. Eşdeğer yarıçap, kesitin logaritmik kapasite yarıçapıdır
+// (Sunde'nin arbitrary-kesit yöntemi). Kesit sınır elemanları yöntemiyle (BEM) sayısal çözüldü;
+// yöntem daire (r=1 -> 0.9999) ve ince şerit (w=1 -> 0.2516, beklenen w/4) ile doğrulandı.
+// Eşit kenarlı L profil (kenar b, et kalınlığı t): t/b=0.05 -> 0.457b, 0.077 -> 0.464b,
+// 0.10 -> 0.470b, 0.12 -> 0.475b. Yani r_eq ≈ 0.47·b (eşdeğer ÇAP ≈ 0.94·b), et kalınlığına
+// duyarlılığı %+-1.
+// DİKKAT: bu fonksiyon YARIÇAP döndürür; ts3CubukDirenciDerinlikli ise ÇAP (d) bekler — çağıran
+// taraf her zaman 2*ts3LProfilYaricap(...) vermelidir (eskiden kazıkta yarıçap doğrudan çap
+// yerine veriliyordu, stub ve iletkende doğruydu).
+function ts3LProfilYaricap(kenarM){ return 0.47 * kenarM; }
 
 var TS3_KANAL_GENISLIK = 1.8; // kanal toplam genişliği (m) — iletken tam ortasında, her yönde ~90cm dolgu
 
@@ -36282,7 +36439,7 @@ function ts3OrtakAyaklar(p){
   // güncellemesiyle artık ilk 30cm'inin dolgu içinde kaldığı, geri kalanının doğal/bozulmamış
   // zeminde olduğu kabul ediliyor (bkz. rhoKazik hesabı yukarıda — eski "tamamen doğal zemin"
   // varsayımı, 2026-08-14 teyidinin yerini almıştır).
-  var Rkazik = ts3CubukDirenciDerinlikli(p.kazikBoy, rKazik, p.temel, rhoKazik);
+  var Rkazik = ts3CubukDirenciDerinlikli(p.kazikBoy, 2*rKazik, p.temel, rhoKazik);
 
   // Bağlantı iletkeni (kazıktan yukarı, direk ayağına) — kazığın tersine, bu iletkenin
   // gömülü kısmı (yüzeyden temel derinliğine kadar) TAMAMEN çukurun İÇİNDE kalıyor, yani
@@ -36385,7 +36542,7 @@ function ts3RingKoseleri(ortak, mesafe){
 function ts3KoseKazikDizisi(p, koseler, zStart, L){
   var rho = ts3RhoEff(zStart, zStart+L, p.katmanlar);
   var rKazik = ts3LProfilYaricap(TS3_KAZIK_KENAR_MM/1000);
-  var R = ts3CubukDirenciDerinlikli(L, rKazik, zStart, rho);
+  var R = ts3CubukDirenciDerinlikli(L, 2*rKazik, zStart, rho);
   return koseler.map(function(xy){ return {R:R,x:xy[0],y:xy[1],rho:rho,L:L}; });
 }
 // Radyal Işın (yıldız) iletkenler — her ayaktan, tower merkezinden dışa uzanan yönde (bu yön,
@@ -36439,7 +36596,7 @@ function ts3UyduElemanlari(p, ortak, i1, i2, yon){
   var k1=[uzakX+perp[0]*1.0, uzakY+perp[1]*1.0], k2=[uzakX-perp[0]*1.0, uzakY-perp[1]*1.0];
   var rhoKazik=ts3RhoEff(kazikZStart,kazikZStart+2.0,p.katmanlar);
   var rKazik=ts3LProfilYaricap(TS3_KAZIK_KENAR_MM/1000);
-  var Rk=ts3CubukDirenciDerinlikli(2.0, rKazik, kazikZStart, rhoKazik);
+  var Rk=ts3CubukDirenciDerinlikli(2.0, 2*rKazik, kazikZStart, rhoKazik);
   var kazik1={R:Rk,x:k1[0],y:k1[1],rho:rhoKazik,L:2.0}, kazik2={R:Rk,x:k2[0],y:k2[1],rho:rhoKazik,L:2.0};
   return [telEleman, hasirEleman, kazik1, kazik2];
 }
@@ -36477,7 +36634,7 @@ function ts3Senaryo4(p){
   var yildiz=ts3YildizElemanlari(p,o,10.0,TS3_KANAL_DERINLIK);
   var rho=ts3RhoEff(TS3_KANAL_DERINLIK,TS3_KANAL_DERINLIK+2.0,p.katmanlar);
   var rKazik=ts3LProfilYaricap(TS3_KAZIK_KENAR_MM/1000);
-  var Rk=ts3CubukDirenciDerinlikli(2.0,rKazik,TS3_KANAL_DERINLIK,rho);
+  var Rk=ts3CubukDirenciDerinlikli(2.0,2*rKazik,TS3_KANAL_DERINLIK,rho);
   var ucKazik=yildiz.map(function(y){ return {R:Rk,x:y.ucX,y:y.ucY,rho:rho,L:2.0}; });
   var detaylar=[{ad:'Radyal ışın iletkeni (4 adet, her biri, kanalda)', R:yildiz[0].R},
                 {ad:'Işın ucu kazığı (4 adet, her biri, doğal zeminde)', R:Rk}];
@@ -39035,10 +39192,12 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     }
     return ext;
   }
-  function toOzdKatmanlariHesapla(aArr, roArr, k, esik, manuelSinirlarA){
+  function toOzdKatmanlariHesapla(aArr, roArr, k, esik, manuelSinirlarA, dogrudanIdx){
     var n = aArr.length;
     var boundaryIdx;
-    if(manuelSinirlarA && manuelSinirlarA.length){
+    if(dogrudanIdx){
+      boundaryIdx = dogrudanIdx.slice();
+    } else if(manuelSinirlarA && manuelSinirlarA.length){
       boundaryIdx = manuelSinirlarA.map(function(v){
         var best=0, bestD=Infinity;
         aArr.forEach(function(a,i){ var d=Math.abs(a-v); if(d<bestD){bestD=d;best=i;} });
@@ -39069,7 +39228,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     // (öncelikle bir ÖNCEKİsine, yoksa sonrakine) BİRLEŞTİRİLİYOR.
     var katmanlar = [];
     katmanlarHam.forEach(function(kat){
-      if(kat.s === kat.e && katmanlar.length){
+      if(kat.s === kat.e && katmanlar.length && !dogrudanIdx){
         var onceki = katmanlar[katmanlar.length-1];
         var vals2 = [];
         for(var i=onceki.s;i<=kat.e;i++) vals2.push(roArr[i]);
@@ -39096,6 +39255,43 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
         aRange: [aArr[s], aArr[e]]
       };
     });
+  }
+
+  // 2026-09-29: N katmanlı (2..5) en iyi bölütleme — log(ρa) üzerinde parçalı-sabit model,
+  // dinamik programlama ile hata kareleri toplamını minimize eder. Otomatik "eğim farkı"
+  // yönteminden bağımsızdır; katman sayısını KULLANICI belirler.
+  function toOzdEnIyiSinirlar(roArr, N){
+    var n = roArr.length, y = roArr.map(function(v){ return Math.log(v); });
+    var minLen = (n >= 2*N) ? 2 : 1;
+    var c1 = [0], c2 = [0];
+    for(var i=0;i<n;i++){ c1.push(c1[i]+y[i]); c2.push(c2[i]+y[i]*y[i]); }
+    function cost(i,j){ var len=j-i+1, s=c1[j+1]-c1[i], q=c2[j+1]-c2[i]; return q - s*s/len; }
+    var INF = 1e18, D = [], B = [];
+    for(var m=0;m<=N;m++){ D.push(new Array(n).fill(INF)); B.push(new Array(n).fill(-1)); }
+    for(var j=minLen-1;j<n;j++) D[1][j] = cost(0,j);
+    for(var m2=2;m2<=N;m2++){
+      for(var j2=m2*minLen-1;j2<n;j2++){
+        for(var t=(m2-1)*minLen-1;t<=j2-minLen;t++){
+          if(D[m2-1][t] >= INF) continue;
+          var c = D[m2-1][t] + cost(t+1,j2);
+          if(c < D[m2][j2]){ D[m2][j2] = c; B[m2][j2] = t; }
+        }
+      }
+    }
+    if(D[N][n-1] >= INF) return null;
+    var idx = [], j3 = n-1;
+    for(var m3=N;m3>=2;m3--){ var t2 = B[m3][j3]; idx.unshift(t2); j3 = t2; }
+    return { idx: idx, sapmaYuzde: Math.sqrt(Math.max(0, D[N][n-1])/n)*100 };
+  }
+  function toOzdSapmaHesapla(aArr, roArr, layers){
+    var toplam = 0, sayi = 0;
+    layers.forEach(function(l){
+      var lr = Math.log(l.rho);
+      for(var i=0;i<aArr.length;i++){
+        if(aArr[i] >= l.aRange[0] && aArr[i] <= l.aRange[1]){ var d = Math.log(roArr[i]) - lr; toplam += d*d; sayi++; }
+      }
+    });
+    return sayi ? Math.sqrt(toplam/sayi)*100 : 0;
   }
   function toOzdKatmanTabloCiz(layers){
     var tbody = document.getElementById('to-ozd-katman-tablo');
@@ -39126,38 +39322,118 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   // verilmedi, Granit sınıfı (zaten en yüksek özdirençli sınıf olduğu için) sonsuza kadar
   // devam ediyor kabul edildi.
   var TOOZD_MALZEME_TABLOSU = [
-    { esik: 10,    ad: 'Çeltik',                simge: '🌾', pattern: 'toozdCeltikDoku' },
-    { esik: 20,    ad: 'Bataklık',               simge: '💧', pattern: 'toozdBataklikDoku' },
-    { esik: 50,    ad: 'Hımuslu Toprak',         simge: '🟤', pattern: 'toozdTopraktDoku' },
-    { esik: 100,   ad: 'Kil',                    simge: '🟠', pattern: 'toozdKilDoku' },
-    { esik: 200,   ad: 'Islak Kum/Toprak',       simge: '🟡', pattern: 'toozdIslakKumDoku' },
-    { esik: 300,   ad: 'Kuru Toprak',            simge: '🟨', pattern: 'toozdKuruToprakDoku' },
-    { esik: 500,   ad: 'Kuru Kum',               simge: '🟡', pattern: 'toozdKumDoku' },
-    { esik: 1000,  ad: 'Çakıl/Taşlık',           simge: '⚪', pattern: 'toozdCakilDoku' },
-    { esik: 3000,  ad: 'Kayalık',                simge: '⬛', pattern: 'toozdKayaDoku' },
-    { esik: Infinity, ad: 'Granit',              simge: '⬛', pattern: 'toozdGranitDoku' }
+    { esik: 10,    ad: 'Çamur',           simge: '🟤', pattern: 'Camur' },
+    { esik: 50,    ad: 'Killi Toprak',    simge: '🟠', pattern: 'Killi' },
+    { esik: 100,   ad: 'Tarım Toprağı',   simge: '🟫', pattern: 'Tarim' },
+    { esik: 150,   ad: 'Kumlu Mil',       simge: '🟨', pattern: 'KumluMil' },
+    { esik: 250,   ad: 'Çakıllı Toprak',  simge: '⚪', pattern: 'Cakilli' },
+    { esik: 500,   ad: 'Kuru Kum',        simge: '🟡', pattern: 'KuruKum' },
+    { esik: 1000,  ad: 'Taşlık',          simge: '🪨', pattern: 'Taslik' },
+    { esik: Infinity, ad: 'Kaya',         simge: '⬛', pattern: 'Kaya' }
   ];
   function toOzdMalzemeSinifi(ro){
     for(var i=0;i<TOOZD_MALZEME_TABLOSU.length;i++){ if(ro < TOOZD_MALZEME_TABLOSU[i].esik) return TOOZD_MALZEME_TABLOSU[i]; }
     return TOOZD_MALZEME_TABLOSU[TOOZD_MALZEME_TABLOSU.length-1];
   }
-  var TOOZD_DOKU_DEFS =
-    '<pattern id="toozdSuDoku" width="26" height="14" patternUnits="userSpaceOnUse"><rect width="26" height="14" fill="#3E5C78"/><path d="M0 7 Q6.5 2 13 7 T26 7" stroke="#6FA8CC" stroke-width="1.2" fill="none" opacity=".6"/><path d="M0 12 Q6.5 8 13 12 T26 12" stroke="#5A8FB3" stroke-width="1" fill="none" opacity=".5"/></pattern>' +
-    '<pattern id="toozdTopraktDoku" width="22" height="22" patternUnits="userSpaceOnUse"><rect width="22" height="22" fill="#8B6B3E"/><circle cx="4" cy="5" r="1.3" fill="#6E5230" opacity=".55"/><circle cx="15" cy="3" r=".9" fill="#785C34" opacity=".5"/><circle cx="10" cy="12" r="1.5" fill="#6E5230" opacity=".5"/><circle cx="18" cy="15" r="1" fill="#785C34" opacity=".55"/><circle cx="2" cy="17" r="1.1" fill="#6E5230" opacity=".45"/></pattern>' +
-    '<pattern id="toozdKumDoku" width="15" height="15" patternUnits="userSpaceOnUse"><rect width="15" height="15" fill="#C9A96E"/><circle cx="3" cy="4" r=".7" fill="#A88750" opacity=".6"/><circle cx="9" cy="2" r=".6" fill="#A88750" opacity=".6"/><circle cx="12" cy="8" r=".7" fill="#A88750" opacity=".6"/><circle cx="5" cy="11" r=".6" fill="#A88750" opacity=".6"/></pattern>' +
-    '<pattern id="toozdCakilDoku" width="24" height="18" patternUnits="userSpaceOnUse"><rect width="24" height="18" fill="#AD9868"/><ellipse cx="5" cy="4" rx="2.6" ry="2" fill="#8A7647" opacity=".6" transform="rotate(20 5 4)"/><ellipse cx="16" cy="4" rx="2.2" ry="1.7" fill="#7C6A3D" opacity=".55" transform="rotate(-15 16 4)"/><ellipse cx="9" cy="12" rx="2.8" ry="2" fill="#8A7647" opacity=".6" transform="rotate(8 9 12)"/><ellipse cx="19" cy="13" rx="2" ry="1.5" fill="#7C6A3D" opacity=".55" transform="rotate(30 19 13)"/></pattern>' +
-    '<pattern id="toozdKayaDoku" width="30" height="24" patternUnits="userSpaceOnUse"><rect width="30" height="24" fill="#8A8A8A"/><path d="M2 3 L10 8 L7 16 M16 2 L19 10 L28 7 M12 17 L21 20 L18 24 M0 19 L7 23" stroke="#6E6E6E" stroke-width="1.3" fill="none" opacity=".6" stroke-linecap="round"/></pattern>' +
-    '<pattern id="toozdAyrisikKayaDoku" width="28" height="22" patternUnits="userSpaceOnUse"><rect width="28" height="22" fill="#9C8F72"/><path d="M1 2 L9 7 L6 15 M15 1 L18 9 L26 6 M11 16 L20 19 L17 22 M-1 18 L6 22" stroke="#7A6E54" stroke-width="1.4" fill="none" opacity=".65" stroke-linecap="round"/><path d="M22 12 L27 16 M4 9 L1 13" stroke="#7A6E54" stroke-width="1" opacity=".4"/></pattern>' +
-    '<pattern id="toozdOrtaKayaDoku" width="30" height="24" patternUnits="userSpaceOnUse"><rect width="30" height="24" fill="#7C7C7C"/><path d="M2 3 L10 8 L7 16 M16 2 L19 10 L28 7 M12 17 L21 20 L18 24 M0 19 L7 23 M22 3 L26 9 M3 10 L8 13" stroke="#5C5C5C" stroke-width="1.4" fill="none" opacity=".65" stroke-linecap="round"/></pattern>' +
-    '<pattern id="toozdCokSaglamKayaDoku" width="30" height="24" patternUnits="userSpaceOnUse"><rect width="30" height="24" fill="#5F5F5F"/><path d="M2 3 L10 8 L7 16 M16 2 L19 10 L28 7 M12 17 L21 20 L18 24 M0 19 L7 23 M22 3 L26 9 M3 10 L8 13 M20 15 L25 19" stroke="#454545" stroke-width="1.4" fill="none" opacity=".7" stroke-linecap="round"/></pattern>' +
-    '<pattern id="toozdMasifKayaDoku" width="30" height="24" patternUnits="userSpaceOnUse"><rect width="30" height="24" fill="#3D3D3D"/><path d="M2 3 L10 8 L7 16 M16 2 L19 10 L28 7 M12 17 L21 20 L18 24 M0 19 L7 23 M22 3 L26 9 M3 10 L8 13 M20 15 L25 19 M13 4 L17 12" stroke="#242424" stroke-width="1.5" fill="none" opacity=".75" stroke-linecap="round"/></pattern>' +
-    // 2026-08-19 — kullanıcının verdiği 10 sınıflı tablo için yeni dokular.
-    '<pattern id="toozdCeltikDoku" width="24" height="20" patternUnits="userSpaceOnUse"><rect width="24" height="20" fill="#4A6B4A"/><path d="M2 4 Q4 1 6 4 T10 4 M14 4 Q16 1 18 4 T22 4" stroke="#7FAF6F" stroke-width="1.1" fill="none" opacity=".7"/><path d="M0 12 Q6 8 12 12 T24 12" stroke="#3E5C78" stroke-width="1.2" fill="none" opacity=".55"/><path d="M0 17 Q6 13 12 17 T24 17" stroke="#3E5C78" stroke-width="1" fill="none" opacity=".45"/></pattern>' +
-    '<pattern id="toozdBataklikDoku" width="26" height="20" patternUnits="userSpaceOnUse"><rect width="26" height="20" fill="#4A5238"/><path d="M0 6 Q6.5 2 13 6 T26 6" stroke="#5E6B45" stroke-width="1.2" fill="none" opacity=".6"/><path d="M0 14 Q6.5 10 13 14 T26 14" stroke="#3A4530" stroke-width="1.1" fill="none" opacity=".55"/><circle cx="9" cy="10" r="1" fill="#6B7A4F" opacity=".5"/><circle cx="19" cy="4" r=".8" fill="#6B7A4F" opacity=".5"/></pattern>' +
-    '<pattern id="toozdKilDoku" width="22" height="18" patternUnits="userSpaceOnUse"><rect width="22" height="18" fill="#B5651D"/><path d="M0 5 L7 3 M9 8 L17 6 M2 13 L10 15 M13 12 L21 14" stroke="#8F4E14" stroke-width="1.1" opacity=".55" stroke-linecap="round"/></pattern>' +
-    '<pattern id="toozdIslakKumDoku" width="15" height="15" patternUnits="userSpaceOnUse"><rect width="15" height="15" fill="#A88750"/><circle cx="3" cy="4" r=".7" fill="#7C6438" opacity=".6"/><circle cx="9" cy="2" r=".6" fill="#7C6438" opacity=".6"/><circle cx="12" cy="8" r=".7" fill="#7C6438" opacity=".6"/><circle cx="5" cy="11" r=".6" fill="#7C6438" opacity=".6"/><path d="M0 14 Q7.5 12 15 14" stroke="#5A8FB3" stroke-width=".8" fill="none" opacity=".4"/></pattern>' +
-    '<pattern id="toozdKuruToprakDoku" width="22" height="22" patternUnits="userSpaceOnUse"><rect width="22" height="22" fill="#C4A876"/><circle cx="4" cy="5" r="1.2" fill="#A88A5C" opacity=".5"/><circle cx="15" cy="3" r=".8" fill="#A88A5C" opacity=".45"/><circle cx="10" cy="12" r="1.4" fill="#A88A5C" opacity=".45"/><circle cx="18" cy="15" r=".9" fill="#A88A5C" opacity=".5"/><path d="M1 18 L6 20 M12 19 L18 21" stroke="#9A7E51" stroke-width=".8" opacity=".4"/></pattern>' +
-    '<pattern id="toozdGranitDoku" width="20" height="16" patternUnits="userSpaceOnUse"><rect width="20" height="16" fill="#B8ADA5"/><circle cx="3" cy="3" r=".7" fill="#6E6660" opacity=".7"/><circle cx="9" cy="6" r=".6" fill="#8C7A6E" opacity=".6"/><circle cx="15" cy="2" r=".8" fill="#5A5450" opacity=".7"/><circle cx="6" cy="11" r=".7" fill="#8C7A6E" opacity=".6"/><circle cx="13" cy="12" r=".9" fill="#6E6660" opacity=".7"/><circle cx="17" cy="9" r=".6" fill="#5A5450" opacity=".65"/></pattern>';
+  // 2026-09-29 (kullanıcı isteği): gerçekçi zemin dokuları. Dış kaynaklı fotoğraf gerektirmeden,
+  // SVG feTurbulence + feDiffuseLighting (kabartma) filtreleri ve şekillerle üretilir; '@@' yer
+  // tutucusu her çizimde kapsayıcı kimliğiyle değiştirilir (aynı sayfada birden fazla SVG olunca
+  // kimlik çakışması ve gizli SVG'den referans sorunu yaşanmasın diye).
+  var TOOZD_DOKU_W = 280, TOOZD_DOKU_H = 160;
+  var TOOZD_DOKU_DEFS = (function(){
+    var W = TOOZD_DOKU_W, H = TOOZD_DOKU_H;
+    var seed = 7;
+    function rnd(){ seed = (seed*1664525 + 1013904223) % 4294967296; return seed/4294967296; }
+    function f1(x){ return Math.round(x*10)/10; }
+    // Ortak filtre: gürültü -> kabartma aydınlatma (çarpma) + geniş ölçekli leke
+    function filt(id, o){
+      return '<filter id="@@F'+id+'" x="0" y="0" width="'+W+'" height="'+H+'" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">'+
+        '<feTurbulence type="fractalNoise" baseFrequency="'+o.f+'" numOctaves="'+(o.oct||3)+'" seed="'+o.seed+'" stitchTiles="stitch" result="n"/>'+
+        '<feDiffuseLighting in="n" surfaceScale="'+o.rel+'" diffuseConstant="'+(o.dc||1.25)+'" lighting-color="#ffffff" result="l"><feDistantLight azimuth="225" elevation="'+(o.el||58)+'"/></feDiffuseLighting>'+
+        '<feTurbulence type="fractalNoise" baseFrequency="'+(o.lf||0.012)+'" numOctaves="2" seed="'+(o.seed+11)+'" stitchTiles="stitch" result="m"/>'+
+        '<feColorMatrix in="m" type="matrix" values="0 0 0 0 '+o.mr+'  0 0 0 0 '+o.mg+'  0 0 0 0 '+o.mb+'  '+(o.ma||0)+' 0 0 0 0" result="mm"/>'+
+        '<feComposite in="mm" in2="SourceGraphic" operator="arithmetic" k1="0" k2="0" k3="0" k4="0" result="unused"/>'+
+        '<feBlend in="SourceGraphic" in2="l" mode="multiply" result="lit"/>'+
+        '<feColorMatrix in="m" type="matrix" values="0.75 0 0 0 0.66  0.75 0 0 0 0.66  0.75 0 0 0 0.66  0 0 0 0 1" result="mot"/>'+
+        '<feBlend in="lit" in2="mot" mode="multiply"/>'+
+        '</filter>';
+    }
+    function pat(id, base, fo, extra){
+      return filt(id, fo)+'<pattern id="@@'+id+'" width="'+W+'" height="'+H+'" patternUnits="userSpaceOnUse">'+
+        '<rect width="'+W+'" height="'+H+'" fill="'+base+'" filter="url(#@@F'+id+')"/>'+(extra||'')+'</pattern>';
+    }
+    function ellip(cx,cy,rx,ry,rot,fill,op){ return '<ellipse cx="'+f1(cx)+'" cy="'+f1(cy)+'" rx="'+f1(rx)+'" ry="'+f1(ry)+'" transform="rotate('+Math.round(rot)+' '+f1(cx)+' '+f1(cy)+')" fill="'+fill+'"'+(op?' opacity="'+op+'"':'')+'/>'; }
+    function wrapPos(x,y,r,fn){ // kenardan taşan şekilleri karşı kenara da çiz (kesintisiz döşeme)
+      var out='', xs=[0], ys=[0];
+      if(x-r<0) xs.push(W); if(x+r>W) xs.push(-W); if(y-r<0) ys.push(H); if(y+r>H) ys.push(-H);
+      xs.forEach(function(dx){ ys.forEach(function(dy){ out+=fn(x+dx,y+dy); }); });
+      return out;
+    }
+    var defs = '';
+    // Gradyanlar (çakıl / taş gövdeleri)
+    defs += '<radialGradient id="@@gPeb" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#e9e2d4"/><stop offset=".55" stop-color="#a99d88"/><stop offset="1" stop-color="#5d5445"/></radialGradient>';
+    defs += '<radialGradient id="@@gPebK" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#d9c2a1"/><stop offset=".55" stop-color="#9b7c58"/><stop offset="1" stop-color="#54402a"/></radialGradient>';
+    defs += '<radialGradient id="@@gPebG" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#cfcfca"/><stop offset=".55" stop-color="#8b8a84"/><stop offset="1" stop-color="#3f3e3a"/></radialGradient>';
+    defs += '<filter id="@@Fblur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.6"/></filter>';
+    defs += '<filter id="@@Fblur3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter>';
+  
+    // 1) ÇAMUR (0-10): koyu, ıslak, parlak yansımalı
+    seed=101; var ex='';
+    for(var i=0;i<9;i++){ ex+=ellip(rnd()*W,rnd()*H,10+rnd()*22,3+rnd()*5,rnd()*40-20,'#c9d2d6',0.16+rnd()*0.12).replace('/>',' filter="url(#@@Fblur)"/>'); }
+    for(i=0;i<26;i++){ var cx=rnd()*W, cy=rnd()*H; ex+=ellip(cx,cy,1.5+rnd()*2.5,1+rnd()*1.5,rnd()*180,'#0f0b08',0.35); }
+    defs += pat('Camur','#57402e',{f:'0.035 0.05',oct:4,seed:5,rel:3.2,dc:1.45,lf:0.008,mr:0,mg:0,mb:0},ex);
+  
+    // 2) KİLLİ TOPRAK (10-50): kızıl-kahve, ince kuruma çatlakları
+    seed=202; ex='';
+    for(i=0;i<9;i++){ // çatlaklar
+      var x=rnd()*W, y=rnd()*H, d='M'+f1(x)+' '+f1(y);
+      for(var k=0;k<5;k++){ x+= (rnd()-0.4)*22; y+= (rnd()-0.5)*16; d+=' L'+f1(x)+' '+f1(y); }
+      ex+='<path d="'+d+'" stroke="#2b160b" stroke-width="'+(0.7+rnd()*0.9).toFixed(1)+'" fill="none" opacity="0.55" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
+    defs += pat('Killi','#a8623f',{f:'0.16 0.22',oct:4,seed:9,rel:1.9,dc:1.3,lf:0.02,mr:0,mg:0,mb:0},ex);
+  
+    // 3) TARIM TOPRAĞI (50-100): koyu humuslu, kesekli, organik kalıntı
+    seed=303; ex='';
+    for(i=0;i<70;i++){ cx=rnd()*W; cy=rnd()*H; var r=2+rnd()*4.5, tr=rnd()*180, tc='#'+(['6b4a30','5a3d27','7a5636'][Math.floor(rnd()*3)]); ex+=wrapPos(cx,cy,r,function(px,py){ return ellip(px+0.9,py+1.1,r,r*0.75,tr,'#120b06',0.45)+ellip(px,py,r,r*0.75,tr,tc,0.9); }); }
+    for(i=0;i<14;i++){ x=rnd()*W; y=rnd()*H; var a=rnd()*Math.PI; var L=5+rnd()*9; ex+='<path d="M'+f1(x)+' '+f1(y)+' q'+f1(Math.cos(a)*L/2+2)+' '+f1(Math.sin(a)*L/2-2)+' '+f1(Math.cos(a)*L)+' '+f1(Math.sin(a)*L)+'" stroke="#b79a5c" stroke-width="0.9" fill="none" opacity="0.75" stroke-linecap="round"/>'; }
+    defs += pat('Tarim','#6a4a30',{f:'0.28 0.34',oct:4,seed:13,rel:2.4,dc:1.35,lf:0.03,mr:0,mg:0,mb:0},ex);
+  
+    // 4) KUMLU MİL (100-150): açık kahverengi-bej, ince taneli
+    seed=404; ex='';
+    for(i=0;i<160;i++){ ex+='<circle cx="'+f1(rnd()*W)+'" cy="'+f1(rnd()*H)+'" r="'+(0.5+rnd()*0.9).toFixed(1)+'" fill="'+(rnd()<0.5?'#f0e3c8':'#6f5a3d')+'" opacity="'+(0.35+rnd()*0.3).toFixed(2)+'"/>'; }
+    defs += pat('KumluMil','#b99c72',{f:'0.55 0.7',oct:4,seed:17,rel:1.4,dc:1.3,lf:0.015,mr:0,mg:0,mb:0},ex);
+  
+    // 5) ÇAKILLI TOPRAK (150-250): kahverengi toprak içinde dağınık çakıllar
+    seed=505; ex='';
+    for(i=0;i<46;i++){ cx=rnd()*W; cy=rnd()*H; var rx=3+rnd()*7, ry=rx*(0.6+rnd()*0.35), rot=rnd()*180, gr=['@@gPeb','@@gPebK','@@gPebG'][Math.floor(rnd()*3)];
+      ex+=wrapPos(cx,cy,rx+2,function(px,py){ return ellip(px+1.6,py+2,rx,ry,rot,'#150e07',0.5).replace('/>',' filter="url(#@@Fblur)"/>')+ellip(px,py,rx,ry,rot,'url(#'+gr+')'); }); }
+    defs += pat('Cakilli','#8f6d48',{f:'0.3 0.38',oct:4,seed:21,rel:2.2,dc:1.3,lf:0.02,mr:0,mg:0,mb:0},ex);
+  
+    // 6) KURU KUM (250-500): açık sarı, rüzgar dalgaları, ince tane
+    seed=606; ex='';
+    for(i=0;i<9;i++){ var yy=8+i*(H/9)+rnd()*6, d2='M0 '+f1(yy); for(k=1;k<=7;k++){ d2+=' Q'+f1((k-0.5)*W/7)+' '+f1(yy+(k%2?-1:1)*(3+rnd()*3))+' '+f1(k*W/7)+' '+f1(yy+(rnd()-0.5)*2); }
+      ex+='<path d="'+d2+'" stroke="#fff3d2" stroke-width="1.4" fill="none" opacity="0.28"/><path d="'+d2.replace(/(\d+\.?\d*)( |$)/g,function(m){return m;})+'" transform="translate(0 2.5)" stroke="#8d6f3c" stroke-width="1.1" fill="none" opacity="0.22"/>'; }
+    for(i=0;i<220;i++){ ex+='<circle cx="'+f1(rnd()*W)+'" cy="'+f1(rnd()*H)+'" r="'+(0.4+rnd()*0.7).toFixed(1)+'" fill="'+(rnd()<0.5?'#fff6dc':'#a98545')+'" opacity="'+(0.4+rnd()*0.3).toFixed(2)+'"/>'; }
+    defs += pat('KuruKum','#dcc08a',{f:'0.85 0.95',oct:3,seed:25,rel:1.2,dc:1.35,lf:0.01,mr:0,mg:0,mb:0},ex);
+  
+    // 7) TAŞLIK (500-1000): sıkışık iri taş/kaya parçaları
+    seed=707; ex='';
+    var cols=['@@gPeb','@@gPebG','@@gPebK','@@gPebG'];
+    for(i=0;i<40;i++){ cx=rnd()*W; cy=rnd()*H; rx=7+rnd()*13; ry=rx*(0.55+rnd()*0.35); rot=rnd()*180; gr=cols[Math.floor(rnd()*cols.length)];
+      ex+=wrapPos(cx,cy,rx+3,function(px,py){ return ellip(px+2.2,py+3,rx,ry,rot,'#0d0a06',0.6).replace('/>',' filter="url(#@@Fblur)"/>')+ellip(px,py,rx,ry,rot,'url(#'+gr+')')+ellip(px-rx*0.25,py-ry*0.3,rx*0.35,ry*0.22,rot,'#ffffff',0.22).replace('/>',' filter="url(#@@Fblur)"/>'); }); }
+    defs += pat('Taslik','#5a4d3d',{f:'0.4 0.5',oct:4,seed:29,rel:2.6,dc:1.2,lf:0.02,mr:0,mg:0,mb:0},ex);
+  
+    // 8) KAYA (1000+): gri masif kaya, çatlaklar ve tabakalanma
+    seed=808; ex='';
+    for(i=0;i<5;i++){ var y0=rnd()*H, d3='M0 '+f1(y0); for(k=1;k<=8;k++){ d3+=' L'+f1(k*W/8)+' '+f1(y0+(rnd()-0.5)*9); }
+      ex+='<path d="'+d3+'" stroke="#1d1d1c" stroke-width="'+(1+rnd()*1.2).toFixed(1)+'" fill="none" opacity="0.5"/><path d="'+d3+'" transform="translate(0 2)" stroke="#d8d8d3" stroke-width="0.9" fill="none" opacity="0.28"/>'; }
+    for(i=0;i<12;i++){ x=rnd()*W; y=rnd()*H; d='M'+f1(x)+' '+f1(y); var ang=(rnd()<0.5?0.9:-0.9)+(rnd()-0.5)*0.6; for(k=0;k<4;k++){ x+=Math.cos(ang)*(8+rnd()*10); y+=Math.sin(ang)*(8+rnd()*10)+ (rnd()-0.5)*4; d+=' L'+f1(x)+' '+f1(y); }
+      ex+='<path d="'+d+'" stroke="#141413" stroke-width="'+(0.8+rnd()*1.1).toFixed(1)+'" fill="none" opacity="0.65" stroke-linejoin="round"/><path d="'+d+'" transform="translate(1.2 1.2)" stroke="#e4e4de" stroke-width="0.7" fill="none" opacity="0.25"/>'; }
+    defs += pat('Kaya','#9a9a95',{f:'0.06 0.09',oct:5,seed:33,rel:4.2,dc:1.3,lf:0.02,mr:0,mg:0,mb:0},ex);
+  
+    return defs;
+  })();
+  
   function toOzdZeminGorseliCiz(rhoArr, hArr, containerId, aMin, aMax){
     var el = document.getElementById(containerId);
     if(!el || !rhoArr || !rhoArr.length) return;
@@ -39187,19 +39463,29 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     // SMIL, harici JS/CSS gerektirmeden innerHTML ile eklenince de doğrudan oynuyor.
     var sonlu = bolgeler.filter(function(b){return b.ust!=null;});
     var toplamSonluKalinlik = sonlu.reduce(function(s,b){return s+(b.ust-b.alt);},0) || 1;
+    // 2026-09-29 GÜNCELLEME (kullanıcı geri bildirimi: rozet numaraları, a= etiketleri ve
+    // ρ/derinlik yazıları telefonda okunmuyordu). Nedenleri: (1) viewBox 900 birim genişti, telefonda
+    // ~0.4 ölçekle küçülüyordu; (2) aydınlık temada genel SVG renk kuralları (fill=#FFFFFF -> metin
+    // rengi, fill=#9A9A9A yalnız stroke'u değiştiriyor) rozet numarasını koyu zemine koyu yazı,
+    // gri yazıları da soluk bırakıyordu. Artık: dar viewBox (760), büyük punto, ve renkler
+    // attribute yerine style ile tema değişkenlerinden (attribute-selector kurallarına takılmaz).
     var minBantYükseklik = 46, sonsuzBantYukseklik = 84;
     var iceriklHesaplananYukseklik = sonlu.length ? Math.max(sonlu.length*minBantYükseklik, 220) : 0;
-    var ustBosluk = 56, altBosluk = 46; // üstte elektrot+etiket için, altta "a=" etiketi için
+    var ustBosluk = 98, altBosluk = 54; // üstte elektrot+etiket için, altta "a=" etiketi için
+    var LEG_SAT = 108; // sağ listede her katman satırı: ad + derinlik + ρ (3 satır, büyük punto)
     var H = iceriklHesaplananYukseklik + sonsuzBantYukseklik + ustBosluk + altBosluk;
+    var HminLegend = ustBosluk + altBosluk + bolgeler.length*LEG_SAT + 8;
+    if(H < HminLegend){ iceriklHesaplananYukseklik += (HminLegend - H); H = HminLegend; }
 
-    var W = 900;
-    var solGenislik = 330, sagBaslangic = 380; // sol: toprak kesiti, sağ: açıklama listesi
+    var W = 760;
+    var solGenislik = 280, sagBaslangic = 322; // sol: toprak kesiti, sağ: açıklama listesi
+    var FONT = 'IBM Plex Sans, sans-serif';
     var ust_a = aMin!=null ? aMin : 0.5, alt_a = aMax!=null ? aMax : 27;
     var yerUstY = ustBosluk, yerAltY = H-altBosluk;
     var yerMerkezX = solGenislik/2;
 
     var svg = '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:100%;height:auto;display:block;">';
-    svg += '<defs>'+TOOZD_DOKU_DEFS+
+    svg += '<defs>'+TOOZD_DOKU_DEFS.replace(/@@/g, containerId+'_')+
       '<clipPath id="'+containerId+'Clip"><rect x="0" y="'+yerUstY+'" width="'+solGenislik+'" height="'+(yerAltY-yerUstY)+'"/></clipPath>'+
       '<filter id="'+containerId+'Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'+
       '</defs>';
@@ -39213,7 +39499,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       var bantH;
       if(b.ust==null){ bantH = sonsuzBantYukseklik; }
       else { bantH = Math.max((b.ust-b.alt)/toplamSonluKalinlik * iceriklHesaplananYukseklik, minBantYükseklik*0.5); }
-      svg += '<rect x="0" y="'+y+'" width="'+solGenislik+'" height="'+bantH+'" fill="url(#'+b.malzeme.pattern+')"/>';
+      svg += '<rect x="0" y="'+y+'" width="'+solGenislik+'" height="'+bantH+'" fill="url(#'+containerId+'_'+b.malzeme.pattern+')"/>';
       if(bi>0) svg += '<line x1="0" y1="'+y+'" x2="'+solGenislik+'" y2="'+y+'" stroke="rgba(255,255,255,0.75)" stroke-width="2"/>';
       bantSinirlari.push({ yOrta: y+bantH/2, katman: b });
       y += bantH;
@@ -39228,7 +39514,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       var renk = e[2] ? '#FFD54F' : '#8FB4CC';
       svg += '<line x1="'+e[1]+'" y1="'+(yerUstY-16)+'" x2="'+e[1]+'" y2="'+(yerUstY+2)+'" stroke="'+renk+'" stroke-width="3" stroke-linecap="round"/>';
       svg += '<circle cx="'+e[1]+'" cy="'+(yerUstY-18)+'" r="4.5" fill="'+renk+'"/>';
-      svg += '<text x="'+e[1]+'" y="'+(yerUstY-26)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" font-weight="700" fill="'+renk+'">'+e[0]+'</text>';
+      svg += '<text x="'+e[1]+'" y="'+(yerUstY-30)+'" text-anchor="middle" font-family="'+FONT+'" font-size="21" font-weight="700" style="fill:var(--text);">'+e[0]+'</text>';
     });
 
     // Akım yayılım hatları — C1'den toprağa girip katmanların arasından geçerek C2'de yüzeye
@@ -39255,30 +39541,34 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
 
     // Katman numarası rozetleri — sol kenarda sabit, her bandın dikey ortasında
     bantSinirlari.forEach(function(bs){
-      var cx = 24, cy = bs.yOrta;
-      svg += '<circle cx="'+cx+'" cy="'+cy+'" r="15" fill="#14171A" stroke="#FFFFFF" stroke-width="2"/>';
-      svg += '<text x="'+cx+'" y="'+(cy+5.5)+'" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="16" font-weight="700" fill="#fff">'+bs.katman.no+'</text>';
+      var cx = 30, cy = bs.yOrta;
+      svg += '<circle cx="'+cx+'" cy="'+cy+'" r="21" style="fill:#14171A;stroke:#FFFFFF;stroke-width:2.5;"/>';
+      svg += '<text x="'+cx+'" y="'+(cy+8.5)+'" text-anchor="middle" font-family="'+FONT+'" font-size="25" font-weight="700" style="fill:#FFFFFF;">'+bs.katman.no+'</text>';
     });
 
     // "a" mesafesi etiketleri (toprak kesitinin hemen üstünde/altında)
-    svg += '<text x="'+yerMerkezX+'" y="14" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="700" fill="#9A9A9A">a=' + formatTR(ust_a,1) + 'm</text>';
-    svg += '<text x="'+yerMerkezX+'" y="'+(yerAltY+22)+'" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="700" fill="#9A9A9A">a=' + formatTR(alt_a,1) + 'm</text>';
+    svg += '<text x="'+yerMerkezX+'" y="28" text-anchor="middle" font-family="'+FONT+'" font-size="23" font-weight="700" style="fill:var(--text);">a=' + formatTR(ust_a,1) + ' m</text>';
+    svg += '<text x="'+yerMerkezX+'" y="'+(yerAltY+34)+'" text-anchor="middle" font-family="'+FONT+'" font-size="23" font-weight="700" style="fill:var(--text);">a=' + formatTR(alt_a,1) + ' m</text>';
 
     // SAĞ taraf — katman no + renk/doku açıklaması + derinlik + direnç. 2026-08-19 GÜNCELLEME
     // (kullanıcı talebi: "boş alanı değerlendir, alt alta olmak zorunda değiller") — sağ panelin
     // sağ yarısı kullanılmıyordu (metinler dar bir sütuna sıkışıp W'nin geri kalanı boş
     // kalıyordu). Derinlik ve ρ değeri artık AYRI SATIRLARDA değil, AYNI SATIRDA yan yana —
     // kazanılan dikey boşluk, malzeme adı ve değerlerin punto büyütülmesine ayrıldı.
-    var legendY = yerUstY + 8;
-    var legendSatirYuksekligi = Math.max((yerAltY-yerUstY-8) / bolgeler.length, 74);
-    var detayXsag = sagBaslangic + 300; // ρ değeri, derinlik metninin sağında — aynı satırda
+    var legendY = yerUstY + 4;
+    var legendSatirYuksekligi = Math.max((yerAltY-yerUstY-8) / bolgeler.length, LEG_SAT);
+    var yaziX = sagBaslangic + 68;
     bolgeler.forEach(function(b){
-      var derinlikMetni = b.ust==null ? (formatTR(b.alt,2)+'m — yarı-sonsuz') : (formatTR(b.alt,2)+' – '+formatTR(b.ust,2)+'m');
-      svg += '<rect x="'+sagBaslangic+'" y="'+(legendY+6)+'" width="44" height="44" rx="7" fill="url(#'+b.malzeme.pattern+')" stroke="#FFFFFF" stroke-width="1.6"/>';
-      svg += '<text x="'+(sagBaslangic+22)+'" y="'+(legendY+33)+'" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="15" font-weight="700" fill="#fff" stroke="#14171A" stroke-width="3.5" stroke-linejoin="round" paint-order="stroke">'+b.no+'</text>';
-      svg += '<text x="'+(sagBaslangic+58)+'" y="'+(legendY+26)+'" font-family="IBM Plex Sans, sans-serif" font-size="19" font-weight="700" fill="#FFFFFF">'+b.malzeme.simge+' '+b.malzeme.ad+'</text>';
-      svg += '<text x="'+(sagBaslangic+58)+'" y="'+(legendY+50)+'" font-family="IBM Plex Mono, monospace" font-size="15.5" font-weight="600" fill="#3E5265">Katman '+b.no+' · '+derinlikMetni+'</text>';
-      svg += '<text x="'+detayXsag+'" y="'+(legendY+50)+'" font-family="IBM Plex Mono, monospace" font-size="15.5" font-weight="700" fill="#9A9A9A">ρ≈'+formatTR(b.rho,1)+' Ω·m</text>';
+      var derinlikMetni = b.ust==null ? (formatTR(b.alt,2)+' m — yarı-sonsuz') : (formatTR(b.alt,2)+' – '+formatTR(b.ust,2)+' m');
+      // Doku kutusu + üstünde koyu kenarlı beyaz numara (her dokuda ve her temada okunur)
+      svg += '<rect x="'+sagBaslangic+'" y="'+(legendY+4)+'" width="54" height="54" rx="9" fill="url(#'+containerId+'_'+b.malzeme.pattern+')" style="stroke:var(--text);stroke-width:2;"/>';
+      svg += '<text x="'+(sagBaslangic+27)+'" y="'+(legendY+41)+'" text-anchor="middle" font-family="'+FONT+'" font-size="30" font-weight="800" style="fill:#FFFFFF;stroke:#14171A;stroke-width:5;stroke-linejoin:round;paint-order:stroke;">'+b.no+'</text>';
+      // Malzeme adı
+      svg += '<text x="'+yaziX+'" y="'+(legendY+30)+'" font-family="'+FONT+'" font-size="27" font-weight="700" style="fill:var(--text);">'+b.malzeme.simge+' '+b.malzeme.ad+'</text>';
+      // Katman + derinlik aralığı
+      svg += '<text x="'+yaziX+'" y="'+(legendY+62)+'" font-family="'+FONT+'" font-size="21" font-weight="500" style="fill:var(--text-2);">Katman '+b.no+' · '+derinlikMetni+'</text>';
+      // Özdirenç — ayrı, kalın satır
+      svg += '<text x="'+yaziX+'" y="'+(legendY+93)+'" font-family="'+FONT+'" font-size="25" font-weight="700" style="fill:var(--text);">ρ ≈ '+formatTR(b.rho,1)+' Ω·m</text>';
       legendY += legendSatirYuksekligi;
     });
 
@@ -39938,7 +40228,17 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     var esik = parseFloat(document.getElementById('to-ozd-param-esik').value) || 0.03;
     var manuelStr = (document.getElementById('to-ozd-param-manuel').value || '').trim();
     var manuelSinirlar = manuelStr ? manuelStr.split(',').map(function(s){ return parseFloat(s.trim()); }).filter(function(v){ return !isNaN(v); }) : null;
-    var layers = toOzdKatmanlariHesapla(aArr, roArr, k, esik, manuelSinirlar);
+    var nSecEl = document.getElementById('to-ozd-kaba-nlayer');
+    var nSec = nSecEl ? parseInt(nSecEl.value, 10) : NaN;
+    var layers;
+    if(nSec >= 1 && nSec <= 5){
+      var en = toOzdEnIyiSinirlar(roArr, Math.min(nSec, aArr.length));
+      layers = en ? toOzdKatmanlariHesapla(aArr, roArr, k, esik, null, en.idx) : toOzdKatmanlariHesapla(aArr, roArr, k, esik, manuelSinirlar);
+    } else {
+      layers = toOzdKatmanlariHesapla(aArr, roArr, k, esik, manuelSinirlar);
+    }
+    var sapmaEl = document.getElementById('to-ozd-kaba-sapma');
+    if(sapmaEl) sapmaEl.innerHTML = 'Ortalama sapma (' + layers.length + ' katman): <b style="color:var(--text);">%' + formatTR(toOzdSapmaHesapla(aArr, roArr, layers), 1) + '</b>';
     toOzdSonKabaKatmanlar = layers;
     toOzdKatmanTabloCiz(layers);
 
@@ -39958,7 +40258,19 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     }
   }
   var toOzdYenidenHesaplaBtn = document.getElementById('to-ozd-yeniden-hesapla-btn');
-  if(toOzdYenidenHesaplaBtn) toOzdYenidenHesaplaBtn.onclick = toOzdOnTahminHesaplaVeCiz;
+  if(toOzdYenidenHesaplaBtn) toOzdYenidenHesaplaBtn.onclick = function(){
+    // Elle sınır yazıldıysa katman seçicisi devre dışı kalır (Oto'ya döner)
+    var mEl = document.getElementById('to-ozd-param-manuel'), nEl = document.getElementById('to-ozd-kaba-nlayer');
+    if(mEl && nEl && mEl.value.trim()) nEl.value = '0';
+    toOzdOnTahminHesaplaVeCiz();
+  };
+  var toOzdKabaNlayerEl = document.getElementById('to-ozd-kaba-nlayer');
+  if(toOzdKabaNlayerEl) toOzdKabaNlayerEl.onchange = function(){
+    var mEl = document.getElementById('to-ozd-param-manuel');
+    if(mEl) mEl.value = '';
+    var icerik = document.getElementById('to-ozd-kaba-icerik');
+    if(icerik && !icerik.hidden) toOzdOnTahminHesaplaVeCiz();
+  };
 
   // Özel kaydırıcı (custom slider): SADECE yuvarlak tuş üzerinden pointerdown ile sürükleme
   // başlar — sayfa gezinirken çubuğa dokunmak/parmağın üzerinden geçmesi hiçbir şey yapmaz
@@ -40085,17 +40397,18 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
 
   // Kutuları daralt/genişlet (2026-08-14, kullanıcı isteği) — Başlat butonunun yanındaki
   // aşağı/yukarı ok ikonlu buton, o kutunun "gövdesini" (başlık HARİÇ her şeyi) gizler/gösterir.
-  function toOzdDaraltKur(btnId, govdeId, ikonId){
+  function toOzdDaraltKur(btnId, govdeId, ikonId, ekIds){
     var btn = document.getElementById(btnId), govde = document.getElementById(govdeId), ikon = document.getElementById(ikonId);
     if(!btn || !govde) return;
     btn.onclick = function(){
       var daraltilmis = govde.style.display === 'none';
       govde.style.display = daraltilmis ? '' : 'none';
+      (ekIds || []).forEach(function(id){ var e = document.getElementById(id); if(e) e.style.display = daraltilmis ? '' : 'none'; });
       if(ikon) ikon.style.transform = daraltilmis ? '' : 'rotate(-180deg)';
     };
   }
   toOzdDaraltKur('to-ozd-kaba-daralt-btn', 'to-ozd-kaba-govde', 'to-ozd-kaba-daralt-ikon');
-  toOzdDaraltKur('to-ozd-fiziksel-daralt-btn', 'to-ozd-fiziksel-govde', 'to-ozd-fiziksel-daralt-ikon');
+  toOzdDaraltKur('to-ozd-fiziksel-daralt-btn', 'to-ozd-fiziksel-govde', 'to-ozd-fiziksel-daralt-ikon', ['to-ozd-fiziksel-zemin-gorsel']);
 
   // Ölçüm kalitesi etiketi (2026-08-13, kullanıcı isteği) — DES/VES eğri-uydurma pratiğinde
   // yaygın kabul gören RMS hata bantlarına göre (Zohdy 1989 ve benzeri klasik VES ters-çözüm
@@ -40218,6 +40531,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       // Hesapla gövdeyi açmadığı için hiçbir şey görünmüyordu — artık her zaman açılıyor.
       var fizGovdeEl = document.getElementById('to-ozd-fiziksel-govde');
       if(fizGovdeEl) fizGovdeEl.style.display = '';
+      var fizZeminGEl = document.getElementById('to-ozd-fiziksel-zemin-gorsel'); if(fizZeminGEl) fizZeminGEl.style.display = '';
       var fizDaraltIkonEl = document.getElementById('to-ozd-fiziksel-daralt-ikon');
       if(fizDaraltIkonEl) fizDaraltIkonEl.style.transform = '';
     }
@@ -40292,7 +40606,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     }
     // 2026-08-19 (kullanıcı isteği): öneri tamamlanınca Hesapla butonu yeniden aktifleşir ve
     // "Yeniden Hesapla"ya döner (önerilen katman sayısıyla gerçek hesaplamayı çalıştırmak için).
-    if(toOzdFizikselBtn){ toOzdFizikselBtn.disabled = false; toOzdFizikselBtn.style.opacity = '1'; toOzdFizikselBtn.textContent = 'Yeniden Hesapla'; }
+    if(toOzdFizikselBtn){ toOzdFizikselBtn.disabled = false; toOzdFizikselBtn.style.opacity = '1'; toOzdFizikselBtn.textContent = 'Başlat'; }
     if(sonucEl){
       sonucEl.hidden = false;
       var siraliMetin = sonuclar.map(function(s){
@@ -40329,6 +40643,8 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     if(katmanTabloEl) katmanTabloEl.innerHTML = '<tr><td colspan="4" style="border:1px solid var(--border);padding:6px;text-align:center;color:var(--text-muted);">Grafik oluşturulunca otomatik hesaplanır.</td></tr>';
     var kabaZeminGorselEl = document.getElementById('to-ozd-kaba-zemin-gorsel');
     if(kabaZeminGorselEl) kabaZeminGorselEl.innerHTML = '';
+    var kabaSapmaEl = document.getElementById('to-ozd-kaba-sapma');
+    if(kabaSapmaEl) kabaSapmaEl.textContent = '';
     var canvasA = document.getElementById('to-ozd-canvas');
     if(canvasA){ canvasA._toOzdHeuristikCurve = null; canvasA._toOzdKatmanBantlari = null; }
     var kabaGovdeEl = document.getElementById('to-ozd-kaba-govde');
@@ -40380,7 +40696,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     if(fizDaraltIkonEl) fizDaraltIkonEl.style.transform = '';
     var nlayerSelectEl = document.getElementById('to-ozd-nlayer');
     if(nlayerSelectEl) nlayerSelectEl.value = '4';
-    if(toOzdFizikselBtn){ toOzdFizikselBtn.disabled = false; toOzdFizikselBtn.style.opacity = '1'; toOzdFizikselBtn.textContent = 'Hesapla'; }
+    if(toOzdFizikselBtn){ toOzdFizikselBtn.disabled = false; toOzdFizikselBtn.style.opacity = '1'; toOzdFizikselBtn.textContent = 'Başlat'; }
 
     // Katman kutularının ortak sonrası — Topraklama Senaryoları alanı
     var senaryoAlanEl = document.getElementById('to-ozd-senaryo-alan');
@@ -40539,6 +40855,19 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   }
 
   var toOzdSenaryoKabaBtn = document.getElementById('to-ozd-senaryo-kaba-btn');
+  // 2026-09-29 (kullanıcı isteği): iki buton başlangıçta AYNI (nötr) görünür; tıklanınca
+  // geçerli olan yöntemin butonu çerçeve içine alınır (vurgu rengi kenarlık), diğeri nötr kalır.
+  function toOzdSenaryoButonlariGuncelle(aktif){
+    [['kaba', toOzdSenaryoKabaBtn], ['detay', document.getElementById('to-ozd-senaryo-detay-btn')]].forEach(function(x){
+      var b = x[1]; if(!b) return;
+      var sec = (x[0] === aktif);
+      b.style.borderColor = sec ? 'var(--accent)' : 'var(--border)';
+      b.style.boxShadow = sec ? '0 0 0 1.5px var(--accent)' : 'none';
+      b.style.background = sec ? 'var(--surface-2)' : 'var(--surface)';
+      b.style.color = 'var(--text)';
+      b.setAttribute('aria-pressed', sec ? 'true' : 'false');
+    });
+  }
   if(toOzdSenaryoKabaBtn) toOzdSenaryoKabaBtn.onclick = function(){
     var kat = toOzdTsKatmanlarKaba();
     if(!kat){
@@ -40548,8 +40877,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     }
     toOzdTsKaynak = 'kaba';
     toOzdTsKatmanOzetYaz(kat, 'Kaba yöntem (' + kat.length + ' katman)', 'var(--text)');
-    if(toOzdSenaryoKabaBtn){ toOzdSenaryoKabaBtn.style.background = 'var(--surface-2)'; toOzdSenaryoKabaBtn.style.color = 'var(--text)'; }
-    if(toOzdSenaryoDetayBtn){ toOzdSenaryoDetayBtn.style.background = 'var(--inv-bg)'; toOzdSenaryoDetayBtn.style.color = '#C97B2E'; }
+    toOzdSenaryoButonlariGuncelle('kaba');
     if(toOzdTsWrap){ toOzdTsWrap.hidden = false; toOzdTsWrap.scrollIntoView({behavior:'smooth', block:'start'}); }
     if(window.ts3DolguGorselleriYenidenCiz) window.ts3DolguGorselleriYenidenCiz();
     if(window.ts3DolguSliderGuncelle) window.ts3DolguSliderGuncelle();
@@ -40567,8 +40895,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     }
     toOzdTsKaynak = 'detay';
     toOzdTsKatmanOzetYaz(kat, 'Detaylı yöntem (' + kat.length + ' katman)', '#C97B2E');
-    if(toOzdSenaryoDetayBtn){ toOzdSenaryoDetayBtn.style.background = '#C97B2E'; toOzdSenaryoDetayBtn.style.color = 'var(--text)'; }
-    if(toOzdSenaryoKabaBtn){ toOzdSenaryoKabaBtn.style.background = 'var(--inv-bg)'; toOzdSenaryoKabaBtn.style.color = 'var(--inv-text)'; }
+    toOzdSenaryoButonlariGuncelle('detay');
     if(toOzdTsWrap){ toOzdTsWrap.hidden = false; toOzdTsWrap.scrollIntoView({behavior:'smooth', block:'start'}); }
     if(window.ts3DolguGorselleriYenidenCiz) window.ts3DolguGorselleriYenidenCiz();
     if(window.ts3DolguSliderGuncelle) window.ts3DolguSliderGuncelle();
@@ -43025,7 +43352,7 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   #hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(18,46,67,.9);color:#fff;font-size:10.5px;padding:6px 12px;border-radius:20px;z-index:15;max-width:88%;text-align:center;line-height:1.4;pointer-events:none;opacity:1;transition:opacity .35s ease;}
 
   /* ── Alt panel (seçili kanal özellikleri) ─────────────────────── */
-  #panel{position:absolute;left:0;right:0;bottom:0;background:#161616;border-top:1.5px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -4px 16px rgba(18,46,67,.15);z-index:18;max-height:44%;overflow-y:auto;padding:0 16px 18px;transform:translateY(105%);transition:transform .22s ease;}
+  #panel{position:absolute;left:0;right:0;bottom:0;background:#161616;border-top:1.5px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -4px 16px rgba(18,46,67,.15);z-index:18;max-height:66%;overflow-y:auto;padding:0 16px 18px;transform:translateY(105%);transition:transform .22s ease;}
   #panel.open{transform:translateY(calc(-1 * var(--kb-offset, 0px)));}
   /* 2026-09-13 EKLEME (kullanıcı isteği: &quot;Kanalı Sil/Tamam en üstte sabit kalsın, aşağılar
      kaydıkça yerleri değişmesin&quot;) — başlık + eylem butonları artık #panel'in kaydırılabilir
@@ -43290,7 +43617,8 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   var TS3_KAZIK_DOLGU_PAYI_M = 0.30;
   var TS3_KAZIK_KENAR_MM = 65;
 
-  function ts3LProfilYaricap(kenarM){ return 0.215 * kenarM; }
+  // 2026-09-28: ana uygulamadaki ts3LProfilYaricap ile AYNI (0.47 x kenar = eşdeğer YARIÇAP; formüllere 2x ÇAP olarak verilir).
+  function ts3LProfilYaricap(kenarM){ return 0.47 * kenarM; }
 
   // 2026 GÜNCELLEME (kullanıcı isteği — &quot;Tek Ayakta Kazık Sayısı&quot;): çukurun köşe konumlarını
   // hesaplar. Kazık #1 (mevcut, en dış köşe) konumundan başlayıp merkez etrafında sırayla 90°
@@ -43311,27 +43639,15 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
   // kelepçe) yeniden üretiliyor — sahneyiHesapla'nın kendi (gerçek çizim geometrisine uygun,
   // kasıtlı olarak farklı) modeli DEĞİŞMEDİ, sadece &quot;başlangıç&quot; referansı artık bunun yerine
   // BU fonksiyonu kullanıyor.
-  function ts3BazSenaryoReferans(s){
-    var TS3_RHO_BETON_REF = 180;
-    var TS3_KADEME_PAD_H_REF = 0.5;
-    function betonKademeli(L, stubKenarM, rB1, rB2, rB3, rPit, rhoDolgu, rhoZemin){
-      var dStub = 2 * ts3LProfilYaricap(stubKenarM);
-      var D3 = Math.max(2*rB3, dStub*1.001), D2 = Math.max(2*rB2, D3), D1 = Math.max(2*rB1, D2);
-      var ikiPi = 2*Math.PI;
-      var R1;
-      if(D1 <= D3*1.0001 && D2 <= D3*1.0001){
-        R1 = TS3_RHO_BETON_REF/(ikiPi*L) * Math.log(D3/dStub);
-      } else {
-        var h3 = Math.max(0.1, L - 2*TS3_KADEME_PAD_H_REF);
-        var h2 = TS3_KADEME_PAD_H_REF, h1 = TS3_KADEME_PAD_H_REF;
-        R1 = TS3_RHO_BETON_REF/ikiPi * ( Math.log(D3/dStub)/h3 + Math.log(D2/D3)/h2 + Math.log(D1/D2)/h1 );
-      }
-      var Dpit = 2*Math.max(rPit, (D1/2)*1.001);
-      var ikiPiL = ikiPi*L;
-      var R2 = rhoDolgu/ikiPiL * Math.log(Dpit/D1);
-      var R3 = rhoZemin/ikiPiL * Math.max(0, Math.log(4*L/Dpit) - 1 + 0.5*Math.log(3));
-      return R1 + R2 + R3;
-    }
+  // 2026-09-28 GÜNCELLEME (kullanıcı kararı: Baz Senaryo simülasyonda ve modülde AYNI hesaplanmalı):
+  // Ayak eşdeğer direnci artık TEK bir fonksiyonda (ts3AyakEsdegeri) hesaplanıyor; hem Başlangıç
+  // referansı (aşağıda) hem sahneyiHesapla (kanallı hesap) BUNU kullanır. Yöntem ana uygulamadaki
+  // ts3OrtakAyaklar ile birebir aynı: stub + [temel iletkeni (yüzeyden temel dibine, DÜŞEY, dolgu
+  // içinde) + kazık] dalı; karşılıklı direnç + Rayleigh kelepçesi. 4 ayak eşdeğer eleman olarak
+  // matrise girer (kanal yokken sonuç = (Rayak+2*R12+R13)/4, yani Baz Senaryo ile birebir aynı).
+  // kazikSayisi>1 ise (yalnız simülasyonda var) her kazık dalı stub çevresinde 90 derece aralıkla
+  // yerleştirilir; kazikSayisi=1 iken sonuç modülle birebir aynıdır.
+  function ts3AyakEsdegeri(s, kazikVar, kazikSayisi){
     var rB3 = Math.sqrt((s.aBeton*s.aBeton)/Math.PI);
     var kademe2M = (typeof s.kademe2 === 'number' && s.kademe2 > 0) ? s.kademe2 : s.aBeton;
     var kademe1M = (typeof s.kademe1 === 'number' && s.kademe1 > 0) ? s.kademe1 : kademe2M;
@@ -43339,34 +43655,42 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     var rB1 = Math.max(Math.sqrt((kademe1M*kademe1M)/Math.PI), rB2);
     var rPit = Math.max(Math.sqrt((s.aCukur*s.aCukur)/Math.PI), rB1*1.001);
     var rhoEqFooting = ts3RhoEqS(s.temel, s.katmanlar);
-    var kazikDolguPayi = Math.min(TS3_KAZIK_DOLGU_PAYI_M, s.kazikBoy);
-    var kazikNativeBoy = s.kazikBoy - kazikDolguPayi;
-    var rhoKazikNative = kazikNativeBoy > 0 ? ts3RhoEff(s.temel+kazikDolguPayi, s.temel+s.kazikBoy, s.katmanlar) : 0;
-    var rhoKazik = (kazikDolguPayi*s.dolgu + kazikNativeBoy*rhoKazikNative) / s.kazikBoy;
     var rhoZeminBeton = ts3RhoEff(0, s.temel, s.katmanlar);
+    var Rbeton = ts3BetonDirenciKademeli(s.temel, s.stubMm/1000, rB1, rB2, rB3, rPit, 180, s.dolgu, rhoZeminBeton);
+    if(!kazikVar){
+      return { Rayak:Rbeton, rhoEqFooting:rhoEqFooting, ayakL:s.temel, Rbeton:Rbeton, Rkazik:null, Riletken:null, kazikSayisi:0 };
+    }
+    var n = Math.max(1, Math.min(4, kazikSayisi || 1));
     var rKazik = ts3LProfilYaricap(TS3_KAZIK_KENAR_MM/1000);
-    var Rbeton = betonKademeli(s.temel, s.stubMm/1000, rB1, rB2, rB3, rPit, s.dolgu, rhoZeminBeton);
-    var Rkazik = ts3CubukDirenciDerinlikli(s.kazikBoy, rKazik, s.temel, rhoKazik);
-    var dIletken = 2*TS3_R_ILETKEN;
-    var Riletken = ts3CubukDirenciDerinlikli(s.temel, dIletken, 0, s.dolgu);
-    var TS3_STUB_ILETKEN_MESAFE_M = Math.max(0.3, (rB1 + s.aCukur/2) / 2);
-    var iletkenEleman = {R:Riletken, x:TS3_STUB_ILETKEN_MESAFE_M, y:0, rho:s.dolgu, L:s.temel};
-    var kazikEleman = {R:Rkazik, x:TS3_STUB_ILETKEN_MESAFE_M+Math.max(0.1, s.aCukur/2 - TS3_STUB_ILETKEN_MESAFE_M), y:0, rho:rhoKazik, L:s.kazikBoy};
-    var RiletkenKazikHam = ts3Birlestir([iletkenEleman, kazikEleman]);
-    var idealParalelIK = 1/(1/Riletken + 1/Rkazik);
-    var minIK = Math.min(Riletken, Rkazik);
-    var RiletkenKazik = (RiletkenKazikHam >= idealParalelIK - 1e-9 && RiletkenKazikHam <= minIK + 1e-9) ? RiletkenKazikHam : minIK;
-    var stubEleman = {R:Rbeton, x:0, y:0, rho:s.dolgu, L:s.temel};
-    var ikBileske = {R:RiletkenKazik, x:TS3_STUB_ILETKEN_MESAFE_M, y:0, rho:s.dolgu, L:s.temel+s.kazikBoy};
-    var RayakHam = ts3Birlestir([stubEleman, ikBileske]);
-    var idealParalelAyak = 1/(1/Rbeton + 1/RiletkenKazik);
-    var minAyak = Math.min(Rbeton, RiletkenKazik);
-    var Rayak = (RayakHam >= idealParalelAyak - 1e-9 && RayakHam <= minAyak + 1e-9) ? RayakHam : minAyak;
+    var rhoKazik = ts3KazikOzdirenciKaris(s.temel, s.kazikBoy, s.dolgu, s.katmanlar);
+    var Rkazik = ts3CubukDirenciDerinlikli(s.kazikBoy, 2*rKazik, s.temel, rhoKazik);
+    var Riletken = ts3CubukDirenciDerinlikli(s.temel, 2*TS3_R_ILETKEN, 0, s.dolgu);
+    var M = Math.max(0.3, (rB1 + s.aCukur/2) / 2);
+    var dKI = Math.max(0.1, s.aCukur/2 - M);
+    var ikHam = ts3Birlestir([
+      {R:Riletken, x:M, y:0, rho:s.dolgu, L:s.temel},
+      {R:Rkazik, x:M+dKI, y:0, rho:rhoKazik, L:s.kazikBoy}
+    ]);
+    var ikIdeal = 1/(1/Riletken + 1/Rkazik), ikMin = Math.min(Riletken, Rkazik);
+    var RIK = (ikHam >= ikIdeal - 1e-9 && ikHam <= ikMin + 1e-9) ? ikHam : ikMin;
     var ayakL = s.temel + s.kazikBoy;
+    var el = [ {R:Rbeton, x:0, y:0, rho:s.dolgu, L:s.temel} ];
+    for(var k=0; k<n; k++){
+      var ac = k*Math.PI/2;
+      el.push({R:RIK, x:M*Math.cos(ac), y:M*Math.sin(ac), rho:s.dolgu, L:ayakL});
+    }
+    var ayHam = ts3Birlestir(el);
+    var ayIdeal = 1/(1/Rbeton + n/RIK), ayMin = Math.min(Rbeton, RIK);
+    var Rayak = (ayHam >= ayIdeal - 1e-9 && ayHam <= ayMin + 1e-9) ? ayHam : ayMin;
+    return { Rayak:Rayak, rhoEqFooting:rhoEqFooting, ayakL:ayakL, Rbeton:Rbeton, Rkazik:Rkazik, Riletken:Riletken, kazikSayisi:n };
+  }
+
+  function ts3BazSenaryoReferans(s){
+    var a = ts3AyakEsdegeri(s, true, 1);
     var w = s.ayak;
-    var R12 = ts3MutualGenel(rhoEqFooting, ayakL, w);
-    var R13 = ts3MutualGenel(rhoEqFooting, ayakL, w*Math.sqrt(2));
-    return (Rayak + 2*R12 + R13) / 4.0;
+    var R12 = ts3MutualGenel(a.rhoEqFooting, a.ayakL, w);
+    var R13 = ts3MutualGenel(a.rhoEqFooting, a.ayakL, w*Math.sqrt(2));
+    return (a.Rayak + 2*R12 + R13) / 4.0;
   }
 
   function kazikKoseleriHesapla(lp, aCukur, sayi){
@@ -43634,40 +43958,13 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
       {x:-w/2, y:-w/2, ad:'B'}, {x: w/2, y:-w/2, ad:'C'},
       {x: w/2, y: w/2, ad:'D'}, {x:-w/2, y: w/2, ad:'A'}
     ];
-    var rhoBeton = 180;
-    var rhoZeminStub = ts3RhoEff(0, s.temel, katmanlar);
+    // 2026-09-28: her ayak, Baz Senaryo ile AYNI eşdeğer dirençle (ts3AyakEsdegeri) tek eleman olarak
+    // matrise girer; kanallar bunlara ek elektrot olarak eklenir.
+    var ayakEs = ts3AyakEsdegeri(s, !!s.kazikVar, s.kazikSayisi);
     var ayakDetay = [];
-
     legPos.forEach(function(lp){
-      var Rbeton = ts3BetonDirenciKademeli(s.temel, s.stubMm/1000, rB1, rB2, rB3, rPit, rhoBeton, s.dolgu, rhoZeminStub);
-      elemanlar.push({ x:lp.x, y:lp.y, L:s.temel, rho:rhoBeton, R:Rbeton, tip:'stub', ad:lp.ad });
-      var det = { ad:lp.ad, Rbeton:Rbeton, Rkazik:null, Riletken:null, kazikSayisi:0 };
-      if(s.kazikVar){
-        var kazikSayisi = Math.max(1, Math.min(4, s.kazikSayisi||1));
-        var rKazik = ts3LProfilYaricap(TS3_KAZIK_KENAR_MM/1000);
-        var rhoKazik = ts3KazikOzdirenciKaris(s.temel, s.kazikBoy, s.dolgu, katmanlar);
-        var Rkazik = ts3CubukDirenciDerinlikli(s.kazikBoy, 2*rKazik, s.temel, rhoKazik);
-        var koseler = kazikKoseleriHesapla(lp, s.aCukur, kazikSayisi);
-        det.Rkazik = Rkazik;
-        det.kazikSayisi = kazikSayisi;
-        koseler.forEach(function(kose){
-          elemanlar.push({ x:kose.x, y:kose.y, L:s.kazikBoy, rho:rhoKazik, R:Rkazik, tip:'kazik', ad:lp.ad });
-          // 2026 GÜNCELLEME (kullanıcı isteği — diyagram): &quot;direk ayağından temelin içindeki
-          // kazığa giden bir iletken var&quot; — stub ile HER BİR ayak kazığı arasında, temel
-          // çukurunun (dolgu) İÇİNDE kalan gerçek bir bağlantı iletkeni. Çukur sınırını hiç
-          // aşmadığı için TAMAMEN dolguya bağlı tek-bölgeli formül. Mesafe her köşe için
-          // AYNI (aCukur/2) — kazıkKoseleri fonksiyonu bunu garanti ediyor (rotasyon, uzunluk
-          // korur).
-          var kazikMesafe = Math.hypot(kose.x-lp.x, kose.y-lp.y);
-          if(kazikMesafe > 0.05){
-            var Riletken = ts3KanalDirenci(kazikMesafe, 2*TS3_R_ILETKEN, s.temel, 0.3, s.dolgu, s.dolgu);
-            var ix = (lp.x+kose.x)/2, iy = (lp.y+kose.y)/2;
-            elemanlar.push({ x:ix, y:iy, L:kazikMesafe, rho:s.dolgu, R:Riletken, tip:'iletken', ad:lp.ad });
-            det.Riletken = Riletken;
-          }
-        });
-      }
-      ayakDetay.push(det);
+      elemanlar.push({ x:lp.x, y:lp.y, L:ayakEs.ayakL, rho:ayakEs.rhoEqFooting, R:ayakEs.Rayak, tip:'ayak', ad:lp.ad });
+      ayakDetay.push({ ad:lp.ad, Rbeton:ayakEs.Rbeton, Rkazik:ayakEs.Rkazik, Riletken:ayakEs.Riletken, kazikSayisi:ayakEs.kazikSayisi });
     });
 
     var bagliKanallar = baglantiAnaliziniCikar(s, state.channels);
@@ -44652,18 +44949,10 @@ window._moduleOpenHooks['topraklama-olcumu']=function(){
     var elGun = document.getElementById('direncGuncel');
     if(elBas) elBas.textContent = (direncBaslangic!=null && isFinite(direncBaslangic)) ? direncBaslangic.toFixed(2)+' Ω' : '— Ω';
     try{
-      // 2026 DÜZELTME (kullanıcı bulgusu — &quot;hiç kanal çizmeden sonuç, başlangıçtan yüksek
-      // görünüyor&quot;): sahneyiHesapla, GERÇEK çizilmiş kanal geometrisi için ayrı/kasıtlı farklı
-      // bir model kullanıyor (bkz. ts3BazSenaryoReferans notu) — stub↔kazık bağlantısını
-      // yatay &quot;kanal&quot; formülüyle modelliyor, oysa ts3BazSenaryoReferans aynı bağlantıyı düşey
-      // iletken + ideal-paralel sınırlama ile modelliyor. İki formül HİÇBİR kanal yokken bile
-      // birbirinden farklı (ve tutarsız) sonuç veriyordu. Hiç kanal çizilmemişken &quot;ilave
-      // topraklama yok&quot; demektir — bu durumda canlı sonuç, başlangıç referansıyla (aynı
-      // formülle) BİREBİR aynı olmalı; sahneyiHesapla'nın (kanal geometrisine özel) modeli
-      // sadece GERÇEKTEN bir kanal çizildiğinde devreye giriyor.
-      var rGuncel = (state.channels.length === 0)
-        ? ts3BazSenaryoReferans(state.ayarlar)
-        : sahneyiHesapla(state).Rtoplam;
+      // 2026-09-28: artık tek hesap yolu var — sahneyiHesapla, ayakları Baz Senaryo ile AYNI eşdeğer
+      // dirençle (ts3AyakEsdegeri) kullandığı için kanal yokken sonuç Başlangıç'a (Baz Senaryo'ya)
+      // birebir eşit; kanal eklenince direnç yalnızca düşer. Eski geçici çözüm kaldırıldı.
+      var rGuncel = sahneyiHesapla(state).Rtoplam;
       if(elGun) elGun.textContent = isFinite(rGuncel) ? rGuncel.toFixed(2)+' Ω' : '— Ω';
     } catch(e){ if(elGun) elGun.textContent = '— Ω'; }
   }
