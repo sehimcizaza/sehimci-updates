@@ -345,6 +345,8 @@ button,input{font-family:inherit;}
   box-shadow:0 2px 6px rgba(10,42,74,0.08);
 }
 .mod-illus svg{ width:90%; height:90%; }
+.mod-illus.sx-art{ position:relative; }
+.mod-illus.sx-art .sx-card-art{ left:7%; right:7%; top:9%; bottom:9%; }
 .mod-label{
   font-family:'IBM Plex Sans', sans-serif;
   font-size:9px;
@@ -1118,8 +1120,8 @@ select.field-input{width:100%; max-width:100%; box-sizing:border-box; text-overf
 .agt-gorsel-kart{position:relative; background:var(--surface); border-radius:16px; max-width:360px; width:100%; padding:18px;}
 .agt-gorsel-img-wrap{width:100%; height:320px; display:flex; align-items:center; justify-content:center; overflow:hidden;}
 .agt-gorsel-img-wrap img, .agt-gorsel-img-wrap svg{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block;}
-.agt-gorsel-kapat{position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:2;}
-.agt-gorsel-kapat svg{width:15px; height:15px;}
+.agt-gorsel-kapat{position:static; margin:16px auto 0; width:54px; height:54px; border-radius:50%; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; cursor:pointer;}
+.agt-gorsel-kapat svg{width:24px; height:24px;}
 .sim-overlay{position:fixed; inset:0; background:var(--surface); z-index:9998; overflow-y:auto; -webkit-overflow-scrolling:touch;}
 .sim-header{position:sticky; top:0; z-index:2; background:var(--surface); padding:14px 16px 10px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border);}
 .sim-body{padding:14px 16px 40px;}
@@ -2993,8 +2995,8 @@ html.sx-light #home-bar svg{ filter:none; }
 #module-tab-bar #mtb-title, #mtb-title{ color:var(--text) !important; font-weight:700; letter-spacing:.01em; }
 
 /* ══════════════════ TEMA ANAHTARI ══════════════════ */
-#dark-mode-toggle, #settings-dark-toggle{ background:var(--surface-3) !important; box-shadow:inset 0 0 0 1px var(--border-strong); transition:background .25s; }
-#dark-mode-toggle.sx-on, #settings-dark-toggle.sx-on{ background:var(--accent) !important; box-shadow:none; }
+#dark-mode-toggle{ background:var(--surface-3) !important; box-shadow:inset 0 0 0 1px var(--border-strong); transition:background .25s; }
+#dark-mode-toggle.sx-on{ background:var(--accent) !important; box-shadow:none; }
 #settings-sheet{ background:var(--surface) !important; color:var(--text); }
 
 /* ══════════════════ VERİ GİRİŞ ALANLARI ══════════════════ */
@@ -3163,8 +3165,8 @@ html #screen-sehim-tevziat .panel-link{ border-color:var(--border-strong) !impor
 /* 3) Askı/Gergi Takımları — malzeme fotoğrafı büyütme penceresi: lacivert
    zemin ve lacivert kapatma düğmesi nötr/koyu bir sisteme çevrildi. */
 .agt-gorsel-overlay{ background:var(--scrim) !important; }
-.agt-gorsel-kapat{ background:rgba(0,0,0,.55) !important; }
-html.sx-light .agt-gorsel-kapat{ background:rgba(0,0,0,.62) !important; }
+.agt-gorsel-kapat{ background:#fff !important; }
+html.sx-light .agt-gorsel-kapat{ background:#fff !important; border:1px solid var(--border); }
 
 /* 4) Üst bar (logo/tema anahtarı) ile sayfa içeriği arasına her ekranda sabit boşluk */
 .app{ box-sizing:border-box; }
@@ -4226,19 +4228,6 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
           <button type="button" onclick="closeSettingsPanel(); qsEditAc();" style="display:block;width:100%;padding:7px 0;background:none;border:none;cursor:pointer;text-align:left;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;font-weight:600;color:var(--accent);">Hızlı Başlat Kartlarını Değiştir</button>
         </div>
       </div>
-    </div>
-
-    <!-- Karanlık mod satırı -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:36px;height:36px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" stroke="#2FA866" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <span style="font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:600;color:var(--text);">Karanlık Mod</span>
-      </div>
-      <button type="button" id="settings-dark-toggle" onclick="toggleDarkMode()" style="width:44px;height:24px;border-radius:12px;background:var(--surface-3);border:none;cursor:pointer;position:relative;transition:background .25s;">
-        <span id="settings-dark-knob" style="position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:var(--surface);transition:left .25s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
-      </button>
     </div>
 
     <!-- Bildirimler -->
@@ -6576,22 +6565,19 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   </main>
 
   <main class="module module-screen hidden" id="screen-not-defteri" data-module-screen="not-defteri">
-    <!-- Üst araçlar -->
-    <div style="display:flex;gap:8px;margin-bottom:10px;">
-      <input type="text" id="nd-arama" class="home-search-input" placeholder="Notlarda ara…" autocomplete="off" style="flex:1;min-width:0;">
-      <button type="button" id="nd-yeni-btn" style="background:var(--surface-2);color:var(--text);border:none;border-radius:10px;padding:0 14px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.04em;cursor:pointer;white-space:nowrap;">+ Yeni Not</button>
+    <!-- Üst araçlar: 1. satır arama + Yeni Not, 2. satır kategori listesi + Kategorileri Düzenle (iki sütun hizalı) -->
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 148px;gap:8px;margin-bottom:10px;align-items:stretch;">
+      <input type="text" id="nd-arama" class="home-search-input" placeholder="Notlarda ara…" autocomplete="off" style="min-width:0;height:44px;padding-top:0;padding-bottom:0;">
+      <button type="button" id="nd-yeni-btn" style="height:44px;width:100%;box-sizing:border-box;background:var(--surface-2);color:var(--text);border:none;border-radius:10px;padding:0 8px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;">+ Yeni Not</button>
+      <div id="nd-kat-dd" style="position:relative;min-width:0;">
+        <button type="button" id="nd-kat-dd-btn" aria-haspopup="listbox" aria-expanded="false" class="home-search-input" style="height:44px;padding-top:0;padding-bottom:0;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;cursor:pointer;">
+          <span id="nd-kat-dd-label" style="flex:1;min-width:0;display:flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">Tümü</span>
+          <span style="font-size:11px;color:var(--text-muted);flex-shrink:0;">▼</span>
+        </button>
+        <div id="nd-kat-dd-liste" role="listbox" hidden style="position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:10px;z-index:60;box-shadow:0 4px 20px rgba(0,0,0,0.25);max-height:260px;overflow-y:auto;"></div>
+      </div>
+      <button type="button" id="nd-kat-yonet-btn" style="height:44px;width:100%;box-sizing:border-box;background:var(--surface-2);color:var(--text);border:none;border-radius:10px;padding:0 8px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.03em;cursor:pointer;white-space:nowrap;">Kategorileri Düzenle</button>
     </div>
-
-    <!-- Kategori filtresi -->
-    <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px;"><div id="nd-kategori-bar" style="display:flex;gap:5px;flex-wrap:wrap;flex:1;">
-      <button type="button" class="nd-kat-btn nd-kat-aktif" data-kat="tumu" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);font-size:11px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;">Tümü</button>
-      <button type="button" class="nd-kat-btn" data-kat="is-emri" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid #E05A2B;background:var(--surface);color:#E05A2B;font-size:11px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;">İş Emri</button>
-      <button type="button" class="nd-kat-btn" data-kat="ariza" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid var(--danger);background:var(--surface);color:var(--danger);font-size:11px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;">Arıza</button>
-      <button type="button" class="nd-kat-btn" data-kat="olcum" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid var(--accent);background:var(--surface);color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;">Ölçüm</button>
-      <button type="button" class="nd-kat-btn" data-kat="genel" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid #9A9A9A;background:var(--surface);color:var(--text-muted);font-size:11px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;">Genel</button>
-    </div>
-    <button type="button" id="nd-kat-yonet-btn" style="flex-shrink:0;background:var(--surface-2);border:none;border-radius:8px;padding:4px 8px;font-size:9px;font-weight:600;cursor:pointer;color:var(--text);line-height:1.4;font-family:'IBM Plex Sans',sans-serif;text-align:center;">+ Kategori<br>Ekle</button>
-  </div>
 
     <!-- Not listesi -->
     <div id="nd-liste" style="display:flex;flex-direction:column;gap:10px;"></div>
@@ -6638,17 +6624,17 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     </div>
 
     <!-- Görsel Önizleme Overlay -->
-    <div id="nd-gorsel-preview-overlay" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.9);align-items:center;justify-content:center;">
-      <img id="nd-gorsel-preview-img" style="max-width:95vw;max-height:90vh;object-fit:contain;border-radius:8px;">
-      <button type="button" id="nd-gorsel-preview-kapat" style="position:absolute;top:16px;right:16px;background:var(--tint-2);border:none;color:var(--text);border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;line-height:1;">✕</button>
+    <div id="nd-gorsel-preview-overlay" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.9);flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));box-sizing:border-box;">
+      <img id="nd-gorsel-preview-img" style="max-width:95vw;max-height:calc(100vh - 150px);object-fit:contain;border-radius:8px;">
+      <button type="button" id="nd-gorsel-preview-kapat" aria-label="Kapat" style="width:54px;height:54px;flex:0 0 auto;border-radius:50%;background:#fff;border:none;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;box-shadow:0 2px 10px rgba(0,0,0,.45);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
 
     <!-- Kategori Yönetim Overlay -->
-    <div id="nd-kat-overlay" style="display:none;position:fixed;inset:0;z-index:560;background:rgba(10,30,50,0.7);align-items:flex-end;justify-content:center;">
-      <div style="background:var(--surface);width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:20px;max-height:85vh;overflow-y:auto;">
+    <div id="nd-kat-overlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(10,30,50,0.7);align-items:flex-end;justify-content:center;">
+      <div style="background:var(--surface);width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));max-height:85vh;overflow-y:auto;box-sizing:border-box;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--text);">Kategori Yönetimi</h3>
-          <button type="button" id="nd-kat-overlay-kapat" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);">✕</button>
+          <h3 style="margin:0;font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--text);">Kategorileri Düzenle</h3>
+          <button type="button" id="nd-kat-overlay-kapat" aria-label="Kapat" style="width:40px;height:40px;flex-shrink:0;border-radius:50%;background:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.35);"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
         </div>
         <!-- Mevcut kategoriler -->
         <div id="nd-kat-listesi" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
@@ -9158,9 +9144,9 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   </div>
 
   <!-- Resim tam boyut viewer -->
-  <div id="harita-img-viewer" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;">
-    <img id="harita-img-viewer-img" style="max-width:96vw;max-height:92vh;border-radius:8px;object-fit:contain;">
-    <button type="button" id="harita-img-viewer-kapat" style="position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:var(--tint-2);border:none;color:var(--text);font-size:20px;cursor:pointer;line-height:1;">✕</button>
+  <div id="harita-img-viewer" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.92);flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));box-sizing:border-box;">
+    <img id="harita-img-viewer-img" style="max-width:96vw;max-height:calc(100vh - 150px);border-radius:8px;object-fit:contain;">
+    <button type="button" id="harita-img-viewer-kapat" aria-label="Kapat" style="width:54px;height:54px;flex:0 0 auto;border-radius:50%;background:#fff;border:none;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;box-shadow:0 2px 10px rgba(0,0,0,.45);"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
 
   <!-- Not oluştur modal -->
@@ -9954,7 +9940,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     if(!m) return;
     // Alt modülse, geri tuşu Diğer Hesaplamalar menüsüne dönsün
     if(mainModuleIds[id]){ openModule(m); }
-    else { openModule(m, { backTarget: 'hirdavat-menu' }); }
+    else { openModule(m); }
   });
 
   // ── Klasör popup: alt modülü olan ana ekran kartları ─────────────────────
@@ -10263,6 +10249,8 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
     });
   };
   function openModule(m, opts){
+    // Hırdavat Hesapları ara ekranı devre dışı — modüller ana sayfadaki kategori satırından açılır.
+    if(m && m.id === 'hirdavat-menu') return;
     if(window.haritaDirekAlaniniKapat) window.haritaDirekAlaniniKapat();
     currentBackTarget = (opts && opts.backTarget) || null;
     moduleTitle.textContent = m.title;
@@ -14455,7 +14443,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
           '<p class="card-desc">' + sm.desc + '</p>' +
         '</span>';
       card.addEventListener('click', function(){
-        window.openModuleScreen(sm, { backTarget:'hirdavat-menu' });
+        window.openModuleScreen(sm);
       });
       hirdavatSubGrid.appendChild(card);
     });
@@ -15955,7 +15943,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
       if(!svg) return;
       var ov = document.createElement('div');
       ov.className = 'agt-gorsel-overlay';
-      ov.innerHTML = '<div class="agt-gorsel-kart"><div class="agt-gorsel-kapat" aria-label="Kapat"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div><p style="margin:0 0 12px;font-family:\'Oswald\',sans-serif;font-size:13px;font-weight:700;color:var(--text);text-align:center;letter-spacing:0.03em;">'+kod+'</p><div class="agt-gorsel-img-wrap">'+svg+'</div></div>';
+      ov.innerHTML = '<div class="agt-gorsel-kart"><p style="margin:0 0 12px;font-family:\'Oswald\',sans-serif;font-size:13px;font-weight:700;color:var(--text);text-align:center;letter-spacing:0.03em;">'+kod+'</p><div class="agt-gorsel-img-wrap">'+svg+'</div><div class="agt-gorsel-kapat" aria-label="Kapat"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></div></div>';
       ov.addEventListener('click', function(){ ov.remove(); });
       document.body.appendChild(ov);
     }
@@ -16175,11 +16163,11 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
   })();
 
   // ───────────────────────── Ana sayfa arama ─────────────────────────
-  var searchIndex = modules.filter(function(m){ return m.active; }).map(function(m){
+  var searchIndex = modules.filter(function(m){ return m.active && m.id !== 'hirdavat-menu'; }).map(function(m){
     return { id:m.id, title:m.title, desc:m.desc || '', path:m.title, target:m, backTarget:null };
   }).concat(hirdavatSubModules.map(function(sm){
     var parent = modules.filter(function(m){ return m.id === 'hirdavat-menu'; })[0];
-    return { id:sm.id, title:sm.title, desc:sm.desc || '', path:(parent ? parent.title + ' › ' : '') + sm.title, target:sm, backTarget:'hirdavat-menu' };
+    return { id:sm.id, title:sm.title, desc:sm.desc || '', path:(parent ? parent.title + ' › ' : '') + sm.title, target:sm, backTarget:null };
   }));
 
   function normalizeTr(s){
@@ -16292,7 +16280,7 @@ button, .tool-row, .qs-card, .picker-option{ -webkit-tap-highlight-color:transpa
             title: kisalt(m.ad, 60),
             desc: d.ad,
             path: 'Askı/Gergi Takımları › #' + d.no + ' ' + d.ad,
-            target: agtModule, backTarget: 'hirdavat-menu',
+            target: agtModule, backTarget: null,
             dynamic: true, module: 'aski-gergi-takimlari', takimNo: d.no
           });
         });
@@ -25656,6 +25644,19 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
     // Harita modülü açılınca otomatik yükle
     // Kabul Testleri ana menü render
+  // Alt ekran (Hırdavat / Malzeme / Kabul Testleri) kartları — ana sayfadaki yeni animasyonlu
+  // resimlerle (SX_MODUL_ILLUS) aynı; resmi olmayan nadir modüller eski ikona düşer.
+  function sxAltKartHtml(sm, attr){
+    var art = window.SX_MODUL_ILLUS && SX_MODUL_ILLUS[sm.id];
+    var illus = art
+      ? '<div class="mod-illus sx-art sx-play"><span class="sx-card-art">' + art + '</span></div>'
+      : '<div class="mod-illus">' + (sm.illus || '') + '</div>';
+    return '<button type="button" class="mod-btn" ' + attr + '="' + sm.id + '">' +
+      illus +
+      '<span class="mod-label">' + sm.title + '</span>' +
+    '</button>';
+  }
+
   window._moduleOpenHooks['kabul-testleri'] = function(){
     var grid = document.getElementById('kabul-testleri-grid');
     if(!grid) return;
@@ -25666,10 +25667,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         illus: '<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="80" fill="#161616" rx="16"/><line x1="40" y1="10" x2="40" y2="70" stroke="#9A9A9A" stroke-width="2"/><ellipse cx="40" cy="20" rx="16" ry="5" fill="#2A2A2A" stroke="#9A9A9A" stroke-width="1.5"/><ellipse cx="40" cy="30" rx="16" ry="5" fill="#2A2A2A" stroke="#9A9A9A" stroke-width="1.5"/><ellipse cx="40" cy="40" rx="16" ry="5" fill="#2A2A2A" stroke="#9A9A9A" stroke-width="1.5"/><ellipse cx="40" cy="50" rx="16" ry="5" fill="#2A2A2A" stroke="#9A9A9A" stroke-width="1.5"/><rect x="34" y="58" width="12" height="10" rx="2" fill="#FFFFFF"/><rect x="35" y="8" width="10" height="8" rx="2" fill="#FFFFFF"/><circle cx="60" cy="20" r="9" fill="#2E9B4E"/><polyline points="56,20 59,23 65,16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' }
     ];
     grid.innerHTML = subModules.map(function(sm){
-      return '<button type="button" class="mod-btn" data-sub-id="' + sm.id + '">' +
-        '<div class="mod-illus">' + sm.illus + '</div>' +
-        '<span class="mod-label">' + sm.title + '</span>' +
-      '</button>';
+      return sxAltKartHtml(sm, 'data-sub-id');
     }).join(''); // mod-btn + home-grid → ana sayfayla aynı boyut ve ızgara
     grid.querySelectorAll('[data-sub-id]').forEach(function(btn){
       btn.addEventListener('click', function(){
@@ -25700,10 +25698,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         title: 'Silikon İzolatörler' }
     ];
     grid.innerHTML = subModules.map(function(sm){
-      return '<button type="button" class="mod-btn" data-mksub-id="' + sm.id + '">' +
-        '<div class="mod-illus">' + sm.illus + '</div>' +
-        '<span class="mod-label">' + sm.title + '</span>' +
-      '</button>';
+      return sxAltKartHtml(sm, 'data-mksub-id');
     }).join('');
     grid.querySelectorAll('[data-mksub-id]').forEach(function(btn){
       btn.addEventListener('click', function(){
@@ -25735,16 +25730,13 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
         title: 'Pendulum Damper Hesaplama' }
     ];
     grid.innerHTML = subModules.map(function(sm){
-      return '<button type="button" class="mod-btn" data-hsub-id="' + sm.id + '">' +
-        '<div class="mod-illus">' + sm.illus + '</div>' +
-        '<span class="mod-label">' + sm.title + '</span>' +
-      '</button>';
+      return sxAltKartHtml(sm, 'data-hsub-id');
     }).join('');
     grid.querySelectorAll('[data-hsub-id]').forEach(function(btn){
       btn.addEventListener('click', function(){
         var subId = btn.getAttribute('data-hsub-id');
         var subM = moduleRegistry[subId];
-        if(subM) openModule(subM, { backTarget: 'hirdavat-menu' });
+        if(subM) openModule(subM);
       });
     });
   };
@@ -25956,40 +25948,97 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     // Sabitlenen sayısı max 3
     function ndSabitleSayisi(){ return ndNotlar.filter(function(n){ return n.sabitli; }).length; }
 
+    // Kategori filtresi: açılır liste (varsayılan: Tümü)
+    function ndKatDdKapat(){
+      var l=document.getElementById('nd-kat-dd-liste'), b=document.getElementById('nd-kat-dd-btn');
+      if(l) l.hidden=true; if(b) b.setAttribute('aria-expanded','false');
+    }
     function ndKatBarRender(){
       katGuncelle();
-      var bar = document.getElementById('nd-kategori-bar');
-      if(!bar) return;
-      var aktif = ndAktifKat;
-      var btnler = '<button type="button" class="nd-kat-btn" data-kat="tumu" style="flex-shrink:0;padding:4px 12px;border-radius:20px;border:1.5px solid '+(aktif==='tumu'?'var(--accent)':'var(--border)')+';background:'+(aktif==='tumu'?'var(--accent-soft)':'var(--surface)')+';color:var(--text);font-size:11px;font-weight:600;cursor:pointer;font-family:IBM Plex Sans,sans-serif;">Tümü</button>';
-      ndKategoriler.forEach(function(k){
-        btnler += '<button type="button" class="nd-kat-btn" data-kat="'+k.id+'" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;border:1.5px solid '+k.renk+';background:'+(aktif===k.id?'var(--surface-2)':'var(--surface)')+';color:var(--text);font-size:11px;font-weight:600;cursor:pointer;font-family:IBM Plex Sans,sans-serif;"><span style="width:7px;height:7px;border-radius:50%;background:'+k.renk+';flex-shrink:0;"></span>'+k.ad+'</button>';
-      });
-      bar.innerHTML = btnler;
-      bar.querySelectorAll('.nd-kat-btn').forEach(function(btn){
+      var liste = document.getElementById('nd-kat-dd-liste');
+      var lbl   = document.getElementById('nd-kat-dd-label');
+      if(!liste || !lbl) return;
+      // silinmiş/artık olmayan kategori seçiliyse Tümü'ne dön
+      if(ndAktifKat !== 'tumu' && !ndKategoriler.some(function(k){ return k.id===ndAktifKat; })) ndAktifKat = 'tumu';
+      var dot = function(renk){ return '<span style="width:9px;height:9px;border-radius:50%;background:'+renk+';flex-shrink:0;display:inline-block;"></span>'; };
+      var secenekler = [{id:'tumu', ad:'Tümü', renk:null}].concat(ndKategoriler);
+      var aktifK = secenekler.filter(function(k){ return k.id===ndAktifKat; })[0] || secenekler[0];
+      lbl.innerHTML = (aktifK.renk ? dot(aktifK.renk) : '') + '<span style="overflow:hidden;text-overflow:ellipsis;">'+escHtml(aktifK.ad)+'</span>';
+      liste.innerHTML = secenekler.map(function(k,i){
+        var sec = k.id===ndAktifKat;
+        return '<button type="button" role="option" aria-selected="'+sec+'" class="nd-kat-secenek" data-kat="'+k.id+'" style="width:100%;display:flex;align-items:center;gap:9px;padding:12px 14px;background:'+(sec?'var(--surface-2)':'transparent')+';border:none;'+(i?'border-top:1px solid var(--border);':'')+'color:var(--text);font-family:IBM Plex Sans,sans-serif;font-size:14px;font-weight:'+(sec?'700':'500')+';text-align:left;cursor:pointer;">'+(k.renk?dot(k.renk):'<span style="width:9px;flex-shrink:0;"></span>')+'<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escHtml(k.ad)+'</span>'+(sec?'<span style="color:var(--accent);font-weight:700;">✓</span>':'')+'</button>';
+      }).join('');
+      liste.querySelectorAll('.nd-kat-secenek').forEach(function(btn){
         btn.addEventListener('click',function(){
           ndAktifKat = btn.dataset.kat;
+          ndKatDdKapat();
           ndKatBarRender();
           ndRender();
         });
       });
     }
 
+    var ndKatDuzenlenenId = null; // ad değiştirilen kategorinin id'si
     function ndKatYonetRender(){
       katGuncelle();
       var liste = document.getElementById('nd-kat-listesi');
       if(!liste) return;
-      liste.innerHTML = ndKategoriler.map(function(k,i){
+      var kAttr = function(t){ return escHtml(t).replace(/"/g,'&quot;'); };
+      var ikonBtn = 'border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;';
+      liste.innerHTML = ndKategoriler.map(function(k){
+        var genel = k.id==='genel'; // Genel kategorisi düzenlenemez
+        var duzenleniyor = (ndKatDuzenlenenId===k.id) && !genel;
+        var renkKutu = genel
+          ? '<span style="width:32px;height:32px;border-radius:6px;background:'+k.renk+';flex-shrink:0;display:inline-block;"></span>'
+          : '<input type="color" value="'+k.renk+'" data-kid="'+k.id+'" class="nd-kat-renk-input" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;flex-shrink:0;">';
+        var ad = duzenleniyor
+          ? '<input type="text" class="nd-kat-ad-input" data-kid="'+k.id+'" value="'+kAttr(k.ad)+'" maxlength="20" style="flex:1;min-width:0;border:1px solid var(--accent);border-radius:8px;padding:6px 8px;font-size:13px;background:var(--surface);color:var(--text);font-family:IBM Plex Sans,sans-serif;">'
+          : '<span style="flex:1;min-width:0;font-family:IBM Plex Sans,sans-serif;font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;">'+escHtml(k.ad)+'</span>';
+        var butonlar = duzenleniyor
+          ? '<button type="button" data-kid="'+k.id+'" class="nd-kat-kaydet-btn" aria-label="Kaydet" style="background:var(--ok-bg);color:var(--ok);font-weight:700;'+ikonBtn+'">✓</button>' +
+            '<button type="button" data-kid="'+k.id+'" class="nd-kat-iptal-btn" aria-label="Vazgeç" style="background:var(--surface-2);color:var(--text);'+ikonBtn+'">✕</button>'
+          : (genel ? '' : '<button type="button" data-kid="'+k.id+'" class="nd-kat-duzenle-btn" aria-label="Adı düzenle" style="background:var(--surface-2);'+ikonBtn+'">✏️</button>') +
+            '<button type="button" data-kid="'+k.id+'" class="nd-kat-sil-btn" style="background:var(--danger-bg);color:var(--danger);'+ikonBtn+'">Sil</button>';
         return '<div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;">' +
-          '<input type="color" value="'+k.renk+'" data-kid="'+k.id+'" class="nd-kat-renk-input" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;flex-shrink:0;">' +
-          '<span style="flex:1;font-family:IBM Plex Sans,sans-serif;font-size:13px;font-weight:600;color:var(--text);">'+k.ad+'</span>' +
-          '<button type="button" data-kid="'+k.id+'" class="nd-kat-sil-btn" style="background:var(--danger-bg);border:none;border-radius:6px;padding:4px 8px;font-size:11px;color:var(--danger);cursor:pointer;">Sil</button>' +
-        '</div>';
+          renkKutu + ad + '<div style="display:flex;gap:6px;flex-shrink:0;">'+butonlar+'</div></div>';
       }).join('');
       liste.querySelectorAll('.nd-kat-renk-input').forEach(function(inp){
         inp.addEventListener('change', function(){
           var k = ndKategoriler.find(function(x){ return x.id===inp.dataset.kid; });
-          if(k){ k.renk=inp.value; katKaydet(); ndKatBarRender(); }
+          if(k){ k.renk=inp.value; katKaydet(); ndKatBarRender(); ndRender(); }
+        });
+      });
+      liste.querySelectorAll('.nd-kat-duzenle-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          ndKatDuzenlenenId = btn.dataset.kid;
+          ndKatYonetRender();
+          var inp = document.querySelector('.nd-kat-ad-input');
+          if(inp){ inp.focus(); inp.select(); }
+        });
+      });
+      liste.querySelectorAll('.nd-kat-iptal-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){ ndKatDuzenlenenId = null; ndKatYonetRender(); });
+      });
+      var kaydetAd = function(kid){
+        var k = ndKategoriler.find(function(x){ return x.id===kid; });
+        var inp = liste.querySelector('.nd-kat-ad-input[data-kid="'+kid+'"]');
+        if(!k || !inp || kid==='genel') return;
+        var yeniAd = (inp.value||'').trim();
+        if(!yeniAd){ alert('Kategori adı boş olamaz.'); return; }
+        var cakisma = ndKategoriler.some(function(x){ return x.id!==kid && x.ad.toLocaleLowerCase('tr-TR')===yeniAd.toLocaleLowerCase('tr-TR'); });
+        if(cakisma){ alert('Bu isimde bir kategori zaten var.'); return; }
+        k.ad = yeniAd;
+        katKaydet();
+        ndKatDuzenlenenId = null;
+        ndKatYonetRender(); ndKatBarRender(); ndRender();
+      };
+      liste.querySelectorAll('.nd-kat-kaydet-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){ kaydetAd(btn.dataset.kid); });
+      });
+      liste.querySelectorAll('.nd-kat-ad-input').forEach(function(inp){
+        inp.addEventListener('keydown', function(e){
+          if(e.key==='Enter'){ e.preventDefault(); kaydetAd(inp.dataset.kid); }
+          else if(e.key==='Escape'){ ndKatDuzenlenenId = null; ndKatYonetRender(); }
         });
       });
       liste.querySelectorAll('.nd-kat-sil-btn').forEach(function(btn){
@@ -26006,10 +26055,12 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
           ndKategoriler = ndKategoriler.filter(function(x){ return x.id!==k.id; });
           katKaydet();
           if(ndAktifKat===k.id) ndAktifKat='tumu';
+          if(ndKatDuzenlenenId===k.id) ndKatDuzenlenenId=null;
           ndKatYonetRender(); ndKatBarRender(); ndRender();
         });
       });
     }
+
 
     function ndRender(){
       var liste = document.getElementById('nd-liste');
@@ -26053,7 +26104,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
             '</div>' +
             '<div style="display:flex;gap:8px;align-items:flex-start;">' +
               '<div style="flex:2;min-width:0;">' +
-                '<div style="font-family:Oswald,sans-serif;font-size:13px;font-weight:600;color:'+(n.tamamlandi?'var(--text-muted)':'#23262A')+';'+(n.tamamlandi?'text-decoration:line-through;':'')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">'+escHtml(n.baslik||'Başlıksız')+'</div>' +
+                '<div style="font-family:Oswald,sans-serif;font-size:13px;font-weight:600;color:'+(n.tamamlandi?'var(--text-muted)':'var(--text)')+';'+(n.tamamlandi?'text-decoration:line-through;':'')+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">'+escHtml(n.baslik||'Başlıksız')+'</div>' +
                 '<div style="font-family:IBM Plex Sans,sans-serif;font-size:11px;color:var(--text-muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">'+icerikHtml+'</div>' +
                 (n.konum?'<div style="font-family:IBM Plex Mono,monospace;font-size:9px;color:var(--accent);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">📍 '+n.konum+'</div>':'') +
               '</div>' +
@@ -26235,11 +26286,28 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     window._ndListenersKuruldu = true;
     // Kategori yönetim butonu
     document.getElementById('nd-kat-yonet-btn').addEventListener('click', function(){
-      ndYukle(); ndKatYonetRender();
+      ndYukle(); ndKatDuzenlenenId = null; ndKatYonetRender();
       document.getElementById('nd-kat-overlay').style.display='flex';
     });
-    document.getElementById('nd-kat-overlay-kapat').addEventListener('click', function(){
+    function ndKatOverlayKapat(){
+      ndKatDuzenlenenId = null;
       document.getElementById('nd-kat-overlay').style.display='none';
+    }
+    document.getElementById('nd-kat-overlay-kapat').addEventListener('click', ndKatOverlayKapat);
+    document.getElementById('nd-kat-overlay').addEventListener('click', function(e){
+      if(e.target === this) ndKatOverlayKapat();
+    });
+    // Kategori açılır listesi
+    document.getElementById('nd-kat-dd-btn').addEventListener('click', function(e){
+      e.stopPropagation();
+      var l = document.getElementById('nd-kat-dd-liste');
+      var ac = l.hidden;
+      l.hidden = !ac;
+      this.setAttribute('aria-expanded', ac ? 'true' : 'false');
+    });
+    document.addEventListener('click', function(e){
+      var dd = document.getElementById('nd-kat-dd');
+      if(dd && !dd.contains(e.target)) ndKatDdKapat();
     });
     // Renk seçici logic
     var ndKatSeciliRenk = '#2FA866';
@@ -26363,20 +26431,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       };
       reader.readAsDataURL(file);
     };
-
-    // Kategori filtresi
-    document.querySelectorAll('.nd-kat-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        ndAktifKat = btn.dataset.kat;
-        document.querySelectorAll('.nd-kat-btn').forEach(function(b){
-          var renk = b.dataset.kat==='tumu' ? null : (katRenkler[b.dataset.kat]||'#9A9A9A');
-          b.style.borderColor = renk || (b===btn ? 'var(--accent)' : 'var(--border)');
-          b.style.background = b===btn ? (renk ? 'var(--surface-2)' : 'var(--accent-soft)') : 'var(--surface)';
-          b.style.color = 'var(--text)';
-        });
-        ndRender();
-      });
-    });
 
     // GPS konum
     document.getElementById('nd-konum-btn').addEventListener('click', function(){
@@ -28393,11 +28447,6 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     var tog  = document.getElementById('dark-mode-toggle');
     if(knob){ knob.style.left = on ? '17px' : '3px'; knob.textContent = on ? '🌙' : '☀️'; }
     if(tog){ tog.style.background = ''; tog.classList.toggle('sx-on', on); }
-    // Settings sheet toggle
-    var sknob = document.getElementById('settings-dark-knob');
-    var stog  = document.getElementById('settings-dark-toggle');
-    if(sknob){ sknob.style.left = on ? '22px' : '3px'; }
-    if(stog){ stog.style.background = ''; stog.classList.toggle('sx-on', on); }
     // Dark mode'da settings sheet arka planı
     var sheet = document.getElementById('settings-sheet');
     if(sheet){ sheet.style.background = ''; }
@@ -28520,6 +28569,25 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     document.getElementById('settings-sheet'),
     document.getElementById('settings-backdrop')
   );
+
+  // Profil paneli hangi yolla kapanırsa kapansın (geri butonu, arka plan, sürükleme) içteki
+  // açılır alt menüler (Ayarlar > Görünüm Ayarları, Veri Yedekleme, Koordinat Formatı) kapatılır.
+  function settingsAltPanelleriniKapat(){
+    [['ayarlar-panel','ayarlar-chevron'],['gorunum-panel','gorunum-chevron'],
+     ['yedekleme-panel','yedekleme-chevron'],['coord-fmt-panel','coord-chevron']].forEach(function(p){
+      var panel = document.getElementById(p[0]);
+      var chev  = document.getElementById(p[1]);
+      if(panel) panel.style.display = 'none';
+      if(chev)  chev.style.transform = '';
+    });
+  }
+  (function(){
+    var _hide = settingsSheetCtrl.hide;
+    settingsSheetCtrl.hide = function(){
+      settingsAltPanelleriniKapat();
+      return _hide.apply(this, arguments);
+    };
+  })();
 
   // Settings panel sağa sürükleyip kapatma
   (function(){
@@ -28827,30 +28895,93 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     };
   };
 
-  // Uygulama Tanıtımı — anasayfadaki modülleri (HOME_GRID_ORDER sırasıyla) ikon +
-  // kısa açıklamayla tek tek listeleyen tam ekran sayfa. İçerik ilk açılışta bir
-  // kez kuruluyor (moduleRegistry/MOD_ILLUS'un tamamı o ana kadar dolmuş oluyor).
+  // Uygulama Tanıtımı — anasayfadaki 6 araç kategorisini, kendi ANİMASYONLU sahneleriyle
+  // (tool-row içindeki .sx-scene, çalışma anında klonlanır) ve her kategorideki modüllerin
+  // ayrıntılı açıklamalarıyla gösteren tam ekran sayfa. Eski statik MOD_ILLUS ikonları
+  // artık kullanılmıyor.
+  var TANITIM_KATEGORILER = [
+    { id:'kat-sehim', baslik:'Sehim Hesapları',
+      ozet:'İletken sehimini sahada doğrulamak, tevzi listelerini hazırlamak ve zemine olan mesafeyi kontrol etmek için kullanılan modüller.',
+      moduller:[
+        ['Sehim Kontrolleri','Klemp açısı ve cetvel sehim değerini girersiniz; uygulama teğet açısını ve sehim hatasını hesaplayarak ayarın doğru olup olmadığını gösterir.'],
+        ['Sehim Tevziat','Direk tevzi listesi, sehim cetveli, kritik açıklık / sıcaklık ve gevşek irtibat hesaplarını tek yerde toplar. Sehim ayarı öncesi sahaya götürülecek değerleri hazırlar.'],
+        ['Gabari Kontrol','İki nokta arasına gerçek arazi profili üzerinde sehim çizgisi çizer ve iletkenin zemine yakınlığını kontrol eder; gabari ihlali olup olmadığını görsel olarak gösterir.']
+      ] },
+    { id:'kat-direk', baslik:'Direk Hesapları',
+      ozet:'Direk tipi, gövde ve ayak bilgilerinden boyut, ağırlık, temel ve istimlak hesaplarını yapan modüller.',
+      moduller:[
+        ['Direk Ayak Ayar Ölçüleri','Direk tipi, gövde ve 4 ayağın boyuna göre kenar ve çapraz V-Blok ayar uzunluklarını hesaplar; montaj sırasında ölçü alma işini kolaylaştırır.'],
+        ['Direk Ağırlıkları','Direk tipi, gövde, 4 ayak boyu ve temel tipine göre toplam direk ağırlığını verir.'],
+        ['Direk Temel Hesabı','Seçilen direk tipi ve temel tipine göre 1 ayak için kazı, beton, grobeton ve donatı çeliği miktarlarını gösterir.'],
+        ['Direk Uzunlukları','Direk tipi, gövde ve en küçük ayak değerine göre toplam direk boyunu ve travers boyunu hesaplar.'],
+        ['İstimlak Alanları','Direk tipi, gövde ve ayağa göre kamulaştırma (istimlak) alanını verir.']
+      ] },
+    { id:'kat-topraklama', baslik:'Topraklama Hesapları',
+      ozet:'Direk topraklama direncini analiz eden ve farklı tertibat senaryolarını karşılaştıran modüller.',
+      moduller:[
+        ['Topraklama Ölçümü','Direk topraklama direnci ölçüm verilerini grafik üzerinde analiz eder ve eşdeğer direnci belirler.'],
+        ['Topraklama Senaryoları','Toprak katman dirençleri ile direk / temel ölçülerini girersiniz; 10 farklı topraklama tertibatı senaryosu için yaklaşık eşdeğer direnç tahmini yapılır, böylece en uygun tertibat seçilebilir.']
+      ] },
+    { id:'hirdavat-menu', baslik:'Hırdavat Hesapları',
+      ozet:'İletim hattı hırdavatının (küre, damper, askı/gergi takımları) sayı ve yerleşim hesapları.',
+      moduller:[
+        ['İkaz Küresi Hesaplama','İleri yön açıklık değerine göre gereken ikaz küresi sayısını ve yerleşim noktalarını hesaplar.'],
+        ['Askı/Gergi Takımları','Faz veya koruma iletkeni, gerilim seviyesi ve askı/gergi tipine göre süzerek ilgili takımın hırdavat malzeme listesini gösterir.'],
+        ['Spacer Damper Hesaplama','3x1272 MCM iletken için açıklık uzunluğuna göre spacer damper sayısını ve yerleşim noktalarını hesaplar.'],
+        ['Stockbridge Damper Hesaplama','Faz iletkeni ve OPGW için Stockbridge damper sayısını ve yerleşimini hesaplar.'],
+        ['Pendulum Damper Hesaplama','Girilen direk ara mesafesine göre gereken pendulum damper sayısını, pendulumlar arası mesafeyi ve direğe en yakın pendulum mesafesini hesaplar.']
+      ] },
+    { id:'malzeme-karakteristikleri', baslik:'Malzeme Bilgileri',
+      ozet:'İletken ve izolatörlerin teknik özellikleri ile fabrika kabul testlerinin standart maddeleri.',
+      moduller:[
+        ['İletkenler','Seçilen ACSR iletken tipinin teknik özelliklerini tablo halinde gösterir.'],
+        ['Kabul Testleri — İletken Testleri','Çelik özlü alüminyum iletkenler için Tip ve Numune testlerinin nasıl yapıldığını standart maddesiyle birlikte gösterir.'],
+        ['Kabul Testleri — Kompozit İzolatör Testleri','170 kV ve 420 kV kompozit silikon izolatörler için Tip ve Kabul (Numune) testlerinin nasıl yapıldığını standart maddesiyle birlikte gösterir.'],
+        ['Porselen/Cam İzolatör Sembolleri','Kep-pin ve uzun çubuk tipi izolatörlerin standart sembol tanımlarını, elektriksel özelliklerini ve kirlilik seviyelerine göre kaçak yolu uzunluklarını verir.'],
+        ['Silikon İzolatörler','Kompozit silikon izolatörlerin elektriksel / mekanik özellikleri, kirlilik seviyelerine göre izolatör boyutları ve etiket bilgilerini içerir.']
+      ] },
+    { id:'kat-diger-araclar', baslik:'Diğer Araçlar',
+      ozet:'Saha çalışmasını destekleyen harita, ölçüm, not ve kayıt araçları.',
+      moduller:[
+        ['kml/kmz Görüntüleyici','KML/KMZ dosyası yükleyerek hat güzergâhını ve direk lokasyonlarını harita üzerinde görüntülersiniz.'],
+        ['Mesafe Ölç','GPS izleme ile açık alanda mesafe ölçümü yapar.'],
+        ['Not Defteri','Saha notu, iş emri, arıza ve ölçüm kayıtlarını tutmanızı sağlar.'],
+        ['Hat / Güzergah Kaydı','Hat / güzergâh isimlerini ve isteğe bağlı KML/KMZ dosyalarını kaydeder; diğer modüllerde kullanılmak üzere saklar.']
+      ] }
+  ];
   var tanitimIcerikDolduruldu = false;
   function tanitimIcerikOlustur(){
     if(tanitimIcerikDolduruldu) return;
     var el = document.getElementById('tanitim-icerik');
     if(!el) return;
-    var kartlar = HOME_GRID_ORDER.map(function(id){
-      var m = (typeof moduleRegistry !== 'undefined') ? moduleRegistry[id] : null;
-      if(!m) return '';
-      var illus = (typeof MOD_ILLUS !== 'undefined' && MOD_ILLUS[id]) ? MOD_ILLUS[id] : '';
-      return '<div style="display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(10,42,74,0.05);">' +
-        '<div class="tanitim-icon-wrap" style="width:56px;height:56px;flex-shrink:0;border-radius:12px;overflow:hidden;">' + illus + '</div>' +
-        '<div style="flex:1;min-width:0;">' +
-          '<p style="margin:0 0 4px;font-family:\'Oswald\',sans-serif;font-size:14px;font-weight:700;color:var(--text);">' + m.title + '</p>' +
-          '<p style="margin:0;font-family:\'IBM Plex Sans\',sans-serif;font-size:12px;line-height:1.55;color:var(--text-muted);">' + (m.desc || '') + '</p>' +
-        '</div>' +
-      '</div>';
+    var kartlar = TANITIM_KATEGORILER.map(function(k, ki){
+      var moduller = k.moduller.map(function(m, mi){
+        return '<div style="display:flex;gap:10px;align-items:flex-start;padding:10px 0;' + (mi ? 'border-top:1px solid var(--border);' : '') + '">' +
+          '<span style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-family:\'Oswald\',sans-serif;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;">' + (mi + 1) + '</span>' +
+          '<div style="flex:1;min-width:0;">' +
+            '<p style="margin:0 0 3px;font-family:\'Oswald\',sans-serif;font-size:13.5px;font-weight:700;color:var(--text);">' + m[0] + '</p>' +
+            '<p style="margin:0;font-family:\'IBM Plex Sans\',sans-serif;font-size:12px;line-height:1.6;color:var(--text-muted);">' + m[1] + '</p>' +
+          '</div></div>';
+      }).join('');
+      return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:0 1px 4px rgba(10,42,74,0.05);">' +
+        '<div class="tanitim-sahne" data-kat="' + k.id + '" style="position:relative;height:92px;overflow:hidden;background:var(--surface-2,var(--surface));"></div>' +
+        '<div style="padding:14px 14px 6px;">' +
+          '<p style="margin:0 0 4px;font-family:\'Oswald\',sans-serif;font-size:16px;font-weight:700;color:var(--text);letter-spacing:0.01em;">' + (ki + 1) + '. ' + k.baslik + '</p>' +
+          '<p style="margin:0 0 6px;font-family:\'IBM Plex Sans\',sans-serif;font-size:12px;line-height:1.6;color:var(--text);">' + k.ozet + '</p>' +
+          moduller +
+        '</div></div>';
     }).join('');
     el.innerHTML =
-      '<style>#tanitim-icerik .tanitim-icon-wrap svg{width:100%;height:100%;display:block;}</style>' +
-      '<p style="margin:0 0 20px;font-family:\'IBM Plex Sans\',sans-serif;font-size:13px;line-height:1.7;color:var(--text);">SEHİMCİ, yüksek gerilim iletim hattı sahasında kullanılan bir mühendislik hesaplama uygulamasıdır. Aşağıda uygulamadaki modülleri kısaca tanıyabilirsiniz.</p>' +
+      '<style>#tanitim-icerik .tanitim-sahne .sx-scene{position:absolute;inset:0;}#tanitim-icerik .tanitim-sahne .sx-scene svg{width:100%;height:100%;display:block;}</style>' +
+      '<p style="margin:0 0 12px;font-family:\'IBM Plex Sans\',sans-serif;font-size:13px;line-height:1.7;color:var(--text);">SEHİMCİ, yüksek gerilim iletim hattı sahasında çalışan mühendis ve teknikerler için hazırlanmış bir hesaplama ve saha yardımcısı uygulamasıdır. Hesaplamalar cihazınızda çalışır; sehim, direk, topraklama, hırdavat ve malzeme konularındaki günlük işleri tek yerde toplar.</p>' +
+      '<p style="margin:0 0 20px;font-family:\'IBM Plex Sans\',sans-serif;font-size:13px;line-height:1.7;color:var(--text-muted);">Ana sayfadaki araçlar 6 kategoride toplanmıştır. Her kategoriyi açarak içindeki modüllere ulaşabilirsiniz. Aşağıda her kategori ve modülün ne işe yaradığını ayrıntılı olarak bulabilirsiniz.</p>' +
       kartlar;
+    // Animasyonlu sahneleri ana sayfadaki kategori satırlarından klonla
+    TANITIM_KATEGORILER.forEach(function(k){
+      var hedef = el.querySelector('.tanitim-sahne[data-kat="' + k.id + '"]');
+      var kaynak = document.querySelector('#tr-wrap-' + k.id + ' .sx-scene');
+      if(hedef && kaynak) hedef.appendChild(kaynak.cloneNode(true));
+    });
     tanitimIcerikDolduruldu = true;
   }
   function tanitimAc(){
@@ -28868,11 +28999,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
   function openSettingsPanel(){
     profilYukle();
-    // Dark toggle state güncelle
-    var sknob = document.getElementById('settings-dark-knob');
-    var stog  = document.getElementById('settings-dark-toggle');
-    if(sknob){ sknob.style.left = isDark ? '22px' : '3px'; }
-    if(stog){ stog.style.background = isDark ? 'var(--accent)' : 'var(--surface-3)'; }
+    settingsAltPanelleriniKapat();
     settingsSheetCtrl.show();
     // 2026-09-28 (kullanıcı isteği): Profil butonu artık yeşil "aktif" arka plana bürünmüyor —
     // diğer alt bar butonlarıyla aynı görünümde kalır; mevcut aktif sekme değiştirilmez.
@@ -28880,6 +29007,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     if(pp) pp.classList.remove('active');
   }
   function closeSettingsPanel(){
+    settingsAltPanelleriniKapat();
     settingsSheetCtrl.hide();
     document.querySelectorAll('.bnav-btn').forEach(function(b){ b.classList.remove('active'); });
     var hh = document.getElementById('bnav-home');
@@ -36719,12 +36847,17 @@ function ts3Senaryo7(p){
     if(mevcut){ mevcut.querySelector('img').src = src; mevcut.style.display = 'flex'; return; }
     var ov = document.createElement('div');
     ov.id = 'ts3-kroki-buyuk-overlay';
-    ov.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(11,27,41,.92);display:flex;align-items:center;justify-content:center;padding:24px;';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(11,27,41,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px 24px calc(24px + env(safe-area-inset-bottom,0px));box-sizing:border-box;';
     ov.onclick = function(){ ov.style.display = 'none'; };
     var img = document.createElement('img');
     img.src = src;
-    img.style.cssText = 'max-width:100%;max-height:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.5);';
+    img.style.cssText = 'max-width:100%;max-height:calc(100% - 100px);min-height:0;object-fit:contain;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.5);';
     ov.appendChild(img);
+    var kb = document.createElement('button');
+    kb.type = 'button'; kb.setAttribute('aria-label','Kapat');
+    kb.style.cssText = 'width:54px;height:54px;flex:0 0 auto;border-radius:50%;background:#fff;border:none;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;box-shadow:0 2px 10px rgba(0,0,0,.45);';
+    kb.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    ov.appendChild(kb);
     document.body.appendChild(ov);
   };
 
