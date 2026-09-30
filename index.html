@@ -23416,20 +23416,37 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       }
       var mesafeTxt = toplam>=1000 ? (toplam/1000).toFixed(3)+' km' : Math.round(toplam)+' m';
 
-      // Segment mesafelerini polyline üzerine göster
+      // Segment mesafelerini polyline üzerine göster (yalnızca seçilen/aradaki direkler arasında;
+      // hat köşe noktaları arasında etiket çıkarılmaz, aradaki yolun toplamı yazılır)
       _mesafeState.markers.forEach(function(m){ if(m._isMesafeLabel) mapInstance.removeLayer(m); });
       _mesafeState.markers = _mesafeState.markers.filter(function(m){ return !m._isMesafeLabel; });
+      var ns = _mesafeState.noktalar;
+      var gecikme = [0]; // her noktanın başlangıçtan kümülatif mesafesi
+      for(var q=1; q<latlngs.length; q++){
+        var dLa=(latlngs[q][0]-latlngs[q-1][0])*Math.PI/180, dLo=(latlngs[q][1]-latlngs[q-1][1])*Math.PI/180;
+        var aa=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(latlngs[q-1][0]*Math.PI/180)*Math.cos(latlngs[q][0]*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);
+        gecikme.push(gecikme[q-1] + R*2*Math.atan2(Math.sqrt(aa),Math.sqrt(1-aa)));
+      }
+      var oncekiDirek = 0;
       for(var j=1; j<latlngs.length; j++){
-        var midLat=(latlngs[j-1][0]+latlngs[j][0])/2, midLng=(latlngs[j-1][1]+latlngs[j][1])/2;
-        var dLat2=(latlngs[j][0]-latlngs[j-1][0])*Math.PI/180,
-            dLon2=(latlngs[j][1]-latlngs[j-1][1])*Math.PI/180,
-            a2=Math.sin(dLat2/2)*Math.sin(dLat2/2)+Math.cos(latlngs[j-1][0]*Math.PI/180)*Math.cos(latlngs[j][0]*Math.PI/180)*Math.sin(dLon2/2)*Math.sin(dLon2/2);
-        var segD = R*2*Math.atan2(Math.sqrt(a2),Math.sqrt(1-a2));
+        if(ns[j].ara) continue;
+        var segD = gecikme[j] - gecikme[oncekiDirek];
+        // etiket konumu: iki direk arasındaki yolun yarı mesafesindeki nokta
+        var yariHedef = gecikme[oncekiDirek] + segD/2, midLat = latlngs[j][0], midLng = latlngs[j][1];
+        for(var m2=oncekiDirek+1; m2<=j; m2++){
+          if(gecikme[m2] >= yariHedef){
+            var bas = gecikme[m2]-gecikme[m2-1], fr = bas>0 ? (yariHedef-gecikme[m2-1])/bas : 0;
+            midLat = latlngs[m2-1][0] + fr*(latlngs[m2][0]-latlngs[m2-1][0]);
+            midLng = latlngs[m2-1][1] + fr*(latlngs[m2][1]-latlngs[m2-1][1]);
+            break;
+          }
+        }
         var segTxt = segD>=1000 ? (segD/1000).toFixed(3)+' km' : Math.round(segD)+' m';
         var lbl = L.marker([midLat,midLng],{icon:L.divIcon({className:'',html:'<div style="background:rgba(224,90,43,0.9);color:#000;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap;font-family:IBM Plex Mono,monospace;">'+segTxt+'</div>',iconAnchor:[20,10]})});
         lbl._isMesafeLabel = true;
         lbl.addTo(mapInstance);
         _mesafeState.markers.push(lbl);
+        oncekiDirek = j;
       }
 
       // Paneli güncelle
@@ -23438,7 +23455,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
 
     function haritaMesafePanelGuncelle(mesafeTxt){
       if(!_mesafeState) return;
-      var n = _mesafeState.noktalar;
+      var n = _mesafeState.noktalar.filter(function(x){ return !x.ara; });
       var noktaSayisi = n.length;
       var mesafeEl = document.getElementById('hmp-mesafe');
       var noktaEl  = document.getElementById('hmp-nokta-sayisi');
@@ -23493,7 +23510,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       var iptalBtn = document.getElementById('hmp-iptal-btn');
       var hamListeBtn = document.getElementById('hmp-hamliste-btn');
       _mesafeState.tamamlandi = true;
-      if(bilgi)    bilgi.textContent = '✅ ' + _mesafeState.noktalar.length + ' nokta ölçüldü';
+      if(bilgi)    bilgi.textContent = '✅ ' + _mesafeState.noktalar.filter(function(x){ return !x.ara; }).length + ' nokta ölçüldü';
       if(bitirBtn) bitirBtn.style.display = 'none';
       if(iptalBtn) iptalBtn.textContent = '✕ Kapat';
       if(hamListeBtn){ hamListeBtn.style.display = ''; hamListeBtn.onclick = function(){ haritaGabariHamListeGoster(); }; }
@@ -23639,79 +23656,230 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.remove(); });
     }
 
-    function haritaMesafeNoktaEkle(pi){
-      if(!_mesafeState) return;
-
-      var sonNokta = _mesafeState.noktalar[_mesafeState.noktalar.length - 1];
-      var araNoktalar = [];
-
-      if(sonNokta && sonNokta.fileName === pi.fileName){
-        var dosyaNoktalari = tumNoktalar.filter(function(n){ return n.fileName === pi.fileName; });
-        // Aynı dosyada birden fazla hat/bölüm olduğunda (enterkonnekte sistemde aynı numaralı direkler
-        // farkl\u0131 hatlarda tekrarlanabiliyor), arama sadece t\u0131klanan iki noktan\u0131n AYNI klas\u00f6r\u00fcnde (varsa) yap\u0131l\u0131r.
-        if(sonNokta.folder && pi.folder && sonNokta.folder === pi.folder){
-          dosyaNoktalari = dosyaNoktalari.filter(function(n){ return n.folder === pi.folder; });
-        }
-
-        if(typeof sonNokta.noktaNo === 'number' && typeof pi.noktaNo === 'number' && sonNokta.noktaNo !== pi.noktaNo){
-          // Bir noktan\u0131n, t\u0131klanan A-B do\u011fru parças\u0131na olan yakla\u015f\u0131k dik uzakl\u0131\u011f\u0131n\u0131 (metre) hesaplar.
-          // Ayn\u0131 numaral\u0131 birden fazla direk oldu\u011funda (ör. enterkonnekte sistemde ba\u015fka bir hatta ayn\u0131
-          // numara tekrar ediyorsa), ger\u00e7ekten A-B aras\u0131ndaki hat \u00fczerinde olan\u0131 se\u00e7mek i\u00e7in kullan\u0131l\u0131r.
-          function segmentUzakligiMetre(lat, lng, lat1, lng1, lat2, lng2){
-            var A=lat-lat1, B=lng-lng1, C=lat2-lat1, D=lng2-lng1;
-            var lenSq = C*C+D*D;
-            var t = lenSq !== 0 ? Math.max(0, Math.min(1, (A*C+B*D)/lenSq)) : 0;
-            var pLat=lat1+t*C, pLng=lng1+t*D;
-            var dLat=(lat-pLat)*111320, dLng=(lng-pLng)*111320*Math.cos(lat1*Math.PI/180);
-            return Math.sqrt(dLat*dLat+dLng*dLng);
-          }
-          var latA = parseFloat(sonNokta.lat), lngA = parseFloat(sonNokta.lng);
-          var latB = parseFloat(pi.lat), lngB = parseFloat(pi.lng);
-          var minNo = Math.min(sonNokta.noktaNo, pi.noktaNo);
-          var maxNo = Math.max(sonNokta.noktaNo, pi.noktaNo);
-
-          // A ile B aras\u0131ndaki numaralara sahip t\u00fcm adaylar\u0131 topla, numaraya göre grupla
-          var adaylar = dosyaNoktalari.filter(function(n){
-            return typeof n.noktaNo === 'number' && n.noktaNo > minNo && n.noktaNo < maxNo && n.pointKey !== sonNokta.pointKey && n.pointKey !== pi.pointKey;
-          });
-          var gruplar = {};
-          adaylar.forEach(function(n){
-            var k = n.noktaNo;
-            if(!gruplar[k]) gruplar[k] = [];
-            gruplar[k].push(n);
-          });
-          var secilenler = Object.keys(gruplar).map(function(k){
-            var grup = gruplar[k];
-            if(grup.length === 1) return grup[0];
-            // Ayn\u0131 numaradan birden fazla varsa, A-B hatt\u0131na en yak\u0131n olan\u0131 (ger\u00e7ekten aradaki) se\u00e7 ilir
-            var enYakin = grup[0], enKucukMesafe = Infinity;
-            grup.forEach(function(n){
-              var d = segmentUzakligiMetre(parseFloat(n.lat), parseFloat(n.lng), latA, lngA, latB, lngB);
-              if(d < enKucukMesafe){ enKucukMesafe = d; enYakin = n; }
-            });
-            return enYakin;
-          });
-          secilenler.sort(function(a,b){ return sonNokta.noktaNo < pi.noktaNo ? a.noktaNo - b.noktaNo : b.noktaNo - a.noktaNo; });
-          araNoktalar = secilenler;
-        } else if(typeof sonNokta.noktaIndex === 'number' && typeof pi.noktaIndex === 'number' && sonNokta.noktaIndex !== pi.noktaIndex){
-          // Direk numarası bulunamadıysa render sırasına geri dön
-          var basla = sonNokta.noktaIndex, bitir = pi.noktaIndex;
-          var yon = basla < bitir ? 1 : -1;
-          for(var idx = basla + yon; idx !== bitir; idx += yon){
-            if(dosyaNoktalari[idx]) araNoktalar.push(dosyaNoktalari[idx]);
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Mesafe ölçümü: seçilen iki nokta arasını KML'deki HAT ÇİZGİSİNİ takip ederek bulur.
+    // Hat köşe noktalarından ve aradaki tüm direklerden (pinlerden) sırayla geçer, nokta atlamaz.
+    // Aynı dosyadaki tüm hat çizgileri bir grafik olarak ele alınır (uç uca eklenen parçalar dahil);
+    // A ve B hat üzerine oturtulup en kısa yol (Dijkstra) hat boyunca izlenir.
+    // Hat bulunamazsa eski yönteme (dosyadaki ardışık noktalar) dönülür.
+    // ─────────────────────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Hat çizgisi olmayan (yalnızca direk pinlerinden oluşan) KML dosyalarında direklerin GERÇEK
+    // güzergâh sırası: KML'deki sıra kaba sıralama olarak alınır, komşu direklerin yer değiştirdiği
+    // yerel karışıklıklar (örn. dosyada 154,151,152,153,149,150 → gerçekte 154,153,152,151,150,149)
+    // en kısa yol (2-opt) ile düzeltilir. Direk numarasına bakılmaz; numaralar atlayabilir, aynı
+    // numara başka bir güzergâhta tekrar edebilir.
+    // ─────────────────────────────────────────────────────────────────────────────
+    var _direkZinciriOnbellek = {};
+    function direkZinciriKur(noktalar){
+  var n = noktalar.length;
+  if(n < 3) return noktalar.slice();
+  var lat0 = parseFloat(noktalar[0].lat), boy = 111320 * Math.cos(lat0 * Math.PI / 180);
+  var X = new Array(n), Y = new Array(n), o = new Array(n);
+  for(var i=0;i<n;i++){ X[i] = parseFloat(noktalar[i].lng) * boy; Y[i] = parseFloat(noktalar[i].lat) * 111320; o[i] = i; }
+  function d(a, b){ var dx = X[a]-X[b], dy = Y[a]-Y[b]; return Math.sqrt(dx*dx + dy*dy); }
+  if(n <= 4000){
+    var gelisti = true, tur = 0;
+    while(gelisti && tur < 60){
+      gelisti = false; tur++;
+      for(var i=0;i<n-1;i++){
+        for(var j=i+1;j<n;j++){
+          var onceki = i > 0 ? o[i-1] : -1, sonraki = j < n-1 ? o[j+1] : -1;
+          var eski = (onceki >= 0 ? d(onceki, o[i]) : 0) + (sonraki >= 0 ? d(o[j], sonraki) : 0);
+          var yeni = (onceki >= 0 ? d(onceki, o[j]) : 0) + (sonraki >= 0 ? d(o[i], sonraki) : 0);
+          if(yeni < eski - 0.5){
+            for(var a=i, b=j; a<b; a++, b--){ var t=o[a]; o[a]=o[b]; o[b]=t; }
+            gelisti = true;
           }
         }
       }
+    }
+  }
+  return o.map(function(k){ return noktalar[k]; });
+}
 
-      var eklenecekler = araNoktalar.concat([pi]);
+    function direkZinciriAl(A){
+      var ayni = A.folder ? A.folder : '';
+      var anahtar = A.fileName + '|' + ayni;
+      var say = tumNoktalar.length;
+      var kayit = _direkZinciriOnbellek[anahtar];
+      if(kayit && kayit.say === say) return kayit.zincir;
+      var liste = tumNoktalar.filter(function(n){ return n.fileName === A.fileName; });
+      liste.sort(function(x,y){ return (x.belgeSirasi||0) - (y.belgeSirasi||0); });
+      var zincir = direkZinciriKur(liste);
+      _direkZinciriOnbellek[anahtar] = { say: say, zincir: zincir };
+      return zincir;
+    }
+
+    function haritaHatYoluBul(A, B){
+      var HAT_TOLERANS = 60;   // m: direk, hat çizgisine en fazla bu kadar uzakta olabilir
+      var DIREK_TOLERANS = 15; // m: bir pin, yola en fazla bu kadar yakınsa "aradaki direk" sayılır
+      var enlemM = 111320;
+      var lat0 = parseFloat(A.lat);
+      var boyM = enlemM * Math.cos(lat0 * Math.PI / 180);
+      function xy(lat, lng){ return [(lng - parseFloat(B.lng)) * boyM, (lat - parseFloat(B.lat)) * enlemM]; }
+      function hav(la1, ln1, la2, ln2){
+        var R=6371000, dLa=(la2-la1)*Math.PI/180, dLn=(ln2-ln1)*Math.PI/180;
+        var a=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLn/2)*Math.sin(dLn/2);
+        return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      }
+      var hatlar = kmlHatlari.filter(function(h){ return h.fileName === A.fileName && h.coords && h.coords.length > 1; });
+      if(!hatlar.length) return null;
+
+      // Düğümler: yuvarlanmış koordinat anahtarı (≈1 m) → indeks; uç uca gelen hatlar birleşsin
+      var dugumler = [], anahtar = {}, komsu = [];
+      function dugumAl(lat, lng){
+        var k = lat.toFixed(5) + ',' + lng.toFixed(5);
+        if(anahtar[k] === undefined){ anahtar[k] = dugumler.length; dugumler.push([lat, lng]); komsu.push([]); }
+        return anahtar[k];
+      }
+      var segler = []; // {u, v}
+      hatlar.forEach(function(h){
+        var onceki = null;
+        h.coords.forEach(function(c){
+          var id = dugumAl(parseFloat(c[0]), parseFloat(c[1]));
+          if(onceki !== null && onceki !== id){
+            var w = hav(dugumler[onceki][0], dugumler[onceki][1], dugumler[id][0], dugumler[id][1]);
+            komsu[onceki].push([id, w]); komsu[id].push([onceki, w]);
+            segler.push({u: onceki, v: id});
+          }
+          onceki = id;
+        });
+      });
+      if(!segler.length) return null;
+
+      // Bir noktayı en yakın hat parçasına oturt
+      function oturt(P){
+        var px = xy(parseFloat(P.lat), parseFloat(P.lng)), enIyi = null;
+        segler.forEach(function(sg, i){
+          var a = xy(dugumler[sg.u][0], dugumler[sg.u][1]), b = xy(dugumler[sg.v][0], dugumler[sg.v][1]);
+          var dx = b[0]-a[0], dy = b[1]-a[1], len2 = dx*dx + dy*dy;
+          var t = len2 > 0 ? ((px[0]-a[0])*dx + (px[1]-a[1])*dy) / len2 : 0;
+          t = Math.max(0, Math.min(1, t));
+          var qx = a[0]+t*dx, qy = a[1]+t*dy;
+          var d = Math.sqrt((px[0]-qx)*(px[0]-qx) + (px[1]-qy)*(px[1]-qy));
+          if(!enIyi || d < enIyi.d) enIyi = {d: d, seg: i, t: t};
+        });
+        if(!enIyi || enIyi.d > HAT_TOLERANS) return null;
+        var sg = segler[enIyi.seg];
+        var lat = dugumler[sg.u][0] + enIyi.t * (dugumler[sg.v][0] - dugumler[sg.u][0]);
+        var lng = dugumler[sg.u][1] + enIyi.t * (dugumler[sg.v][1] - dugumler[sg.u][1]);
+        return {seg: enIyi.seg, t: enIyi.t, lat: lat, lng: lng};
+      }
+      var oA = oturt(A), oB = oturt(B);
+      if(!oA || !oB) return null;
+
+      // Sanal düğümler: A ve B (kendi parçalarının iki ucuna bağlanır)
+      var idA = dugumler.length; dugumler.push([oA.lat, oA.lng]); komsu.push([]);
+      var idB = dugumler.length; dugumler.push([oB.lat, oB.lng]); komsu.push([]);
+      function bagla(id, o){
+        var sg = segler[o.seg];
+        [sg.u, sg.v].forEach(function(n){
+          var w = hav(dugumler[id][0], dugumler[id][1], dugumler[n][0], dugumler[n][1]);
+          komsu[id].push([n, w]); komsu[n].push([id, w]);
+        });
+      }
+      bagla(idA, oA); bagla(idB, oB);
+      if(oA.seg === oB.seg){ // aynı parça üzerindeler: doğrudan bağ
+        var wAB = hav(oA.lat, oA.lng, oB.lat, oB.lng);
+        komsu[idA].push([idB, wAB]); komsu[idB].push([idA, wAB]);
+      }
+
+      // Dijkstra (ikili yığın)
+      var N = dugumler.length, uzak = new Array(N), onc = new Array(N), bitti = new Array(N);
+      for(var i=0;i<N;i++){ uzak[i]=Infinity; onc[i]=-1; bitti[i]=false; }
+      uzak[idA] = 0;
+      var yigin = [[0, idA]];
+      function yiginEkle(e){ yigin.push(e); var i=yigin.length-1; while(i>0){ var p=(i-1)>>1; if(yigin[p][0] <= yigin[i][0]) break; var t=yigin[p]; yigin[p]=yigin[i]; yigin[i]=t; i=p; } }
+      function yiginAl(){ var top=yigin[0], son=yigin.pop(); if(yigin.length){ yigin[0]=son; var i=0; for(;;){ var l=2*i+1, r=l+1, m=i; if(l<yigin.length && yigin[l][0] < yigin[m][0]) m=l; if(r<yigin.length && yigin[r][0] < yigin[m][0]) m=r; if(m===i) break; var t=yigin[m]; yigin[m]=yigin[i]; yigin[i]=t; i=m; } } return top; }
+      while(yigin.length){
+        var cur = yiginAl(), u = cur[1];
+        if(bitti[u]) continue;
+        bitti[u] = true;
+        if(u === idB) break;
+        komsu[u].forEach(function(e){
+          var nd = uzak[u] + e[1];
+          if(nd < uzak[e[0]]){ uzak[e[0]] = nd; onc[e[0]] = u; yiginEkle([nd, e[0]]); }
+        });
+      }
+      if(!isFinite(uzak[idB])) return null; // hatlar A ile B arasında bağlantılı değil
+
+      var yol = [], k = idB;
+      while(k !== -1){ yol.push(k); k = onc[k]; }
+      yol.reverse();
+      var P = yol.map(function(id){ return [dugumler[id][0], dugumler[id][1]]; });
+      var kum = [0];
+      for(var j=1;j<P.length;j++) kum.push(kum[j-1] + hav(P[j-1][0], P[j-1][1], P[j][0], P[j][1]));
+      var toplam = kum[kum.length-1];
+
+      // Yol üzerindeki (yola ≤ DIREK_TOLERANS m) diğer direkleri (pinleri) sırayla bul
+      var ayniKlasor = A.folder && B.folder && A.folder === B.folder;
+      var adaylar = tumNoktalar.filter(function(n){
+        return n.fileName === A.fileName && n.pointKey !== A.pointKey && n.pointKey !== B.pointKey &&
+               (!ayniKlasor || n.folder === A.folder);
+      });
+      var direkler = [];
+      adaylar.forEach(function(n){
+        var q = xy(parseFloat(n.lat), parseFloat(n.lng)), en = null;
+        for(var j=1;j<P.length;j++){
+          var a = xy(P[j-1][0], P[j-1][1]), b = xy(P[j][0], P[j][1]);
+          var dx=b[0]-a[0], dy=b[1]-a[1], len2=dx*dx+dy*dy;
+          var t = len2>0 ? ((q[0]-a[0])*dx+(q[1]-a[1])*dy)/len2 : 0; t=Math.max(0,Math.min(1,t));
+          var rx=a[0]+t*dx, ry=a[1]+t*dy, d=Math.sqrt((q[0]-rx)*(q[0]-rx)+(q[1]-ry)*(q[1]-ry));
+          if(!en || d < en.d) en = {d:d, s: kum[j-1] + t*(kum[j]-kum[j-1])};
+        }
+        if(en && en.d <= DIREK_TOLERANS && en.s > 1 && en.s < toplam - 1) direkler.push({s: en.s, nokta: n});
+      });
+
+      // Köşe noktaları (iç düğümler) + direkleri yol sırasına göre birleştir
+      var liste = [];
+      for(var j=1;j<P.length-1;j++) liste.push({s: kum[j], tip:'ara', lat: P[j][0], lng: P[j][1]});
+      direkler.forEach(function(d){ liste.push({s: d.s, tip:'nokta', nokta: d.nokta}); });
+      liste.sort(function(x,y){ return x.s - y.s || (x.tip==='ara' ? -1 : 1); });
+      return liste;
+    }
+
+    function haritaMesafeNoktaEkle(pi){
+      if(!_mesafeState) return;
+
+      var sonNokta = _mesafeState.noktalar.filter(function(n){ return !n.ara; }).slice(-1)[0] || _mesafeState.noktalar[_mesafeState.noktalar.length - 1];
+      var araNoktalar = [];
+      var hatYolu = null; // hat çizgisini takip eden ara liste (köşe noktaları + direkler)
+
+      if(sonNokta && sonNokta.fileName === pi.fileName){
+        try{ hatYolu = haritaHatYoluBul(sonNokta, pi); }catch(e){ hatYolu = null; }
+      }
+
+      if(!hatYolu && sonNokta && sonNokta.fileName === pi.fileName){
+        // Hat çizgisi yok: direkleri konumlarına göre dizilmiş güzergâh zincirinde A ile B arasını al
+        var zincir = direkZinciriAl(sonNokta);
+        var iA = -1, iB = -1;
+        zincir.forEach(function(n, k){
+          if(n.pointKey === sonNokta.pointKey) iA = k;
+          if(n.pointKey === pi.pointKey) iB = k;
+        });
+        if(iA >= 0 && iB >= 0 && iA !== iB){
+          araNoktalar = iA < iB ? zincir.slice(iA + 1, iB) : zincir.slice(iB + 1, iA).reverse();
+        }
+      }
+
+      var eklenecekler = hatYolu
+        ? hatYolu.map(function(e){ return e.tip === 'ara' ? {ara:true, lat:e.lat, lng:e.lng} : e.nokta; }).concat([pi])
+        : araNoktalar.concat([pi]);
       eklenecekler.forEach(function(nokta){
         var lat = parseFloat(nokta.lat), lng = parseFloat(nokta.lng);
+
+        // Hat köşe noktası: sadece çizgiyi/mesafeyi takip eder; pin, etiket ya da sayaç eklenmez
+        if(nokta.ara){
+          _mesafeState.noktalar.push({ lat:lat.toFixed(6), lng:lng.toFixed(6), ara:true });
+          return;
+        }
 
         // Asıl KML noktasını bul (tumNoktalar üzerinden, marker referansına erişim için)
         var orijinalNokta = tumNoktalar.find(function(n){ return n.pointKey === nokta.pointKey; }) || nokta;
 
         if(orijinalNokta.markerRef && window._haritaMarkerIconBuilder){
-          var siraNo = _mesafeState.noktalar.length + 1;
+          var siraNo = _mesafeState.noktalar.filter(function(x){ return !x.ara; }).length + 1;
           var yeniIcon = window._haritaMarkerIconBuilder('#E05A2B', orijinalNokta.displayName, orijinalNokta.lblId, true);
           orijinalNokta.markerRef.setIcon(yeniIcon);
           orijinalNokta.markerRef._mesafeRenkli = true;
@@ -23724,13 +23892,13 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
           _mesafeState.markers.push(nm);
         }
 
-        var siraNoEtiket = _mesafeState.noktalar.length + 1;
+        var siraNoEtiket = _mesafeState.noktalar.filter(function(x){ return !x.ara; }).length + 1;
         var lbl = L.marker([lat, lng], {icon:L.divIcon({className:'',html:'<div style="background:#E05A2B;color:#fff;padding:1px 5px;border-radius:10px;font-size:9px;font-weight:700;white-space:nowrap;font-family:IBM Plex Mono,monospace;margin-left:10px;margin-top:-8px;">'+siraNoEtiket+'</div>',iconAnchor:[-8,8]})});
         lbl._isMesafeLabel = true;
         lbl.addTo(mapInstance);
         _mesafeState.markers.push(lbl);
 
-        _mesafeState.noktalar.push({ lat:lat.toFixed(6), lng:lng.toFixed(6), name: nokta.displayName || nokta.name, noktaIndex: nokta.noktaIndex, noktaNo: nokta.noktaNo, fileName: nokta.fileName, pointKey: nokta.pointKey, _markerRef: orijinalNokta.markerRef });
+        _mesafeState.noktalar.push({ lat:lat.toFixed(6), lng:lng.toFixed(6), name: nokta.displayName || nokta.name, noktaIndex: nokta.noktaIndex, noktaNo: nokta.noktaNo, fileName: nokta.fileName, pointKey: nokta.pointKey, folder: nokta.folder, belgeSirasi: nokta.belgeSirasi, _markerRef: orijinalNokta.markerRef });
       });
 
       haritaMesafeGuncelle();
@@ -23741,7 +23909,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
       // Önceki ölçümü temizle
       haritaMesafeTemizle();
 
-      var ilkNokta = { lat: pi.lat, lng: pi.lng, name: pi.displayName, noktaIndex: pi.noktaIndex, noktaNo: pi.noktaNo, fileName: pi.fileName, pointKey: pi.pointKey, _markerRef: pi.markerRef };
+      var ilkNokta = { lat: pi.lat, lng: pi.lng, name: pi.displayName, noktaIndex: pi.noktaIndex, noktaNo: pi.noktaNo, fileName: pi.fileName, pointKey: pi.pointKey, folder: pi.folder, belgeSirasi: pi.belgeSirasi, _markerRef: pi.markerRef };
       _mesafeState = { noktalar: [ilkNokta], polyline: null, markers: [], clickHandler: haritaMesafeNoktaEkle, tamamlandi: false };
 
       // Başlangıç noktasının kendi KML pinini renklendir (ayrı bir daire çizmek yerine)
@@ -24000,12 +24168,16 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
     });
 
     // ── Dosyayı haritaya çiz ──
+    var kmlHatlari = []; // KML LineString hatları: {fileName, folder, coords:[[lat,lng]...]} — ölçümde hat çizgisini takip etmek için
     var tumNoktalar = []; // Tüm KML noktaları, dosya ekleme sırasına göre — mesafe ölçümünde "aradaki noktalar" için kullanılır
 
     function renderFile(fileEntry){
       if(kmlLayerMap[fileEntry.id]){ kmlLayerMap[fileEntry.id].forEach(function(l){ mapInstance.removeLayer(l); }); }
       tumNoktalar = tumNoktalar.filter(function(n){ return n.fileName !== (fileEntry.name||''); });
+      kmlHatlari = kmlHatlari.filter(function(h){ return h.fileName !== (fileEntry.name||''); });
+      _direkZinciriOnbellek = {};
       var features=parseKML(fileEntry.text), folders={};
+      features.forEach(function(f,i){ f._belgeSirasi=i; }); // KML dosyasındaki gerçek sıra (ölçümde 'ard arda noktalar' bunu kullanır)
       features.forEach(function(f){ var k=f.folder||'Genel'; if(!folders[k]) folders[k]=[]; folders[k].push(f); });
       var layers=[], pi=kmlFiles.findIndex(function(f){ return f.id===fileEntry.id; });
       var baseColor=palette[pi%palette.length];
@@ -24017,6 +24189,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
           if(f.name&&f.direkTipi) displayName=f.name+' — '+f.direkTipi;
           if(f.type==='line'){
             L.polyline(f.coords,{color:c,weight:3.5,opacity:0.9}).addTo(group);
+            kmlHatlari.push({ fileName: fileEntry.name||'', folder: f.folder||'', coords: f.coords });
           } else if(f.type==='point'){
             var lat=parseFloat(f.latlng[0].toFixed(6)), lng=parseFloat(f.latlng[1].toFixed(6));
             var pointKey=lat+'_'+lng;
@@ -24045,7 +24218,7 @@ var V_BLOK_DATA = window.V_BLOK_DATA = {
               var icon = window._haritaMarkerIconBuilder(m._origColor, m._origDisplayName, m._origLblId, gosterEtiket, false);
               m.setIcon(icon);
             };
-            var pi2={pointKey,displayName,name:f.name||'',desc:f.desc||'',lat:lat.toFixed(6),lng:lng.toFixed(6),fileName:fileEntry.name||'',folder:f.folder||''};
+            var pi2={pointKey,displayName,name:f.name||'',desc:f.desc||'',lat:lat.toFixed(6),lng:lng.toFixed(6),fileName:fileEntry.name||'',folder:f.folder||'',belgeSirasi:f._belgeSirasi};
             pi2.markerRef = marker;
             pi2.color = c;
             pi2.lblId = lid;
