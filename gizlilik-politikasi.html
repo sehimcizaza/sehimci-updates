@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEHİMCİ — Gizlilik Politikası</title>
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;max-width:760px;margin:0 auto;padding:20px;color:#1c2430;background:#fff}
+  h1{font-size:24px;margin:0 0 4px}
+  h2{font-size:17px;margin:28px 0 8px;color:#1A3E6E}
+  .tarih{color:#667;font-size:13px;margin-bottom:20px}
+  ul{padding-left:20px}
+  li{margin:4px 0}
+  .not{background:#f2f6fb;border-left:4px solid #2E6BB0;padding:10px 14px;border-radius:4px}
+  @media (prefers-color-scheme: dark){
+    body{background:#14181f;color:#e6e9ef} h2{color:#7fb2ee} .not{background:#1c232e} .tarih{color:#9aa4b2}
+  }
+</style>
+</head>
+<body>
+<h1>SEHİMCİ — Gizlilik Politikası</h1>
+<p class="tarih">Son güncelleme: 1 Ekim 2026</p>
+
+<p>SEHİMCİ (paket adı: <code>com.sehimci.app</code>), yüksek gerilim iletim hatlarında saha mühendisliği hesaplamaları ve ölçüm kayıtları için geliştirilmiş bir Android uygulamasıdır. Bu metin, uygulamanın hangi verilere eriştiğini ve bunları nasıl kullandığını açıklar.</p>
+
+<div class="not"><strong>Özet:</strong> Hesap açmanız gerekmez. Girdiğiniz hesaplama verileri, notlar, fotoğraflar ve kayıtlar yalnızca cihazınızda saklanır. Geliştirici bu verileri toplamaz, satmaz ve reklam için kullanmaz.</div>
+
+<h2>1. Cihazınızda saklanan veriler</h2>
+<ul>
+  <li>Hesaplama girdileri, kayıtlı hatlar, not defteri, favoriler, tema ve görünüm tercihleri, ölçüm kayıtları.</li>
+  <li>Galeri/saha notlarında eklediğiniz fotoğraflar ve bunlara bağlı konum bilgisi.</li>
+  <li>KML/KMZ dosyaları ve açtığınız diğer dosyalar.</li>
+</ul>
+<p>Bu veriler cihazın uygulama depolamasında tutulur ve geliştiriciye gönderilmez. Uygulamayı kaldırdığınızda bu veriler silinir. Uygulama içindeki yedekleme/dışa aktarma özelliklerini kullanırsanız dosya yalnızca sizin seçtiğiniz yere kaydedilir.</p>
+
+<h2>2. Konum</h2>
+<p>Konum izni isteğe bağlıdır ve yalnızca siz ilgili özelliği kullandığınızda istenir (haritada konumunuzu görme, konum etiketli fotoğraf/not, rakım ve hava durumu bilgisi). Konum arka planda takip edilmez.</p>
+<p>Bu özellikler çalışırken yaklaşık/kesin koordinatınız, hizmeti sağlamak amacıyla aşağıdaki üçüncü taraf servislere gönderilebilir:</p>
+<ul>
+  <li><strong>Open-Meteo</strong> (hava durumu), <strong>Open-Elevation</strong> ve <strong>OpenTopoData</strong> (rakım), <strong>Nominatim / OpenStreetMap</strong> (adres/yer adı).</li>
+  <li><strong>OpenStreetMap, Esri (ArcGIS) harita sunucuları</strong> (harita karoları; görüntülenen bölge bilgisi bu sunuculara iletilir) ve <strong>OpenStreetMap statik harita servisi</strong> (rapor/çıktılardaki harita görseli için seçtiğiniz noktaların koordinatları).</li>
+  <li>"Haritada aç" gibi bağlantılara dokunduğunuzda koordinat, Google Haritalar'da açılmak üzere tarayıcıya aktarılır.</li>
+</ul>
+<p>Bu servisler kendi gizlilik politikalarına tabidir. Geliştirici bu isteklerin kaydını tutmaz.</p>
+
+<h2>3. Kamera, fotoğraf ve dosyalar</h2>
+<p>Fotoğraf çekme veya dosya seçme yalnızca siz istediğinizde, işletim sisteminin seçicisi üzerinden yapılır. Seçilen içerik cihazda işlenir ve geliştiriciye gönderilmez.</p>
+
+<h2>4. İsteğe bağlı yapay zekâ asistanı</h2>
+<p>Uygulamada, kullanıcının kendi Anthropic API anahtarını girerek kullanabildiği isteğe bağlı bir "AI Hesap Asistanı" vardır. Bu özelliği kullanırsanız yazdığınız sorular ve sohbet geçmişi, yanıt üretilmesi için doğrudan cihazınızdan Anthropic API'sine gönderilir. API anahtarınız yalnızca cihazınızda saklanır; geliştirici anahtarınıza veya sorularınıza erişmez. Özelliği kullanmazsanız hiçbir veri gönderilmez. Yapay zekâ yanıtları hatalı olabilir; mühendislik kararlarından önce doğrulayın. Uygunsuz veya hatalı bir yanıtı, yanıtın altındaki "Yanıtı bildir" bağlantısıyla bize iletebilirsiniz.</p>
+
+<h2>5. Duyurular ve uygulama kaynakları</h2>
+<p>Uygulama, duyuruları göstermek için GitHub üzerinde barındırılan bir metin dosyasını okuyabilir. Ayrıca PDF oluşturma, 3B görünüm ve harita gibi bazı modüller, ilk kullanımda açık kaynaklı kütüphaneleri (cdnjs, jsDelivr, unpkg) ve yazı tiplerini (Google Fonts) internetten yükleyebilir; bu istekler sırasında IP adresiniz bu hizmet sağlayıcılar tarafından görülebilir.</p>
+
+<h2>6. Toplamadığımız veriler</h2>
+<ul>
+  <li>Ad, e-posta, telefon gibi hesap/kimlik bilgisi (hesap sistemi yoktur).</li>
+  <li>Reklam kimliği; uygulamada reklam, analitik veya izleme kütüphanesi bulunmaz.</li>
+  <li>Kişileri, mesajları, takvimi veya mikrofon kaydını okumayız.</li>
+</ul>
+<p>Verileriniz satılmaz ve reklam amacıyla paylaşılmaz.</p>
+
+<h2>7. Çocuklar</h2>
+<p>Uygulama mesleki kullanıma yöneliktir ve 18 yaş altına hitap etmez.</p>
+
+<h2>8. Haklarınız (KVKK)</h2>
+<p>Veriler cihazınızda tutulduğundan silme işlemi uygulama verilerini temizleyerek veya uygulamayı kaldırarak sizin kontrolünüzdedir. 6698 sayılı KVKK kapsamındaki taleplerinizi aşağıdaki adrese iletebilirsiniz.</p>
+
+<h2>9. Mühendislik uyarısı</h2>
+<p>SEHİMCİ'deki hesaplamalar yardımcı araçtır; resmî proje, şartname ve yetkili mühendis onayının yerine geçmez. Sonuçların doğruluğunu kullanıcı kontrol etmelidir.</p>
+
+<h2>10. Değişiklikler ve iletişim</h2>
+<p>Bu politika güncellenebilir; güncel sürüm bu adreste yayımlanır. Sorularınız için: <a href="mailto:sehimci@gmail.com">sehimci@gmail.com</a></p>
+</body>
+</html>
